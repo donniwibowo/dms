@@ -17,16 +17,20 @@ class _MyHomePageState extends State<SplashSreen> {
                     IntroductionAnimationScreen()
             )
         )
-    );
+    ); 
   }
   @override
   Widget build(BuildContext context) {
-    double width=MediaQuery.of(context).size.width *0.001;
-    double height=MediaQuery.of(context).size.height*0.001;
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
     return Container(
         color: Colors.white,
-        child:Image(image: AssetImage("assets/images/splash_screen.png"),height:height,
-          width: width)
+        child:
+        Image.asset(
+          'assets/images/splash_screen.png',
+          height: height,
+          width: width,
+        )
     );
   }
 }
