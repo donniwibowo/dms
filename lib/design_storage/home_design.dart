@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
+import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
@@ -292,10 +293,16 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               ],
             ),
           ),
-          Container(
-            width: 60,
-            height: 60,
-            child: Image.asset('assets/design_storage/userImage.png'),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Settings()));
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              child: Image.asset('assets/design_storage/userImage.png'),
+            ),
           )
         ],
       ),

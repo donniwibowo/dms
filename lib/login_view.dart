@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
-void main() {
-  runApp(MaterialApp(home:LoginView()));
-}
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -10,11 +10,41 @@ class LoginView extends StatefulWidget {
 }
 
 class _MyappState extends State<LoginView> {
+  late SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("user_token") != null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => DesignHomeScreen()),
+          (Route<dynamic> route) => false);
+    }
+  }
+
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
+  final snackbarKey = GlobalKey<ScaffoldState>();
+  bool _obscureText1 = true;
+  // Toggles the password show status
+  void _togglevisibility() {
+    setState(() {
+      _obscureText1 = !_obscureText1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width=MediaQuery.of(context).size.width;
-    double height=MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      key: snackbarKey,
       body: Container(
         height: height,
         width: width,
@@ -24,20 +54,30 @@ class _MyappState extends State<LoginView> {
             children: [
               Container(
                 width: width,
-                height: height*0.45,
-                child: Image.asset('assets/images/yoga.png',fit: BoxFit.fill,),
+                height: height * 0.45,
+                child: Image.asset(
+                  'assets/images/yoga.png',
+                  fit: BoxFit.fill,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Login',style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 30.0,),
+              SizedBox(
+                height: 30.0,
+              ),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   suffixIcon: Icon(Icons.email),
@@ -46,56 +86,69 @@ class _MyappState extends State<LoginView> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0,),
+              SizedBox(
+                height: 20.0,
+              ),
               TextField(
-                obscureText: true,
+                obscureText: _obscureText1,
+                controller: passwordController,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  suffixIcon: Icon(Icons.visibility_off),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _togglevisibility();
+                    },
+                    child: Icon(
+                      _obscureText1 ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
               ),
-              SizedBox(height: 30.0,),
+              SizedBox(
+                height: 30.0,
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Forget password?',style: TextStyle(fontSize: 12.0),),
+                    Text(
+                      'Forget password?',
+                      style: TextStyle(fontSize: 12.0),
+                    ),
                     MaterialButton(
-                      child: Text('Login',style:TextStyle(color: Colors.white),),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       color: Color(0xff132137),
-                      onPressed: (){
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DesignHomeScreen()
-                            ));
+                      onPressed: () {
+                        signIn(emailController.text, passwordController.text);
                       },
                     ),
                   ],
                 ),
               ),
-              SizedBox(height:20.0),
+              SizedBox(height: 20.0),
               GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Second()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Second()));
                 },
                 child: Text.rich(
                   TextSpan(
-                    text: 'Don\'t have an account ',
-                    style: TextStyle(color:Colors.grey),
-                    children: [
-                      TextSpan(
-                        text: 'Signup',
-                        style: TextStyle(
-                          color: Color(0xff132137)
+                      text: 'Don\'t have an account ',
+                      style: TextStyle(color: Colors.grey),
+                      children: [
+                        TextSpan(
+                          text: 'Signup',
+                          style: TextStyle(color: Color(0xff132137)),
                         ),
-                      ),
-                    ]
-                  ),
+                      ]),
                 ),
               ),
             ],
@@ -104,8 +157,42 @@ class _MyappState extends State<LoginView> {
       ),
     );
   }
-}
 
+  signIn(String email, password) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Map data = {'email': email, 'password': password};
+    var jsonResponse = null;
+    var response = await http
+        .post("https://dms.tigajayabahankue.com/api/user/login", body: data);
+    jsonResponse = json.decode(response.body);
+    print('ini response');
+    print(jsonResponse);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      if (jsonResponse != null) {
+        print(jsonResponse);
+        print('finally masuk');
+        sharedPreferences.setString("user_token", jsonResponse['user_token']);
+        sharedPreferences.setString("email", jsonResponse['data']['email']);
+        sharedPreferences.setString(
+            "fullname", jsonResponse['data']['fullname']);
+        sharedPreferences.setString("user_id", jsonResponse['data']['user_id']);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (BuildContext context) => DesignHomeScreen()),
+            (Route<dynamic> route) => false);
+      }
+    } else {
+      var snackbar = SnackBar(
+        content: Text(jsonResponse['message'],
+            style: TextStyle(color: Colors.white.withOpacity(0.8))),
+        backgroundColor: Colors.black,
+      );
+      // snackbarKey.currentState?.showBodyScrim(true, 1);
+      // snackbarKey.currentState.showSnackBar(snackbar);
+    }
+  }
+}
 
 class Second extends StatefulWidget {
   @override
@@ -113,10 +200,24 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  bool _isLoading = false;
+
+  final snackbarKey = GlobalKey<ScaffoldState>();
+  bool _obscureText1 = false;
+  bool _obscureText2 = false;
+  // Toggles the password show status
+  void _togglevisibility() {
+    setState(() {
+      _obscureText2 = !_obscureText2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width=MediaQuery.of(context).size.width;
-    double height=MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
         height: height,
@@ -127,20 +228,30 @@ class _SecondState extends State<Second> {
             children: [
               Container(
                 width: width,
-                height: height*0.45,
-                child: Image.asset('assets/images/play.png',fit: BoxFit.fill,),
+                height: height * 0.45,
+                child: Image.asset(
+                  'assets/images/play.png',
+                  fit: BoxFit.fill,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Signup',style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
+                    Text(
+                      'Signup',
+                      style: TextStyle(
+                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 30.0,),
+              SizedBox(
+                height: 30.0,
+              ),
               TextField(
+                controller: _email,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   suffixIcon: Icon(Icons.email),
@@ -149,64 +260,100 @@ class _SecondState extends State<Second> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0,),
+              SizedBox(
+                height: 20.0,
+              ),
               TextField(
                 obscureText: true,
+                controller: _password,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  suffixIcon: Icon(Icons.visibility_off),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _togglevisibility();
+                    },
+                    child: Icon(
+                      _obscureText2 ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
               ),
-              SizedBox(height: 30.0,),
+              SizedBox(
+                height: 30.0,
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Forget password?',style: TextStyle(fontSize: 12.0),),
+                    Text(
+                      'Forget password?',
+                      style: TextStyle(fontSize: 12.0),
+                    ),
                     MaterialButton(
-                      child: Text('Signup',style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        'Signup',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       color: Color(0xff132137),
-                      onPressed: (){
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DesignHomeScreen()
-                            ));
-                      },
+                      onPressed: () => submit(context),
+                      //  {
+                      //   Navigator.of(context).push(MaterialPageRoute(
+                      //       builder: (context) => DesignHomeScreen()));
+                      // },
                     ),
                   ],
                 ),
               ),
-              SizedBox(height:20.0),
+              SizedBox(height: 20.0),
               GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginView()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginView()));
                 },
                 child: Text.rich(
                   TextSpan(
                       text: 'Already have an account',
-                      style: TextStyle(color:Colors.grey),
+                      style: TextStyle(color: Colors.grey),
                       children: [
                         TextSpan(
                           text: ' Signin',
-                          style: TextStyle(
-                              color: Color(0xff132137)
-                          ),
+                          style: TextStyle(color: Color(0xff132137)),
                         ),
-                      ]
-                  ),
+                      ]),
                 ),
               ),
-
-
             ],
           ),
         ),
       ),
     );
+  }
+
+//flutter run --no-sound-null-safety
+  Future<void> submit(BuildContext context) async {
+    Map data = {'email': _email.text, 'password': _password.text};
+    var jsonResponse = null;
+    var response =
+        await http.post("https://discoverkorea.site/apiuser/store", body: data);
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      if (jsonResponse != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (BuildContext context) => LoginView()),
+            (Route<dynamic> route) => false);
+      }
+    } else {
+      var snackbar = SnackBar(
+        content: Text(response.body,
+            style: TextStyle(color: Colors.white.withOpacity(0.8))),
+        backgroundColor: Colors.black,
+      );
+      // snackbarKey.currentState.showSnackBar(snackbar);
+    }
   }
 }

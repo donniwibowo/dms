@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/design_course/home_design.dart';
+import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/introduction_animation_screen.dart';
 import 'package:flutter/widgets.dart';
 
@@ -26,7 +26,7 @@ class HomeList {
     // ),
     HomeList(
       imagePath: 'assets/design_course/design_course.png',
-      navigateScreen: DesignCourseHomeScreen(),
+      navigateScreen: DesignHomeScreen(),
     ),
   ];
 }

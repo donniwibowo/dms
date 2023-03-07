@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
 import 'package:best_flutter_ui_templates/login_view.dart';
+
 class CenterNextButton extends StatelessWidget {
   final AnimationController animationController;
   final VoidCallback onNextClick;
@@ -96,12 +97,9 @@ class CenterNextButton extends StatelessWidget {
                     child: _signUpMoveAnimation.value > 0.7
                         ? InkWell(
                             key: ValueKey('Sign Up button'),
-                            onTap:  () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoginView()
-                                  ));
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Second()));
                             },
                             child: Padding(
                               padding: EdgeInsets.only(left: 16.0, right: 16.0),
@@ -144,20 +142,28 @@ class CenterNextButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Already have an account? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Color(0xff132137),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LoginView()));
+                    },
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Already have an Account? ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                                text: 'Login',
+                                style: TextStyle(
+                                  color: Color(0xff132137),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ]),
                     ),
                   ),
                 ],

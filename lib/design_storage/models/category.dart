@@ -15,28 +15,28 @@ class Category {
 
   static List<Category> categoryList = <Category>[
     Category(
-      imagePath: 'assets/design_storage/interFace1.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'User interface Design',
       fileCount: 24,
       money: 25,
       rating: 4.3,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace2.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'User interface Design',
       fileCount: 22,
       money: 18,
       rating: 4.6,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace1.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'User interface Design',
       fileCount: 24,
       money: 25,
       rating: 4.3,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace2.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'User interface Design',
       fileCount: 22,
       money: 18,
@@ -46,28 +46,28 @@ class Category {
 
   static List<Category> popularCourseList = <Category>[
     Category(
-      imagePath: 'assets/design_storage/interFace3.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'Folder Main',
       fileCount: 12,
       money: 25,
       rating: 4.8,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace4.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'Folder 1',
       fileCount: 28,
       money: 208,
       rating: 4.9,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace3.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'Folder 2',
       fileCount: 12,
       money: 25,
       rating: 4.8,
     ),
     Category(
-      imagePath: 'assets/design_storage/interFace4.png',
+      imagePath: 'assets/design_storage/folders.png',
       title: 'Folder 3',
       fileCount: 28,
       money: 208,
