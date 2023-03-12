@@ -13,7 +13,7 @@ class DesignHomeScreen extends StatefulWidget {
 
 class _DesignHomeScreenState extends State<DesignHomeScreen> {
   CategoryType categoryType = CategoryType.ui;
-
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,10 +33,23 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: Column(
                     children: <Widget>[
                       getSearchBarUI(),
-                      // getCategoryUI(),
-                      Flexible(
-                        child: getPopularCourseUI(),
+                      CategoryListView(
+                        callBack: () {
+                          moveTo();
+                        },
                       ),
+                      // Flexible(
+                      // child: Positioned(
+                      //   // adjust the position as needed
+                      //   child: FloatingActionButton(
+                      //     splashColor: Colors.blueGrey,
+                      //     onPressed: () {
+                      //       // Add button action
+                      //     },
+                      //     child: Icon(Icons.add),
+                      //   ),
+                      // ),
+                      // ),
                     ],
                   ),
                 ),
@@ -44,70 +57,46 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Add',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
 
-  // Widget getCategoryUI() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: <Widget>[
-  //       Padding(
-  //         padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-  //         child: Text(
-  //           'Category',
-  //           textAlign: TextAlign.left,
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.w600,
-  //             fontSize: 22,
-  //             letterSpacing: 0.27,
-  //             color: DesignAppTheme.darkerText,
-  //           ),
-  //         ),
-  //       ),
-  //       const SizedBox(
-  //         height: 16,
-  //       ),
-  //       Padding(
-  //         padding: const EdgeInsets.only(left: 16, right: 16),
-  //         child: Row(
-  //           children: <Widget>[
-  //             getButtonUI(CategoryType.ui, categoryType == CategoryType.ui),
-  //             const SizedBox(
-  //               width: 16,
-  //             ),
-  //             getButtonUI(
-  //                 CategoryType.coding, categoryType == CategoryType.coding),
-  //             const SizedBox(
-  //               width: 16,
-  //             ),
-  //             getButtonUI(
-  //                 CategoryType.basic, categoryType == CategoryType.basic),
-  //           ],
-  //         ),
-  //       ),
-  //       const SizedBox(
-  //         height: 16,
-  //       ),
-  //       CategoryListView(
-  //         callBack: () {
-  //           moveTo();
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Index 1: Search'),
+  ];
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
-  Widget getPopularCourseUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Folders',
+  Widget getCategoryUI() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          child: Text(
+            'Category',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -116,17 +105,68 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               color: DesignAppTheme.darkerText,
             ),
           ),
-          Flexible(
-            child: PopularCourseListView(
-              callBack: () {
-                moveTo();
-              },
-            ),
-          )
-        ],
-      ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Row(
+            children: <Widget>[
+              getButtonUI(CategoryType.ui, categoryType == CategoryType.ui),
+              const SizedBox(
+                width: 16,
+              ),
+              getButtonUI(
+                  CategoryType.coding, categoryType == CategoryType.coding),
+              const SizedBox(
+                width: 16,
+              ),
+              getButtonUI(
+                  CategoryType.basic, categoryType == CategoryType.basic),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        CategoryListView(
+          callBack: () {
+            moveTo();
+          },
+        ),
+      ],
     );
   }
+
+  // Widget getPopularCourseUI() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         Text(
+  //           'Folders',
+  //           textAlign: TextAlign.left,
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.w600,
+  //             fontSize: 22,
+  //             letterSpacing: 0.27,
+  //             color: DesignAppTheme.darkerText,
+  //           ),
+  //         ),
+  //         Flexible(
+  //           child: PopularCourseListView(
+  //             callBack: () {
+  //               moveTo();
+  //             },
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void moveTo() {
     Navigator.push<dynamic>(
@@ -254,7 +294,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           ),
           const Expanded(
             child: SizedBox(),
-          )
+          ),
         ],
       ),
     );

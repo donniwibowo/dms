@@ -9,7 +9,6 @@ class CategoryModel {
   String name;
   String nomor;
   String perihal;
-  String type;
   String format;
   String size;
   String description;
@@ -25,7 +24,6 @@ class CategoryModel {
       required this.name,
       required this.nomor,
       required this.perihal,
-      required this.type,
       required this.format,
       required this.size,
       required this.description,
@@ -41,7 +39,6 @@ class CategoryModel {
       name: json["name"],
       nomor: json["nomor"],
       perihal: json["perihal"],
-      type: json["type"],
       format: json["format"],
       size: json["size"],
       description: json["description"],

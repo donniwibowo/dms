@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'introduction_animation/introduction_animation_screen.dart';
 import 'package:best_flutter_ui_templates/splash_screen.dart';
+import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +18,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final routes = <String, WidgetBuilder>{
+    '/login': (BuildContext context) => new LoginView(),
+  };
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -26,16 +32,24 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
-    return MaterialApp(
-      title: 'DropHere',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: AppTheme.textTheme,
-        platform: TargetPlatform.iOS,
-      ),
-      home: SplashSreen(),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ApiFolders>(create: (context) => ApiFolders()),
+          // ChangeNotifierProvider(
+          //   create: (_) => ApiProvider(),
+          // ),
+        ],
+        child: MaterialApp(
+          title: 'DMS',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: AppTheme.textTheme,
+            platform: TargetPlatform.iOS,
+          ),
+          home: Scaffold(body: SplashSreen()),
+          routes: routes,
+        ));
   }
 }
 
