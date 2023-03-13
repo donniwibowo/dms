@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           // ),
         ],
         child: MaterialApp(
-          title: 'ITS | DMS',
+          title: 'DMS',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
