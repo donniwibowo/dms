@@ -44,15 +44,15 @@ class _IntroductionAnimationScreenState
             SplashView(
               animationController: _animationController!,
             ),
-            RelaxView(
-              animationController: _animationController!,
-            ),
-            CareView(
-              animationController: _animationController!,
-            ),
-            MoodDiaryVew(
-              animationController: _animationController!,
-            ),
+            // RelaxView(
+            //   animationController: _animationController!,
+            // ),
+            // CareView(
+            //   animationController: _animationController!,
+            // ),
+            // MoodDiaryVew(
+            //   animationController: _animationController!,
+            // ),
             WelcomeView(
               animationController: _animationController!,
             ),
@@ -98,7 +98,8 @@ class _IntroductionAnimationScreenState
   void _onNextClick() {
     if (_animationController!.value >= 0 &&
         _animationController!.value <= 0.2) {
-      _animationController?.animateTo(0.4);
+      // _animationController?.animateTo(0.4);
+      _signUpClick();
     } else if (_animationController!.value > 0.2 &&
         _animationController!.value <= 0.4) {
       _animationController?.animateTo(0.6);

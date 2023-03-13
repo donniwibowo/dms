@@ -56,7 +56,7 @@ class _MyappState extends State<LoginView> {
                 width: width,
                 height: height * 0.45,
                 child: Image.asset(
-                  'assets/images/yoga.png',
+                  'assets/introduction_animation/login_image.png',
                   fit: BoxFit.fill,
                 ),
               ),
@@ -116,10 +116,10 @@ class _MyappState extends State<LoginView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Forget password?',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
+                    // Text(
+                    //   'Forget password?',
+                    //   style: TextStyle(fontSize: 12.0),
+                    // ),
                     MaterialButton(
                       child: Text(
                         'Login',
@@ -133,24 +133,24 @@ class _MyappState extends State<LoginView> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Second()));
-                },
-                child: Text.rich(
-                  TextSpan(
-                      text: 'Don\'t have an account ',
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                          text: 'Signup',
-                          style: TextStyle(color: Color(0xff132137)),
-                        ),
-                      ]),
-                ),
-              ),
+              // SizedBox(height: 20.0),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => Second()));
+              //   },
+              //   child: Text.rich(
+              //     TextSpan(
+              //         text: 'Don\'t have an account ',
+              //         style: TextStyle(color: Colors.grey),
+              //         children: [
+              //           TextSpan(
+              //             text: 'Signup',
+              //             style: TextStyle(color: Color(0xff132137)),
+              //           ),
+              //         ]),
+              //   ),
+              // ),
             ],
           ),
         ),
