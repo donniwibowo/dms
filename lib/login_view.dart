@@ -43,115 +43,116 @@ class _MyappState extends State<LoginView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      key: snackbarKey,
-      body: Container(
-        height: height,
-        width: width,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: width,
-                height: height * 0.45,
-                child: Image.asset(
-                  'assets/images/yoga.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Login',
-                      style: TextStyle(
-                          fontSize: 25.0, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  suffixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+    return ScaffoldMessenger(
+      child: Scaffold(
+        body: Container(
+          height: height,
+          width: width,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: width,
+                  height: height * 0.45,
+                  child: Image.asset(
+                    'assets/images/yoga.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              TextField(
-                obscureText: _obscureText1,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      _togglevisibility();
-                    },
-                    child: Icon(
-                      _obscureText1 ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Forget password?',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    MaterialButton(
-                      child: Text(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
                         'Login',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 25.0, fontWeight: FontWeight.bold),
                       ),
-                      color: Color(0xff132137),
-                      onPressed: () {
-                        signIn(emailController.text, passwordController.text);
-                      },
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    suffixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Second()));
-                },
-                child: Text.rich(
-                  TextSpan(
-                      text: 'Don\'t have an account ',
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                          text: 'Signup',
-                          style: TextStyle(color: Color(0xff132137)),
+                SizedBox(
+                  height: 20.0,
+                ),
+                TextField(
+                  obscureText: _obscureText1,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        _togglevisibility();
+                      },
+                      child: Icon(
+                        _obscureText1 ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Forget password?',
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                      MaterialButton(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ]),
+                        color: Color(0xff132137),
+                        onPressed: () {
+                          signIn(emailController.text, passwordController.text);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 20.0),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Second()));
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                        text: 'Don\'t have an account ',
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                            text: 'Signup',
+                            style: TextStyle(color: Color(0xff132137)),
+                          ),
+                        ]),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -165,9 +166,6 @@ class _MyappState extends State<LoginView> {
     var response = await http
         .post("https://dms.tigajayabahankue.com/api/user/login", body: data);
     jsonResponse = json.decode(response.body);
-    print('ini response');
-    print(jsonResponse);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (jsonResponse != null) {
         print(jsonResponse);
@@ -183,15 +181,33 @@ class _MyappState extends State<LoginView> {
             (Route<dynamic> route) => false);
       }
     } else {
-      var snackbar = SnackBar(
-        content: Text(jsonResponse['message'],
-            style: TextStyle(color: Colors.white.withOpacity(0.8))),
-        backgroundColor: Colors.black,
-      );
-      // snackbarKey.currentState?.showBodyScrim(true, 1);
-      // snackbarKey.currentState.showSnackBar(snackbar);
+      showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
     }
   }
+}
+
+showAlertDialog(BuildContext context, String message) {
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Error"),
+    content: Text(message),
+    actions: [
+      TextButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
 class Second extends StatefulWidget {

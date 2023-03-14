@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'design_app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DesignHomeScreen extends StatefulWidget {
   @override
@@ -85,7 +89,85 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 1) {
+        showInputDialog(context, 'test');
+        // showAlertDialog(context, "Masuk Ke Folder Ini.");
+      }
+      print(_selectedIndex);
     });
+  }
+
+  signIn() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    Map data = {'name': 'Asal Coba', 'description': 'Asal Deskripsi'};
+    var jsonResponse = null;
+    var response = await http.post(
+        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
+            user_token!,
+        body: data);
+    jsonResponse = json.decode(response.body);
+    if (response.statusCode == 200) {
+      if (jsonResponse != null) {
+        showAlertDialog(context, "Folder Uploaded.");
+      }
+    } else {
+      showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
+    }
+  }
+
+  showAlertDialog(BuildContext context, String message) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Notification"),
+      content: Text(message),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showInputDialog(BuildContext context, String message) {
+    final TextEditingController namaController = new TextEditingController();
+    final TextEditingController descriptionController =
+        new TextEditingController();
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Create Folder"),
+      content: TextField(
+        controller: namaController,
+        decoration: InputDecoration(hintText: 'Enter some text'),
+      ),
+      actions: [
+        TextButton(
+          child: Text("Create"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Widget getCategoryUI() {
@@ -321,7 +403,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   ),
                 ),
                 Text(
-                  'DropHere',
+                  'DBS',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

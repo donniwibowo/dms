@@ -150,6 +150,13 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                       PopupMenuItem<
                                                                           String>(
                                                                         value:
+                                                                            'view',
+                                                                        child: Text(
+                                                                            'View'),
+                                                                      ),
+                                                                      PopupMenuItem<
+                                                                          String>(
+                                                                        value:
                                                                             'edit',
                                                                         child: Text(
                                                                             'Edit'),
