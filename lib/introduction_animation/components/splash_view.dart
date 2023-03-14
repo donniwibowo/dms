@@ -31,15 +31,15 @@ class _SplashViewState extends State<SplashView> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
-                'assets/introduction_animation/introduction_image.gif',
+                'assets/introduction_animation/introduction_image.png',
                 fit: BoxFit.cover,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
               child: Text(
-                "Clearhead",
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                "DOCUMENT MANAGMENT SYSTEM",
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(

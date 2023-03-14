@@ -43,116 +43,115 @@ class _MyappState extends State<LoginView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return ScaffoldMessenger(
-      child: Scaffold(
-        body: Container(
-          height: height,
-          width: width,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: width,
-                  height: height * 0.45,
-                  child: Image.asset(
-                    'assets/images/yoga.png',
-                    fit: BoxFit.fill,
+    return Scaffold(
+      key: snackbarKey,
+      body: Container(
+        height: height,
+        width: width,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: width,
+                height: height * 0.45,
+                child: Image.asset(
+                  'assets/introduction_animation/login_image.png',
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  suffixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              TextField(
+                obscureText: _obscureText1,
+                controller: passwordController,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _togglevisibility();
+                    },
+                    child: Icon(
+                      _obscureText1 ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Text(
+                    //   'Forget password?',
+                    //   style: TextStyle(fontSize: 12.0),
+                    // ),
+                    MaterialButton(
+                      child: Text(
                         'Login',
-                        style: TextStyle(
-                            fontSize: 25.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    suffixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                TextField(
-                  obscureText: _obscureText1,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        _togglevisibility();
+                      color: Color(0xff132137),
+                      onPressed: () {
+                        signIn(emailController.text, passwordController.text);
                       },
-                      child: Icon(
-                        _obscureText1 ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.blueGrey,
-                      ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
+                  ],
                 ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Forget password?',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                      MaterialButton(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        color: Color(0xff132137),
-                        onPressed: () {
-                          signIn(emailController.text, passwordController.text);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Second()));
-                  },
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'Don\'t have an account ',
-                        style: TextStyle(color: Colors.grey),
-                        children: [
-                          TextSpan(
-                            text: 'Signup',
-                            style: TextStyle(color: Color(0xff132137)),
-                          ),
-                        ]),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              // SizedBox(height: 20.0),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => Second()));
+              //   },
+              //   child: Text.rich(
+              //     TextSpan(
+              //         text: 'Don\'t have an account ',
+              //         style: TextStyle(color: Colors.grey),
+              //         children: [
+              //           TextSpan(
+              //             text: 'Signup',
+              //             style: TextStyle(color: Color(0xff132137)),
+              //           ),
+              //         ]),
+              //   ),
+              // ),
+            ],
           ),
         ),
       ),

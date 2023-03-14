@@ -49,20 +49,20 @@ class CenterNextButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SlideTransition(
-            position: _topMoveAnimation,
-            child: AnimatedBuilder(
-              animation: animationController,
-              builder: (context, child) => AnimatedOpacity(
-                opacity: animationController.value >= 0.2 &&
-                        animationController.value <= 0.6
-                    ? 1
-                    : 0,
-                duration: Duration(milliseconds: 480),
-                child: _pageView(),
-              ),
-            ),
-          ),
+          // SlideTransition(
+          //   position: _topMoveAnimation,
+          //   child: AnimatedBuilder(
+          //     animation: animationController,
+          //     builder: (context, child) => AnimatedOpacity(
+          //       opacity: animationController.value >= 0.2 &&
+          //               animationController.value <= 0.6
+          //           ? 1
+          //           : 0,
+          //       duration: Duration(milliseconds: 480),
+          //       child: _pageView(),
+          //     ),
+          //   ),
+          // ),
           SlideTransition(
             position: _topMoveAnimation,
             child: AnimatedBuilder(
@@ -72,65 +72,55 @@ class CenterNextButton extends StatelessWidget {
                     bottom: 38 - (38 * _signUpMoveAnimation.value)),
                 child: Container(
                   height: 58,
-                  width: 58 + (200 * _signUpMoveAnimation.value),
+                  width: 260,
+                  // width: 58 + (200 * _signUpMoveAnimation.value),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        8 + 32 * (1 - _signUpMoveAnimation.value)),
+                    borderRadius: BorderRadius.circular(10),
                     color: Color(0xff132137),
                   ),
                   child: PageTransitionSwitcher(
-                    duration: Duration(milliseconds: 480),
-                    reverse: _signUpMoveAnimation.value < 0.7,
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                    ) {
-                      return SharedAxisTransition(
-                        fillColor: Colors.transparent,
-                        child: child,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical,
-                      );
-                    },
-                    child: _signUpMoveAnimation.value > 0.7
-                        ? InkWell(
-                            key: ValueKey('Sign Up button'),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Second()));
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_forward_rounded,
-                                      color: Colors.white),
-                                ],
+                      duration: Duration(milliseconds: 480),
+                      reverse: _signUpMoveAnimation.value < 0.7,
+                      transitionBuilder: (
+                        Widget child,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                      ) {
+                        return SharedAxisTransition(
+                          fillColor: Colors.transparent,
+                          child: child,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.vertical,
+                        );
+                      },
+                      child: InkWell(
+                        key: ValueKey('Sign Up button'),
+                        onTap: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => Second()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LoginView()));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Login',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          )
-                        : InkWell(
-                            key: ValueKey('next button'),
-                            onTap: onNextClick,
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.arrow_forward_ios_rounded,
+                              Icon(Icons.arrow_forward_rounded,
                                   color: Colors.white),
-                            ),
+                            ],
                           ),
-                  ),
+                        ),
+                      )),
                 ),
               ),
             ),
@@ -142,30 +132,30 @@ class CenterNextButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => LoginView()));
-                    },
-                    child: Text.rich(
-                      TextSpan(
-                          text: 'Already have an Account? ',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                            TextSpan(
-                                text: 'Login',
-                                style: TextStyle(
-                                  color: Color(0xff132137),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ]),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.of(context).push(
+                  //         MaterialPageRoute(builder: (context) => LoginView()));
+                  //   },
+                  //   child: Text.rich(
+                  //     TextSpan(
+                  //         text: 'Already have an Account? ',
+                  //         style: TextStyle(
+                  //           color: Colors.grey,
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //         children: [
+                  //           TextSpan(
+                  //               text: 'Login',
+                  //               style: TextStyle(
+                  //                 color: Color(0xff132137),
+                  //                 fontSize: 16,
+                  //                 fontWeight: FontWeight.bold,
+                  //               )),
+                  //         ]),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -64,13 +64,13 @@ class TopBackSkipView extends StatelessWidget {
                   icon: Icon(Icons.arrow_back_ios_new_rounded),
                   //   ),
                 ),
-                SlideTransition(
-                  position: _skipAnimation,
-                  child: IconButton(
-                    onPressed: onSkipClick,
-                    icon: Text('Skip'),
-                  ),
-                ),
+                // SlideTransition(
+                //   position: _skipAnimation,
+                //   child: IconButton(
+                //     onPressed: onSkipClick,
+                //     icon: Text('Skip'),
+                //   ),
+                // ),
               ],
             ),
           ),

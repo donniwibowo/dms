@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:io';
 import 'package:best_flutter_ui_templates/app_theme.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';

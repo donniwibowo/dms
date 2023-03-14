@@ -12,8 +12,8 @@ class WelcomeView extends StatelessWidget {
       CurvedAnimation(
         parent: animationController,
         curve: Interval(
-          0.6,
-          0.8,
+          0.0,
+          0.2,
           curve: Curves.fastOutSlowIn,
         ),
       ),
@@ -23,31 +23,31 @@ class WelcomeView extends StatelessWidget {
       CurvedAnimation(
         parent: animationController,
         curve: Interval(
-          0.8,
-          1.0,
+          0.2,
+          0.4,
           curve: Curves.fastOutSlowIn,
         ),
       ),
     );
 
     final _welcomeFirstHalfAnimation =
-        Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
+        Tween<Offset>(begin: Offset(0, 0), end: Offset(-2, 0))
             .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
-        0.6,
-        0.8,
+        0.2,
+        0.4,
         curve: Curves.fastOutSlowIn,
       ),
     ));
 
     final _welcomeImageAnimation =
-        Tween<Offset>(begin: Offset(4, 0), end: Offset(0, 0))
+        Tween<Offset>(begin: Offset(0, 0), end: Offset(-4, 0))
             .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
-        0.6,
-        0.8,
+        0.2,
+        0.4,
         curve: Curves.fastOutSlowIn,
       ),
     ));
@@ -65,23 +65,26 @@ class WelcomeView extends StatelessWidget {
                 child: Container(
                   constraints: BoxConstraints(maxWidth: 350, maxHeight: 350),
                   child: Image.asset(
-                    'assets/introduction_animation/welcome.gif',
+                    'assets/introduction_animation/mood_dairy_image.gif',
                     fit: BoxFit.contain,
                   ),
                 ),
               ),
               SlideTransition(
-                position: _welcomeFirstHalfAnimation,
-                child: Text(
-                  "Welcome",
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-              ),
+                  position: _welcomeFirstHalfAnimation,
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(5, 40, 5, 0),
+                    child: Text(
+                      "Selamat Datang",
+                      style: TextStyle(
+                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                    ),
+                  )),
               Padding(
                 padding:
                     EdgeInsets.only(left: 64, right: 64, top: 16, bottom: 16),
                 child: Text(
-                  "Stay organised and live stress-free with you-do app",
+                  "Pengelolaan dokumen secara otomatis dan kontrol akses terhadap aktivitas dokumen",
                   textAlign: TextAlign.center,
                 ),
               ),
