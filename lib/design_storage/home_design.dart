@@ -97,10 +97,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     });
   }
 
-  signIn() async {
+  createFolder(String name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
-    Map data = {'name': 'Asal Coba', 'description': 'Asal Deskripsi'};
+    Map data = {'name': name};
     var jsonResponse = null;
     var response = await http.post(
         "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
@@ -140,6 +140,30 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
+  showViewDialog(BuildContext context, String message) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("View"),
+      content: Text('Test'),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   showInputDialog(BuildContext context, String message) {
     final TextEditingController namaController = new TextEditingController();
     final TextEditingController descriptionController =
@@ -155,6 +179,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         TextButton(
           child: Text("Create"),
           onPressed: () {
+            createFolder(namaController.text);
             Navigator.pop(context);
           },
         ),

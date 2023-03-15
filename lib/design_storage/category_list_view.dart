@@ -152,7 +152,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                         value:
                                                                             'view',
                                                                         child: Text(
-                                                                            'View'),
+                                                                            'Info'),
                                                                       ),
                                                                       PopupMenuItem<
                                                                           String>(
@@ -173,6 +173,27 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                         (String
                                                                             value) {
                                                                       // Handle menu item selection here
+                                                                      if (value ==
+                                                                          'view') {
+                                                                        var name = data
+                                                                            .dataFolders[index]
+                                                                            .name;
+                                                                        var description = data
+                                                                            .dataFolders[index]
+                                                                            .description;
+                                                                        var user_access = data
+                                                                            .dataFolders[index]
+                                                                            .user_access;
+                                                                        var created_by = data
+                                                                            .dataFolders[index]
+                                                                            .created_by;
+                                                                        showViewDialog(
+                                                                            context,
+                                                                            name,
+                                                                            description,
+                                                                            user_access,
+                                                                            created_by);
+                                                                      }
                                                                     },
                                                                     child: Icon(
                                                                       Icons
@@ -294,6 +315,43 @@ class _CategoryListViewState extends State<CategoryListView>
           },
         ),
       ),
+    );
+  }
+
+  showViewDialog(BuildContext context, String name, String description,
+      String user_access, String created_by) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("File Attribute"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Name : ' + name),
+          SizedBox(height: 10),
+          Text('Description : ' + (description == '' ? '-' : description)),
+          SizedBox(height: 10),
+          Text('User Access : ' + user_access),
+          SizedBox(height: 10),
+          Text('Created By : ' + created_by),
+        ],
+      ),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
