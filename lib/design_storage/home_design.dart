@@ -72,8 +72,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               label: 'Recent',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add',
+              icon: Icon(Icons.folder_shared),
+              label: 'Shared',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -90,8 +90,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 1) {
-        showInputDialog(context, 'test');
-        // showAlertDialog(context, "Masuk Ke Folder Ini.");
+        // showInputDialog(context, 'test');
+        showAlertDialog(context, "Open recent page");
+      } else if (_selectedIndex == 2) {
+        showAlertDialog(context, "Open sharred page");
       }
       print(_selectedIndex);
     });
