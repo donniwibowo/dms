@@ -45,7 +45,7 @@ class _SplashViewState extends State<SplashView> {
             Padding(
               padding: EdgeInsets.only(left: 64, right: 64),
               child: Text(
-                "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
+                "In publishing and graphic design, Lorem ipsum is a placeholder text commonly",
                 textAlign: TextAlign.center,
               ),
             ),

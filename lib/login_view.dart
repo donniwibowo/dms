@@ -44,6 +44,8 @@ class _MyappState extends State<LoginView> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      // backgroundColor: Colors.amber.shade300,
+      backgroundColor: Color(0xffc9ccff),
       key: snackbarKey,
       body: Container(
         height: height,
@@ -56,101 +58,86 @@ class _MyappState extends State<LoginView> {
                 width: width,
                 height: height * 0.45,
                 child: Image.asset(
-                  'assets/introduction_animation/login_image.png',
-                  fit: BoxFit.fill,
+                  'assets/introduction_animation/login_avatar.png',
+                  // fit: BoxFit.contain,
+                  width: 100,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Login',
+                      'LOGIN',
                       style: TextStyle(
-                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                          fontSize: 30.0, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  suffixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              TextField(
-                obscureText: _obscureText1,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      _togglevisibility();
-                    },
-                    child: Icon(
-                      _obscureText1 ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30.0,
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
+                padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
+                child: TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    suffixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      // borderSide: BorderSide(width: 3, color: Colors.white),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
+                child: TextField(
+                  obscureText: _obscureText1,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        _togglevisibility();
+                      },
+                      child: Icon(
+                        _obscureText1 ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Text(
-                    //   'Forget password?',
-                    //   style: TextStyle(fontSize: 12.0),
-                    // ),
-                    MaterialButton(
-                      child: Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white),
+                    Material(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      elevation: 10,
+                      clipBehavior: Clip.antiAlias,
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        height: 50,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        color: Color(0xff132137),
+                        onPressed: () {
+                          signIn(emailController.text, passwordController.text);
+                        },
                       ),
-                      color: Color(0xff132137),
-                      onPressed: () {
-                        signIn(emailController.text, passwordController.text);
-                      },
-                    ),
+                    )
                   ],
                 ),
               ),
-              // SizedBox(height: 20.0),
-              // GestureDetector(
-              //   onTap: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (context) => Second()));
-              //   },
-              //   child: Text.rich(
-              //     TextSpan(
-              //         text: 'Don\'t have an account ',
-              //         style: TextStyle(color: Colors.grey),
-              //         children: [
-              //           TextSpan(
-              //             text: 'Signup',
-              //             style: TextStyle(color: Color(0xff132137)),
-              //           ),
-              //         ]),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -162,8 +149,9 @@ class _MyappState extends State<LoginView> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map data = {'email': email, 'password': password};
     var jsonResponse = null;
-    var response = await http
-        .post("https://dms.tigajayabahankue.com/api/user/login", body: data);
+    var response = await http.post(
+        "https://192.168.1.119/leap_integra/master/dms/api/user/login",
+        body: data);
     jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       if (jsonResponse != null) {

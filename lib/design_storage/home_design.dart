@@ -68,12 +68,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add',
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.add),
+              label: 'Add',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -103,7 +103,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     Map data = {'name': name};
     var jsonResponse = null;
     var response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
+        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
     jsonResponse = json.decode(response.body);
