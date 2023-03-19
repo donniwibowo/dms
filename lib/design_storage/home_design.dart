@@ -339,74 +339,134 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
 
   Widget getSearchBarUI() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: 64,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: HexColor('#F8FAFB'),
-                  borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(13.0),
-                    bottomLeft: Radius.circular(13.0),
-                    topLeft: Radius.circular(13.0),
-                    topRight: Radius.circular(13.0),
-                  ),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: DesignAppTheme.nearlyBlue,
-                          ),
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'Search for course',
-                            border: InputBorder.none,
-                            helperStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: HexColor('#B9BABC'),
-                            ),
-                            labelStyle: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              letterSpacing: 0.2,
-                              color: HexColor('#B9BABC'),
-                            ),
-                          ),
-                          onEditingComplete: () {},
-                        ),
+        padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(right: 25),
+                  child: TextFormField(
+                    style: TextStyle(
+                      fontFamily: 'WorkSans',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: DesignAppTheme.nearlyBlue,
+                    ),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: 'Cari dokumen di sini',
+                      // border: InputBorder.none,
+                      helperStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: HexColor('#B9BABC'),
+                      ),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        letterSpacing: 0.2,
+                        color: HexColor('#B9BABC'),
                       ),
                     ),
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: Icon(Icons.search, color: HexColor('#B9BABC')),
-                    )
-                  ],
+                    onEditingComplete: () {},
+                  ),
                 ),
               ),
-            ),
-          ),
-          const Expanded(
-            child: SizedBox(),
-          ),
-        ],
-      ),
-    );
+              Container(
+                child: PopupMenuButton<String>(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)
+                            .copyWith(topRight: Radius.circular(0))),
+                    padding: EdgeInsets.all(10),
+                    elevation: 10,
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                          PopupMenuItem<String>(
+                            value: 'folder',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.folder_outlined,
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Create Folder',
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'file',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.upload_file,
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Upload File',
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          ),
+                        ],
+                    onSelected: (String value) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('$value')));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue.shade600,
+                          border: Border.all(color: Colors.blue.shade600),
+                          borderRadius: BorderRadius.all(Radius.circular(2)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.blue.shade600.withOpacity(0.9),
+                                spreadRadius: 0,
+                                blurRadius: 10)
+                          ]),
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    )),
+              ),
+              // Container(
+              //     child:
+              //         ElevatedButton(onPressed: () {}, child: Icon(Icons.add))),
+            ]));
   }
 
   Widget getAppBarUI() {
@@ -419,24 +479,34 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                // Text(
+                //   'save/share your folder',
+                //   textAlign: TextAlign.left,
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.w400,
+                //     fontSize: 14,
+                //     letterSpacing: 0.2,
+                //     color: DesignAppTheme.grey,
+                //   ),
+                // ),
                 Text(
-                  'save/share your folder',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.2,
-                    color: DesignAppTheme.grey,
-                  ),
-                ),
-                Text(
-                  'DBS',
+                  'DMS',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                     letterSpacing: 0.27,
                     color: DesignAppTheme.darkerText,
+                  ),
+                ),
+                Text(
+                  'Kelola Dokumen Anda',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    letterSpacing: 0.2,
+                    color: DesignAppTheme.grey,
                   ),
                 ),
               ],
