@@ -4,6 +4,7 @@ import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,12 +19,39 @@ class DesignHomeScreen extends StatefulWidget {
 class _DesignHomeScreenState extends State<DesignHomeScreen> {
   CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    final key = GlobalObjectKey<ExpandableFabState>(context);
     return Container(
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: ExpandableFab(
+          distance: 60,
+          child: Icon(Icons.add),
+          backgroundColor: Colors.red,
+          closeButtonStyle: const ExpandableFabCloseButtonStyle(
+            backgroundColor: Colors.red,
+          ),
+          children: [
+            FloatingActionButton.small(
+              heroTag: 'donni',
+              child: const Icon(Icons.folder_outlined),
+              backgroundColor: Colors.red,
+              onPressed: () {
+                showInputDialog(context, 'test');
+              },
+            ),
+            FloatingActionButton.small(
+              heroTag: null,
+              child: const Icon(Icons.file_upload),
+              backgroundColor: Colors.red,
+              onPressed: () {},
+            ),
+          ],
+        ),
         body: Column(
           children: <Widget>[
             SizedBox(
@@ -375,94 +403,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                 ),
               ),
               Container(
-                child: PopupMenuButton<String>(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)
-                            .copyWith(topRight: Radius.circular(0))),
-                    padding: EdgeInsets.all(10),
-                    elevation: 10,
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            value: 'folder',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.folder_outlined,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Create Folder',
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                                Divider()
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem<String>(
-                            value: 'file',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.upload_file,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Upload File',
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                                Divider()
-                              ],
-                            ),
-                          ),
-                        ],
-                    onSelected: (String value) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('$value')));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue.shade600,
-                          border: Border.all(color: Colors.blue.shade600),
-                          borderRadius: BorderRadius.all(Radius.circular(2)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.blue.shade600.withOpacity(0.9),
-                                spreadRadius: 0,
-                                blurRadius: 10)
-                          ]),
-                      padding: EdgeInsets.all(5),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                    )),
-              ),
+                  child: ElevatedButton(
+                      onPressed: () {}, child: Icon(Icons.search))),
               // Container(
               //     child:
               //         ElevatedButton(onPressed: () {}, child: Icon(Icons.add))),

@@ -215,7 +215,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                         .info_outlined,
                                                                     color: Colors
                                                                         .black,
-                                                                    size: 15,
+                                                                    size: 20,
                                                                   ),
                                                                 )),
                                                           ),

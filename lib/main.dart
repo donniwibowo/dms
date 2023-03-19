@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     '/login': (BuildContext context) => new LoginView(),
   };
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
