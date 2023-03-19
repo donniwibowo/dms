@@ -146,78 +146,144 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             ),
                                                           ),
                                                           Container(
-                                                            child: PopupMenuButton<
-                                                                    String>(
-                                                                itemBuilder: (BuildContext
-                                                                        context) =>
-                                                                    <
-                                                                        PopupMenuEntry<
-                                                                            String>>[
-                                                                      PopupMenuItem<
-                                                                          String>(
-                                                                        value:
-                                                                            'view',
-                                                                        child: Text(
-                                                                            'Info'),
-                                                                      ),
-                                                                      PopupMenuItem<
-                                                                          String>(
-                                                                        value:
-                                                                            'edit',
-                                                                        child: Text(
-                                                                            'Edit'),
-                                                                      ),
-                                                                      PopupMenuItem<
-                                                                          String>(
-                                                                        value:
-                                                                            'delete',
-                                                                        child: Text(
-                                                                            'Delete'),
-                                                                      ),
-                                                                    ],
-                                                                onSelected:
-                                                                    (String
-                                                                        value) {
-                                                                  // Handle menu item selection here
-                                                                  if (value ==
-                                                                      'view') {
-                                                                    var name = data
-                                                                        .dataFolders[
-                                                                            index]
-                                                                        .name;
-                                                                    var description = data
-                                                                        .dataFolders[
-                                                                            index]
-                                                                        .description;
-                                                                    var user_access = data
-                                                                        .dataFolders[
-                                                                            index]
-                                                                        .user_access;
-                                                                    var created_by = data
-                                                                        .dataFolders[
-                                                                            index]
-                                                                        .created_by;
-                                                                    showViewDialog(
-                                                                        context,
-                                                                        name,
-                                                                        description,
-                                                                        user_access,
-                                                                        created_by);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
+                                                            child:
+                                                                PopupMenuButton<
+                                                                        String>(
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(20).copyWith(
+                                                                            topRight: Radius.circular(
+                                                                                0))),
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                    elevation:
+                                                                        10,
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade100,
+                                                                    itemBuilder:
+                                                                        (BuildContext
+                                                                                context) =>
+                                                                            <
+                                                                                PopupMenuEntry<
+                                                                                    String>>[
+                                                                              PopupMenuItem<String>(
+                                                                                value: 'view',
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Row(
+                                                                                      children: [
+                                                                                        Icon(
+                                                                                          Icons.info_rounded,
+                                                                                          size: 20,
+                                                                                          color: Colors.green,
+                                                                                        ),
+                                                                                        SizedBox(
+                                                                                          width: 5,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          'Info',
+                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                    Divider()
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              PopupMenuItem<String>(
+                                                                                value: 'edit',
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Row(
+                                                                                      children: [
+                                                                                        Icon(
+                                                                                          Icons.edit,
+                                                                                          size: 20,
+                                                                                          color: Colors.green,
+                                                                                        ),
+                                                                                        SizedBox(
+                                                                                          width: 5,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          'Edit',
+                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                    Divider()
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              PopupMenuItem<String>(
+                                                                                value: 'delete',
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Row(
+                                                                                      children: [
+                                                                                        Icon(
+                                                                                          Icons.delete,
+                                                                                          size: 20,
+                                                                                          color: Colors.green,
+                                                                                        ),
+                                                                                        SizedBox(
+                                                                                          width: 5,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          'Delete',
+                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                    Divider()
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                    onSelected:
+                                                                        (String
+                                                                            value) {
+                                                                      // Handle menu item selection here
+                                                                      if (value ==
+                                                                          'view') {
+                                                                        var name = data
+                                                                            .dataFolders[index]
+                                                                            .name;
+                                                                        var description = data
+                                                                            .dataFolders[index]
+                                                                            .description;
+                                                                        var user_access = data
+                                                                            .dataFolders[index]
+                                                                            .user_access;
+                                                                        var created_by = data
+                                                                            .dataFolders[index]
+                                                                            .created_by;
+                                                                        showViewDialog(
+                                                                            context,
+                                                                            name,
+                                                                            description,
+                                                                            user_access,
+                                                                            created_by);
+                                                                      }
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.only(
                                                                           left:
                                                                               5),
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .info_outlined,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    size: 20,
-                                                                  ),
-                                                                )),
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .info_outlined,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        size:
+                                                                            20,
+                                                                      ),
+                                                                    )),
                                                           ),
                                                         ],
                                                       ),
