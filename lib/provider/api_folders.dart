@@ -30,7 +30,8 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
+        // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
+        'https://dms.tigajayabahankue.com/api/files/getfiles';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {

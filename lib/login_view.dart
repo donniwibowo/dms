@@ -150,7 +150,8 @@ class _MyappState extends State<LoginView> {
     Map data = {'email': email, 'password': password};
     var jsonResponse = null;
     var response = await http.post(
-        "https://192.168.1.119/leap_integra/master/dms/api/user/login",
+        // "https://192.168.1.119/leap_integra/master/dms/api/user/login",
+        "https://dms.tigajayabahankue.com/api/user/login",
         body: data);
     jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
