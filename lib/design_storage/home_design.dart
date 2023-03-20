@@ -8,6 +8,8 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import '../pages/recent_files_page.dart';
 import 'design_app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,7 +39,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           ),
           children: [
             FloatingActionButton.small(
-              heroTag: 'donni',
+              heroTag: null,
               child: const Icon(Icons.folder_outlined),
               backgroundColor: Colors.red,
               onPressed: () {
@@ -118,8 +120,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 1) {
-        // showInputDialog(context, 'test');
-        showAlertDialog(context, "Open recent page");
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
       } else if (_selectedIndex == 2) {
         showAlertDialog(context, "Open sharred page");
       }
@@ -136,6 +138,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
+    // var response = await http.post(
+    //     "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
+    //         user_token!,
+    //     body: data);
     jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       if (jsonResponse != null) {

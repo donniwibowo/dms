@@ -1,0 +1,150 @@
+import 'package:best_flutter_ui_templates/settings.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
+import '../design_storage/design_app_theme.dart';
+import '../design_storage/recent_files_list_view.dart';
+
+class RecentPage extends StatefulWidget {
+  @override
+  _RecentPageState createState() => _RecentPageState();
+}
+
+class _RecentPageState extends State<RecentPage> {
+  CategoryType categoryType = CategoryType.ui;
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final key = GlobalObjectKey<ExpandableFabState>(context);
+    return Container(
+      color: DesignAppTheme.nearlyWhite,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: ExpandableFab(
+          distance: 60,
+          child: Icon(Icons.add),
+          backgroundColor: Colors.red,
+          closeButtonStyle: const ExpandableFabCloseButtonStyle(
+            backgroundColor: Colors.red,
+          ),
+          children: [
+            FloatingActionButton.small(
+              heroTag: null,
+              child: const Icon(Icons.folder_outlined),
+              backgroundColor: Colors.red,
+              onPressed: () {},
+            ),
+            FloatingActionButton.small(
+              heroTag: null,
+              child: const Icon(Icons.file_upload),
+              backgroundColor: Colors.red,
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).padding.top,
+            ),
+            getAppBarUI(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: <Widget>[
+                      RecentFilesListView(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.folder_shared),
+              label: 'Shared',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => DesignHomeScreen()));
+      } else if (_selectedIndex == 1) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
+      } else if (_selectedIndex == 2) {}
+    });
+  }
+
+  Widget getAppBarUI() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'DMS',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    letterSpacing: 0.27,
+                    color: DesignAppTheme.darkerText,
+                  ),
+                ),
+                Text(
+                  'Recent Files',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    letterSpacing: 0.2,
+                    color: DesignAppTheme.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Settings()));
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              child: Image.asset('assets/design_storage/userImage.png'),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
