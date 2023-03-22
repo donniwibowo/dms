@@ -2,6 +2,8 @@ import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import '../controller.dart';
 import '../design_storage/design_app_theme.dart';
 import '../design_storage/recent_files_list_view.dart';
 
@@ -14,9 +16,21 @@ class _RecentPageState extends State<RecentPage> {
   CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
 
+  final double _initFabHeight = 120.0;
+  double _fabHeight = 0;
+  double _panelHeightOpen = 0;
+  double _panelHeightClosed = 95.0;
+
   @override
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
+    _fabHeight = _initFabHeight;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .40;
+
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
     return Container(
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
@@ -62,6 +76,26 @@ class _RecentPageState extends State<RecentPage> {
                 ),
               ),
             ),
+            SlidingUpPanel(
+              defaultPanelState: PanelState.CLOSED,
+              maxHeight: _panelHeightOpen,
+              minHeight: 0,
+              controller: panelController,
+              panel: StreamBuilder<Widget?>(
+                stream: pageController.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) return const SizedBox.shrink();
+                  return snapshot.data!;
+                },
+              ),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
+              onPanelSlide: (double pos) => setState(() {
+                _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                    _initFabHeight;
+              }),
+            ),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -83,6 +117,19 @@ class _RecentPageState extends State<RecentPage> {
           onTap: _onItemTapped,
         ),
       ),
+    );
+  }
+
+  Widget _scrollingList(ScrollController sc) {
+    return ListView.builder(
+      controller: sc,
+      itemCount: 50,
+      itemBuilder: (BuildContext context, int i) {
+        return Container(
+          padding: const EdgeInsets.all(12.0),
+          child: Text("$i"),
+        );
+      },
     );
   }
 

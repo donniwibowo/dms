@@ -2,8 +2,12 @@ import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../controller.dart';
 
 class RecentFilesListView extends StatefulWidget {
+  // final PanelController slidingUpController;
   const RecentFilesListView({Key? key, this.callBack}) : super(key: key);
 
   final Function()? callBack;
@@ -34,8 +38,104 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
   }
 
   int folders_length = 0;
+
+  Widget _attributeDetail(String name, String desc) {
+    return Container(
+      // decoration: BoxDecoration(color: Colors.amber),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 25),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text(
+                      'Nama : ',
+                    ),
+                  ),
+                  Text(name)
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Deskripsi : '),
+                  ),
+                  Text('semua materi')
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Akses : '),
+                  ),
+                  Text('Only you')
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Dibuat Oleh : '),
+                  ),
+                  Text('Jason Immanuel')
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Tanggal Dibuat : '),
+                  ),
+                  Text('05 Feb 2023 09:42:09')
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Tanggal Diperbaharui : '),
+                  ),
+                  Text('05 Feb 2023 09:42:09')
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ScrollController sc = new ScrollController();
+
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
@@ -259,12 +359,17 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                         var created_by = data
                                                                             .dataFolders[index]
                                                                             .created_by;
-                                                                        showViewDialog(
-                                                                            context,
+
+                                                                        slidePanelOn(_attributeDetail(
                                                                             name,
-                                                                            description,
-                                                                            user_access,
-                                                                            created_by);
+                                                                            description));
+
+                                                                        // showViewDialog(
+                                                                        //     context,
+                                                                        //     name,
+                                                                        //     description,
+                                                                        //     user_access,
+                                                                        //     created_by);
                                                                       }
                                                                     },
                                                                     child:
