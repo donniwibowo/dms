@@ -6,16 +6,16 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controller.dart';
 
-class RecentFilesListView extends StatefulWidget {
+class SharedFoldersListView extends StatefulWidget {
   // final PanelController slidingUpController;
-  const RecentFilesListView({Key? key, this.callBack}) : super(key: key);
+  const SharedFoldersListView({Key? key, this.callBack}) : super(key: key);
 
   final Function()? callBack;
   @override
-  _RecentFilesListViewState createState() => _RecentFilesListViewState();
+  _SharedFoldersListViewState createState() => _SharedFoldersListViewState();
 }
 
-class _RecentFilesListViewState extends State<RecentFilesListView>
+class _SharedFoldersListViewState extends State<SharedFoldersListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
 
@@ -144,7 +144,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
         width: double.infinity,
         child: FutureBuilder(
           future:
-              Provider.of<ApiFolders>(context, listen: false).getRecentFiles(),
+              Provider.of<ApiFolders>(context, listen: false).getSharedFolder(),
           builder: (BuildContext context, snapshot) {
             print(snapshot);
             print('masuk sini');
@@ -376,13 +376,6 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                             created_by,
                                                                             created_on,
                                                                             updated_on));
-
-                                                                        // showViewDialog(
-                                                                        //     context,
-                                                                        //     name,
-                                                                        //     description,
-                                                                        //     user_access,
-                                                                        //     created_by);
                                                                       }
                                                                     },
                                                                     child:

@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/pages/shared_folders_page.dart';
+import 'package:best_flutter_ui_templates/pages/recent_files_page.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -7,13 +7,14 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
 import '../design_storage/design_app_theme.dart';
 import '../design_storage/recent_files_list_view.dart';
+import '../design_storage/shared_folders_list_view.dart';
 
-class RecentPage extends StatefulWidget {
+class SharedFoldersPage extends StatefulWidget {
   @override
-  _RecentPageState createState() => _RecentPageState();
+  _SharedFoldersPageState createState() => _SharedFoldersPageState();
 }
 
-class _RecentPageState extends State<RecentPage> {
+class _SharedFoldersPageState extends State<SharedFoldersPage> {
   CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
 
@@ -71,7 +72,7 @@ class _RecentPageState extends State<RecentPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      RecentFilesListView(),
+                      SharedFoldersListView(),
                     ],
                   ),
                 ),
@@ -171,7 +172,7 @@ class _RecentPageState extends State<RecentPage> {
                   ),
                 ),
                 Text(
-                  'Recent Files',
+                  'Shared Folder',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.w400,

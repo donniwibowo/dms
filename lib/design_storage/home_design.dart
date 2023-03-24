@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../pages/recent_files_page.dart';
+import '../pages/shared_folders_page.dart';
 import 'design_app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -123,7 +124,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));
       } else if (_selectedIndex == 2) {
-        showAlertDialog(context, "Open sharred page");
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       }
       print(_selectedIndex);
     });
