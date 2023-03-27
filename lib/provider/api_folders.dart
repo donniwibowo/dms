@@ -79,6 +79,32 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
+
+  Future<List<CategoryModel>?> getSharedFolder() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    final url =
+        // 'https://192.168.1.119/leap_integra/master/dms/api/files/getsharedfolder';
+        'https://dms.tigajayabahankue.com/api/files/getsharedfolder';
+    final response = await http.get(url + '?user_token=' + user_token + '');
+    if (response.body.isNotEmpty) {
+      if (response.statusCode == 200) {
+        print('masuk 200');
+        final result =
+            json.decode(response.body)['data'].cast<Map<String, dynamic>>();
+        print(result);
+
+        _data = result
+            .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+            .toList();
+        return _data;
+      } else {
+        print('masuk selain 200');
+      }
+    } else {
+      print('Terjadi disini kesalahannya');
+    }
+  }
 // //ADD DATA
 // Future<bool> storeEmployee(String name, String salary, String age) async {
 //   final url = 'http://employee-crud-flutter.daengweb.id/add.php';

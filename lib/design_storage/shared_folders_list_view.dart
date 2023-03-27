@@ -2,41 +2,30 @@ import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controller.dart';
 
-class RecentFilesListView extends StatefulWidget {
+class SharedFoldersListView extends StatefulWidget {
   // final PanelController slidingUpController;
-  const RecentFilesListView({Key? key, this.callBack}) : super(key: key);
+  const SharedFoldersListView({Key? key, this.callBack}) : super(key: key);
 
   final Function()? callBack;
   @override
-  _RecentFilesListViewState createState() => _RecentFilesListViewState();
+  _SharedFoldersListViewState createState() => _SharedFoldersListViewState();
 }
 
-class _RecentFilesListViewState extends State<RecentFilesListView>
+class _SharedFoldersListViewState extends State<SharedFoldersListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
-  late SharedPreferences sharedPreferences;
+
   @override
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
-    checkLoginStatus();
   }
- checkLoginStatus() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getString("user_token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => LoginView()),
-          (Route<dynamic> route) => false);
-    }
-  }
+
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
@@ -155,7 +144,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
         width: double.infinity,
         child: FutureBuilder(
           future:
-              Provider.of<ApiFolders>(context, listen: false).getRecentFiles(),
+              Provider.of<ApiFolders>(context, listen: false).getSharedFolder(),
           builder: (BuildContext context, snapshot) {
             print(snapshot);
             print('masuk sini');
@@ -163,16 +152,16 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
               return const SizedBox();
             } else {
               return Consumer<ApiFolders>(builder: (context, data, _) {
-                folders_length = data.dataRecentFolders.length;
+                folders_length = data.dataFolders.length;
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                       top: 0, bottom: 150, right: 16, left: 16),
-                  itemCount: data.dataRecentFolders.length,
+                  itemCount: data.dataFolders.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
-                    final int count = data.dataRecentFolders.length > 10
+                    final int count = data.dataFolders.length > 10
                         ? 10
-                        : data.dataRecentFolders.length;
+                        : data.dataFolders.length;
                     final Animation<double> animation =
                         Tween<double>(begin: 0.0, end: 1.0).animate(
                             CurvedAnimation(
@@ -214,9 +203,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                               Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 15),
-                                                child: data
-                                                            .dataRecentFolders[
-                                                                index]
+                                                child: data.dataFolders[index]
                                                             .type ==
                                                         'Folder'
                                                     ? Icon(
@@ -240,7 +227,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                         children: [
                                                           Text(
                                                             data
-                                                                .dataRecentFolders[
+                                                                .dataFolders[
                                                                     index]
                                                                 .name,
                                                             textAlign:
@@ -362,16 +349,16 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                       if (value ==
                                                                           'view') {
                                                                         var name = data
-                                                                            .dataRecentFolders[index]
+                                                                            .dataFolders[index]
                                                                             .name;
                                                                         var description = data
-                                                                            .dataRecentFolders[index]
+                                                                            .dataFolders[index]
                                                                             .description;
                                                                         var user_access = data
-                                                                            .dataRecentFolders[index]
+                                                                            .dataFolders[index]
                                                                             .user_access;
                                                                         var created_by = data
-                                                                            .dataRecentFolders[index]
+                                                                            .dataFolders[index]
                                                                             .created_by;
 
                                                                         var created_on = data
@@ -389,13 +376,6 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                             created_by,
                                                                             created_on,
                                                                             updated_on));
-
-                                                                        // showViewDialog(
-                                                                        //     context,
-                                                                        //     name,
-                                                                        //     description,
-                                                                        //     user_access,
-                                                                        //     created_by);
                                                                       }
                                                                     },
                                                                     child:
@@ -421,17 +401,15 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                       height: 5,
                                                     ),
                                                     Text(
-                                                      data
-                                                                  .dataRecentFolders[
-                                                                      index]
+                                                      data.dataFolders[index]
                                                                   .type ==
                                                               'Folder'
                                                           ? data
-                                                              .dataRecentFolders[
+                                                              .dataFolders[
                                                                   index]
                                                               .type
                                                           : data
-                                                              .dataRecentFolders[
+                                                              .dataFolders[
                                                                   index]
                                                               .format,
                                                       textAlign: TextAlign.left,
@@ -452,15 +430,12 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                   padding:
                                                       EdgeInsets.only(left: 65),
                                                   child: Text(
-                                                    data
-                                                                .dataRecentFolders[
-                                                                    index]
+                                                    data.dataFolders[index]
                                                                 .size ==
                                                             null
                                                         ? ''
                                                         : data
-                                                            .dataRecentFolders[
-                                                                index]
+                                                            .dataFolders[index]
                                                             .size
                                                             .toString(),
                                                     textAlign: TextAlign.right,
