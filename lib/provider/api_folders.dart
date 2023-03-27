@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiFolders extends ChangeNotifier {
   List<CategoryModel> _data = [];
   List<CategoryModel> get dataFolders => _data;
+  List<CategoryModel> _dataRecent = [];
+  List<CategoryModel> get dataRecentFolders => _dataRecent;
   late SharedPreferences sharedPreferences;
   String email = "unknown";
   String user_id = "";
@@ -26,19 +28,19 @@ class ApiFolders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<CategoryModel>?> getAllFolder() async {
+  Future<List<CategoryModel>?> getAllFolder(String search) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-        'https://dms.tigajayabahankue.com/api/files/getfiles';
-    final response = await http.get(url + '?user_token=' + user_token + '');
+        'https://dms.tigajayabahankue.com/api/files/search';
+    final response = await http.get(url + '?user_token=' + user_token + '&keyword='+search);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         print('masuk 200');
         final result =
             json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-        print(result);
+        // print(result);
 
         _data = result
             .map<CategoryModel>((json) => CategoryModel.fromJson(json))
@@ -66,7 +68,7 @@ class ApiFolders extends ChangeNotifier {
             json.decode(response.body)['data'].cast<Map<String, dynamic>>();
         print(result);
 
-        _data = result
+        _dataRecent = result
             .map<CategoryModel>((json) => CategoryModel.fromJson(json))
             .toList();
         return _data;

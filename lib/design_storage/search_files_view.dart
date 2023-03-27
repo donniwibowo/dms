@@ -1,25 +1,19 @@
-import 'dart:convert';
-
 import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
-import 'package:best_flutter_ui_templates/design_storage/models/category.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
-import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 import 'package:best_flutter_ui_templates/login_view.dart';
-import 'package:http/http.dart' as http;
 
-class CategoryListView extends StatefulWidget {
-  final String search;
-  const CategoryListView({Key? key, this.callBack,required this.search}) : super(key: key);
+class SearchFilesListView extends StatefulWidget {
+  const SearchFilesListView({Key? key, this.callBack}) : super(key: key);
+
   final Function()? callBack;
   @override
-  _CategoryListViewState createState() => _CategoryListViewState();
+  _SearchFilesListViewState createState() => _SearchFilesListViewState();
 }
 
-class _CategoryListViewState extends State<CategoryListView>
+class _SearchFilesListViewState extends State<SearchFilesListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   late SharedPreferences sharedPreferences;
@@ -28,11 +22,9 @@ class _CategoryListViewState extends State<CategoryListView>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
-    print('searchnya');
-    print(widget.search);
     checkLoginStatus();
   }
-  checkLoginStatus() async {
+ checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.getString("user_token") == null) {
       Navigator.of(context).pushAndRemoveUntil(
@@ -41,7 +33,6 @@ class _CategoryListViewState extends State<CategoryListView>
           (Route<dynamic> route) => false);
     }
   }
-
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
@@ -52,6 +43,7 @@ class _CategoryListViewState extends State<CategoryListView>
     animationController?.dispose();
     super.dispose();
   }
+
   int folders_length = 0;
   @override
   Widget build(BuildContext context) {
@@ -70,16 +62,16 @@ class _CategoryListViewState extends State<CategoryListView>
               return const SizedBox();
             } else {
               return Consumer<ApiFolders>(builder: (context, data, _) {
-                folders_length = data.dataFolders.length;
+                folders_length = data.dataRecentFolders.length;
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                       top: 0, bottom: 150, right: 16, left: 16),
-                  itemCount: data.dataFolders.length,
+                  itemCount: data.dataRecentFolders.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
-                    final int count = data.dataFolders.length > 10
+                    final int count = data.dataRecentFolders.length > 10
                         ? 10
-                        : data.dataFolders.length;
+                        : data.dataRecentFolders.length;
                     final Animation<double> animation =
                         Tween<double>(begin: 0.0, end: 1.0).animate(
                             CurvedAnimation(
@@ -121,7 +113,9 @@ class _CategoryListViewState extends State<CategoryListView>
                                               Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 15),
-                                                child: data.dataFolders[index]
+                                                child: data
+                                                            .dataRecentFolders[
+                                                                index]
                                                             .type ==
                                                         'Folder'
                                                     ? Icon(
@@ -145,7 +139,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         children: [
                                                           Text(
                                                             data
-                                                                .dataFolders[
+                                                                .dataRecentFolders[
                                                                     index]
                                                                 .name,
                                                             textAlign:
@@ -267,16 +261,16 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                       if (value ==
                                                                           'view') {
                                                                         var name = data
-                                                                            .dataFolders[index]
+                                                                            .dataRecentFolders[index]
                                                                             .name;
                                                                         var description = data
-                                                                            .dataFolders[index]
+                                                                            .dataRecentFolders[index]
                                                                             .description;
                                                                         var user_access = data
-                                                                            .dataFolders[index]
+                                                                            .dataRecentFolders[index]
                                                                             .user_access;
                                                                         var created_by = data
-                                                                            .dataFolders[index]
+                                                                            .dataRecentFolders[index]
                                                                             .created_by;
                                                                         showViewDialog(
                                                                             context,
@@ -284,22 +278,6 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                             description,
                                                                             user_access,
                                                                             created_by);
-                                                                      }
-                                                                      if(value=='edit')
-                                                                      {
-                                                                         var folder_id = data
-                                                                            .dataFolders[index]
-                                                                            .folder_id;
-                                                                        EditInputDialog(context,
-                                                                            folder_id);
-                                                                      }
-                                                                      if (value ==
-                                                                          'delete') {
-                                                                        var folder_id = data
-                                                                            .dataFolders[index]
-                                                                            .folder_id;
-                                                                        deleteData(
-                                                                            folder_id);
                                                                       }
                                                                     },
                                                                     child:
@@ -325,15 +303,17 @@ class _CategoryListViewState extends State<CategoryListView>
                                                       height: 5,
                                                     ),
                                                     Text(
-                                                      data.dataFolders[index]
+                                                      data
+                                                                  .dataRecentFolders[
+                                                                      index]
                                                                   .type ==
                                                               'Folder'
                                                           ? data
-                                                              .dataFolders[
+                                                              .dataRecentFolders[
                                                                   index]
                                                               .type
                                                           : data
-                                                              .dataFolders[
+                                                              .dataRecentFolders[
                                                                   index]
                                                               .format,
                                                       textAlign: TextAlign.left,
@@ -354,12 +334,15 @@ class _CategoryListViewState extends State<CategoryListView>
                                                   padding:
                                                       EdgeInsets.only(left: 65),
                                                   child: Text(
-                                                    data.dataFolders[index]
+                                                    data
+                                                                .dataRecentFolders[
+                                                                    index]
                                                                 .size ==
                                                             null
                                                         ? ''
                                                         : data
-                                                            .dataFolders[index]
+                                                            .dataRecentFolders[
+                                                                index]
                                                             .size
                                                             .toString(),
                                                     textAlign: TextAlign.right,
@@ -396,37 +379,7 @@ class _CategoryListViewState extends State<CategoryListView>
       ),
     );
   }
-EditInputDialog(BuildContext context, String folder_id) {
-    final TextEditingController namaController = new TextEditingController();
-    final TextEditingController descriptionController =
-        new TextEditingController();
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Edit Folder"),
-      content: TextField(
-        controller: namaController,
-        decoration: InputDecoration(hintText: 'Enter some text'),
-      ),
-      actions: [
-        
-        TextButton(
-          child: Text("Save Change"),
-          onPressed: () {
-            editFolder(namaController.text,folder_id);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
   showViewDialog(BuildContext context, String name, String description,
       String user_access, String created_by) {
     // set up the AlertDialog
@@ -462,65 +415,5 @@ EditInputDialog(BuildContext context, String folder_id) {
         return alert;
       },
     );
-  }
-
-  showAlertDialog(BuildContext context, String message) {
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Error"),
-      content: Text(message),
-      actions: [
-        TextButton(
-          child: Text("OK"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-  editFolder(String namaFolder,String folder_id) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data={'file_id':folder_id};
-    var user_token = sharedPreferences.getString("user_token");
-    var jsonResponse = null;
-    final response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/delete?user_token=" +
-            user_token!,body:data);
-    if (response.body.isNotEmpty) {
-      if (response.statusCode == 200) {
-        showAlertDialog(context, 'File Deleted');
-      } else {
-        showAlertDialog(context, 'Failed Delete Data'+response.body);
-      }
-    } else {
-      print('Terjadi disini kesalahannya');
-    }
-  }
-  deleteData(String folder_id) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data={'file_id':folder_id};
-    var user_token = sharedPreferences.getString("user_token");
-    var jsonResponse = null;
-    final response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/delete?user_token=" +
-            user_token!,body:data);
-    if (response.body.isNotEmpty) {
-      if (response.statusCode == 200) {
-        showAlertDialog(context, 'File Deleted');
-      } else {
-        showAlertDialog(context, 'Failed Delete Data'+response.body);
-      }
-    } else {
-      print('Terjadi disini kesalahannya');
-    }
   }
 }

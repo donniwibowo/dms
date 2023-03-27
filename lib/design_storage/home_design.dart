@@ -1,17 +1,32 @@
 import 'dart:convert';
 
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
+import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
+import 'package:best_flutter_ui_templates/design_storage/recent_files_list_view.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+
+import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:best_flutter_ui_templates/login_view.dart';
 import '../pages/recent_files_page.dart';
 import 'design_app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:file_picker/file_picker.dart';
+import 'package:dio/dio.dart';
+import 'dart:async';
 
 class DesignHomeScreen extends StatefulWidget {
   @override
@@ -21,7 +36,27 @@ class DesignHomeScreen extends StatefulWidget {
 class _DesignHomeScreenState extends State<DesignHomeScreen> {
   CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
-
+  void initState(){
+    super.initState();
+    checkLoginStatus();
+  }
+   late SharedPreferences sharedPreferences;
+   late String search='';
+   checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+     search = await prefs.getString('search') ?? '';
+    if (sharedPreferences.getString("user_token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => LoginView()),
+          (Route<dynamic> route) => false);
+    }
+  }
+  
+  final TextEditingController searchController = new TextEditingController();
+  final TextEditingController _title = TextEditingController();
+  final TextEditingController _status = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
@@ -50,7 +85,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               heroTag: null,
               child: const Icon(Icons.file_upload),
               backgroundColor: Colors.red,
-              onPressed: () {},
+              onPressed: () {
+                //file upload
+                _selectFile();
+              },
             ),
           ],
         ),
@@ -67,10 +105,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: Column(
                     children: <Widget>[
                       getSearchBarUI(),
-                      CategoryListView(
-                        callBack: () {
-                          moveTo();
-                        },
+                      CategoryListView(search:searchController.text
                       ),
                       // Flexible(
                       // child: Positioned(
@@ -128,7 +163,104 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
       print(_selectedIndex);
     });
   }
+  Future<Response> sendForm(
+    String url, Map<String, dynamic> data, Map<String, File> files) async {
+  Map<String, MultipartFile> fileMap = {};
+  for (MapEntry fileEntry in files.entries) {
+    File file = fileEntry.value;
+    String fileName = path.basename(file.path);
+    fileMap[fileEntry.key] =
+        MultipartFile(file.openRead(), await file.length(), filename: fileName);
+  }
+  data.addAll(fileMap);
+  var formData = FormData.fromMap(data);
+  Dio dio = new Dio();
+  return await dio.post(url,
+      data: formData, options: Options(contentType: 'multipart/form-data'));
+}
+Future<void> uploadFile(String filePath) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+  var request = http.MultipartRequest('POST', Uri.parse('https://localhost/leap_integra/master/dms/api/files/upload'+'?user_token=' + user_token));
+  request.files.add(await http.MultipartFile.fromPath('file', filePath));
+  var response = await request.send();
 
+  if (response.statusCode == 200) {
+    print('File uploaded successfully');
+  } else {
+    print('File upload failed with status: ${response.statusCode}');
+  }
+}
+
+// Future uploadFiles() async {
+//     if (userFile == null) {
+//       // return _showSnackbar('Silahkan memilih gambar anda :)');
+//     }
+
+//    try{
+//      var image = userFile;
+//      print('upload started');
+//      //upload image
+//      //scenario  one - upload image as poart of formdata
+//      var res1 = await sendForm('https://localhost/leap_integra/master/dms/api/files/upload',
+//          {'parent_folder': 0, 'perihal': 'test', 'nomor': 'test123', 'description': 'test', 'related_document_ids': 'test','user_access':'[]'}, {'file': userFile});
+//      print("res-1 $res1");
+//      setState(() {
+//        userFile = image;
+//      });
+//      if (res1.statusCode == HttpStatus.OK||res1.statusCode == 200) {
+//        showAlertDialog(context, "File Uploaded.");
+//      } else {
+//        showAlertDialog(context, "Failed Upload.");
+//      }
+//    }
+//    catch (e) {
+//    }
+//   }
+ File? _selectedFile;
+
+  Future<void> _openFilePicker() async {
+    final result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+    }
+  }
+  _selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+     if(result != null) {
+    // Do something with the file
+     try{
+        _selectedFile = File(result.files.single.path!);
+     print('upload started');
+     //upload image
+     //scenario  one - upload image as poart of formdata
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+     var res1 = await sendForm('https://dms.tigajayabahankue.com/api/files/upload'+'?user_token=' + user_token,
+         {'parent_folder': 0, 'perihal': 'test', 'nomor': 'test123', 'description': 'test', 'related_document_ids': 'test','user_access':'[]'}, {'file': _selectedFile!});
+     print("res-1 $res1");
+      print('data masuk upload');
+     print('data masuk upload');
+     if (res1.statusCode == HttpStatus.OK||res1.statusCode == 200) {
+       showAlertDialog(context, "File Uploaded.");
+     } else {
+       showAlertDialog(context, "Failed Upload.");
+     }
+   }
+   catch (e) {
+    print('error message');
+     showAlertDialog(context, "Failed Upload (Error).");
+     print(e);
+   }
+  } else {
+    // User canceled the picker
+    showAlertDialog(context, "Failed Upload.");
+  }
+    setState(() {});
+  }
   createFolder(String name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
@@ -273,10 +405,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         const SizedBox(
           height: 16,
         ),
-        CategoryListView(
-          callBack: () {
-            moveTo();
-          },
+        CategoryListView(search:searchController.text
         ),
       ],
     );
@@ -311,14 +440,14 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   //   );
   // }
 
-  void moveTo() {
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-        builder: (BuildContext context) => CourseInfoScreen(),
-      ),
-    );
-  }
+  // void moveTo() {
+  //   Navigator.push<dynamic>(
+  //     context,
+  //     MaterialPageRoute<dynamic>(
+  //       builder: (BuildContext context) => CategoryListView(search:searchController.text),
+  //     ),
+  //   );
+  // }
 
   Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
     String txt = '';
@@ -372,6 +501,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   }
 
   Widget getSearchBarUI() {
+    final TextEditingController searchController = TextEditingController();
     return Padding(
         padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
         child: Row(
@@ -382,6 +512,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                 child: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: TextFormField(
+                    controller: searchController,
                     style: TextStyle(
                       fontFamily: 'WorkSans',
                       fontWeight: FontWeight.bold,
@@ -390,6 +521,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                     ),
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
+                      hintText: search,
                       labelText: 'Cari dokumen di sini',
                       // border: InputBorder.none,
                       helperStyle: TextStyle(
@@ -404,19 +536,30 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                         color: HexColor('#B9BABC'),
                       ),
                     ),
-                    onEditingComplete: () {},
+                    onEditingComplete: () {
+                    },
                   ),
                 ),
               ),
               Container(
                   child: ElevatedButton(
-                      onPressed: () {}, child: Icon(Icons.search))),
+                      onPressed: () {
+                        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => RecentFilesListView()));
+                          // savedSearch(searchController.text);
+                          // print('ini ketikan');
+                          // print(searchController.text);
+                          // print(sharedPreferences.getString("search") );
+                          // setState(() {});
+                      }, child: Icon(Icons.search))),
               // Container(
               //     child:
               //         ElevatedButton(onPressed: () {}, child: Icon(Icons.add))),
             ]));
   }
-
+   savedSearch(String search) async {
+      sharedPreferences.setString("search", search);
+  }
   Widget getAppBarUI() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
