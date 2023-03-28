@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:best_flutter_ui_templates/design_storage/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -7,8 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiFolders extends ChangeNotifier {
   List<CategoryModel> _data = [];
   List<CategoryModel> get dataFolders => _data;
+  List<CategoryModel> _dataDetail = [];
+  List<CategoryModel> get dataDetail => _dataDetail;
   List<CategoryModel> _dataRecent = [];
   List<CategoryModel> get dataRecentFolders => _dataRecent;
+   List<CategoryModel> _dataSearch = [];
+  List<CategoryModel> get dataSearchFolders => _dataSearch;
   late SharedPreferences sharedPreferences;
   String email = "unknown";
   String user_id = "";
@@ -28,13 +34,13 @@ class ApiFolders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<CategoryModel>?> getAllFolder(String search) async {
+  Future<List<CategoryModel>?> getAllFolder() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-        'https://dms.tigajayabahankue.com/api/files/search';
-    final response = await http.get(url + '?user_token=' + user_token + '&keyword='+search);
+        'https://dms.tigajayabahankue.com/api/files/getfiles';
+    final response = await http.get(url + '?user_token=' + user_token);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         print('masuk 200');
@@ -53,7 +59,56 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
+  Future<List<CategoryModel>?> getDetailFolder(String folder_parent_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    final url =
+        // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
+        'https://dms.tigajayabahankue.com/api/files/getfiles';
+    final response = await http.get(url + '?user_token=' + user_token + '&folder_parent_id='+folder_parent_id);
+    if (response.body.isNotEmpty) {
+      if (response.statusCode == 200) {
+        print('masuk 200');
+        final result =
+            json.decode(response.body)['data'].cast<Map<String, dynamic>>();
+       print(result);
 
+        _dataDetail = result
+            .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+            .toList();
+        return _dataDetail;
+      } else {
+        print('masuk selain 200');
+      }
+    } else {
+      print('Terjadi disini kesalahannya');
+    }
+  }
+  Future<List<CategoryModel>?> getSearchFolder(String keyword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    final url =
+        // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
+        'https://dms.tigajayabahankue.com/api/files/search';
+    final response = await http.get(url + '?user_token=' + user_token + '&keyword='+keyword);
+    if (response.body.isNotEmpty) {
+      if (response.statusCode == 200) {
+        print('masuk 200');
+        final result =
+            json.decode(response.body)['data'].cast<Map<String, dynamic>>();
+       print(result);
+
+        _dataSearch = result
+            .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+            .toList();
+        return _dataSearch;
+      } else {
+        print('masuk selain 200');
+      }
+    } else {
+      print('Terjadi disini kesalahannya');
+    }
+  }
   Future<List<CategoryModel>?> getRecentFiles() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';

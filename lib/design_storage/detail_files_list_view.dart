@@ -20,15 +20,15 @@ import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 
-class SearchFilesListView extends StatefulWidget {
+class DetailFilesListView extends StatefulWidget {
   // static final String path = "lib/src/pages/settings/settings1.dart";
-  final String keyword;
-  SearchFilesListView({required this.keyword});
+  final String folder_parent_id;
+  DetailFilesListView({required this.folder_parent_id});
   @override
-  _SearchFilesListViewState createState() => _SearchFilesListViewState();
+  _DetailFilesListViewState createState() => _DetailFilesListViewState();
 }
 
-class _SearchFilesListViewState extends State<SearchFilesListView>
+class _DetailFilesListViewState extends State<DetailFilesListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   late bool _dark;
@@ -92,28 +92,56 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
       ),
       child: Scaffold(
         backgroundColor: _dark ? null : Colors.grey.shade200,
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: ExpandableFab(
+          distance: 60,
+          child: Icon(Icons.add),
+          backgroundColor: Colors.red,
+          closeButtonStyle: const ExpandableFabCloseButtonStyle(
+            backgroundColor: Colors.red,
+          ),
+          children: [
+            FloatingActionButton.small(
+              heroTag: null,
+              child: const Icon(Icons.folder_outlined),
+              backgroundColor: Colors.red,
+              onPressed: () {
+                showInputDialog(context, 'test');
+              },
+            ),
+            FloatingActionButton.small(
+              heroTag: null,
+              child: const Icon(Icons.file_upload),
+              backgroundColor: Colors.red,
+              onPressed: () {
+                //file upload
+                _selectFile();
+              },
+            ),
+          ],
+        ),
         appBar: AppBar(
           elevation: 0,
           brightness: _getBrightness(),
           iconTheme: IconThemeData(color: _dark ? Colors.white : Colors.black),
           backgroundColor: Colors.transparent,
           title: Text(
-            'Search Result',
+            'Detail Folder',
             style: TextStyle(color: _dark ? Colors.white : Colors.black),
           ),
           actions: <Widget>[
-            // IconButton(
-            //   icon: Icon(
-            //     Icons.arrow_back_sharp,
-            //     color: Colors.black,
-            //   ),
-            //   onPressed: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => DesignHomeScreen()));
-            //   },
-            // ),
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back_sharp,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DesignHomeScreen()));
+              },
+            ),
           ],
         ),
         body: Stack(
@@ -150,7 +178,7 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
                         borderRadius: BorderRadius.circular(10.0)),
                     child: FutureBuilder(
                       future: Provider.of<ApiFolders>(context, listen: false)
-                          .getSearchFolder(widget.keyword),
+                          .getDetailFolder(widget.folder_parent_id),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -163,7 +191,7 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
                             return ListView.builder(
                                 shrinkWrap: true,
                                 physics: ScrollPhysics(),
-                                itemCount: data.dataSearchFolders.length,
+                                itemCount: data.dataDetail.length,
                                 itemBuilder: (context, i) {
                                   return new ListTile(
                                     leading: Icon(
@@ -172,9 +200,10 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
                                     ),
                                     onTap: () {
                                       //open edit profile
+                                      print(widget.folder_parent_id);
                                     },
                                     title: Text(
-                                      data.dataSearchFolders[i].name,
+                                      data.dataFolders[i].name,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -198,7 +227,36 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
     );
   }
 
-  
+  showInputDialog(BuildContext context, String message) {
+    final TextEditingController namaController = new TextEditingController();
+    final TextEditingController descriptionController =
+        new TextEditingController();
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Create Folder"),
+      content: TextField(
+        controller: namaController,
+        decoration: InputDecoration(hintText: 'Enter some text'),
+      ),
+      actions: [
+        TextButton(
+          child: Text("Create"),
+          onPressed: () {
+            createFolder(namaController.text,widget.folder_parent_id);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   File? _selectedFile;
 
@@ -209,6 +267,75 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
       setState(() {
         _selectedFile = File(result.files.single.path!);
       });
+    }
+  }
+
+  _selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      // Do something with the file
+      try {
+        _selectedFile = File(result.files.single.path!);
+        print('upload started');
+        //upload image
+        //scenario  one - upload image as poart of formdata
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String user_token = await prefs.getString('user_token') ?? 'unknown';
+        var res1 = await sendForm(
+            'https://dms.tigajayabahankue.com/api/files/upload' +
+                '?user_token=' +
+                user_token,
+            {
+              'parent_folder': widget.folder_parent_id,
+              'perihal': 'test',
+              'nomor': 'test123',
+              'description': 'test',
+              'related_document_ids': 'test',
+              'user_access': '[]'
+            },
+            {
+              'file': _selectedFile!
+            });
+        print("res-1 $res1");
+        print('data masuk upload');
+        print('data masuk upload');
+        if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
+          showAlertDialog(context, "File Uploaded.");
+        } else {
+          showAlertDialog(context, "Failed Upload.");
+        }
+      } catch (e) {
+        print('error message');
+        showAlertDialog(context, "Failed Upload (Error).");
+        print(e);
+      }
+    } else {
+      // User canceled the picker
+      showAlertDialog(context, "Failed Upload.");
+    }
+    setState(() {});
+  }
+
+  createFolder(String name, String parent_folder) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    Map data = {'name': name,'parent_folder':parent_folder};
+    var jsonResponse = null;
+    var response = await http.post(
+        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
+            user_token!,
+        body: data);
+    // var response = await http.post(
+    //     "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
+    //         user_token!,
+    //     body: data);
+    jsonResponse = json.decode(response.body);
+    if (response.statusCode == 200) {
+      if (jsonResponse != null) {
+        showAlertDialog(context, "Folder Uploaded.");
+      }
+    } else {
+      showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
     }
   }
 

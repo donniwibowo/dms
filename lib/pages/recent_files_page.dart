@@ -14,7 +14,7 @@ class RecentPage extends StatefulWidget {
 }
 
 class _RecentPageState extends State<RecentPage> {
-  CategoryType categoryType = CategoryType.ui;
+  // CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
 
   final double _initFabHeight = 120.0;

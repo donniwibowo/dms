@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
+// import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
 import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
-import 'package:best_flutter_ui_templates/design_storage/recent_files_list_view.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
-import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
-import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
+// import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
+// import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
@@ -35,7 +35,6 @@ class DesignHomeScreen extends StatefulWidget {
 }
 
 class _DesignHomeScreenState extends State<DesignHomeScreen> {
-  CategoryType categoryType = CategoryType.ui;
   int _selectedIndex = 0;
   void initState(){
     super.initState();
@@ -106,7 +105,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: Column(
                     children: <Widget>[
                       getSearchBarUI(),
-                      CategoryListView(search:searchController.text
+                      CategoryListView(
                       ),
                       // Flexible(
                       // child: Positioned(
@@ -284,6 +283,9 @@ Future<void> uploadFile(String filePath) async {
     } else {
       showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
     }
+     setState(() {
+          
+        });
   }
 
   showAlertDialog(BuildContext context, String message) {
@@ -390,24 +392,13 @@ Future<void> uploadFile(String filePath) async {
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: Row(
             children: <Widget>[
-              getButtonUI(CategoryType.ui, categoryType == CategoryType.ui),
-              const SizedBox(
-                width: 16,
-              ),
-              getButtonUI(
-                  CategoryType.coding, categoryType == CategoryType.coding),
-              const SizedBox(
-                width: 16,
-              ),
-              getButtonUI(
-                  CategoryType.basic, categoryType == CategoryType.basic),
             ],
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        CategoryListView(search:searchController.text
+        CategoryListView(
         ),
       ],
     );
@@ -450,57 +441,6 @@ Future<void> uploadFile(String filePath) async {
   //     ),
   //   );
   // }
-
-  Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
-    String txt = '';
-    if (CategoryType.ui == categoryTypeData) {
-      txt = 'Ui/Ux';
-    } else if (CategoryType.coding == categoryTypeData) {
-      txt = 'Coding';
-    } else if (CategoryType.basic == categoryTypeData) {
-      txt = 'Basic UI';
-    }
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-            color: isSelected
-                ? DesignAppTheme.nearlyBlue
-                : DesignAppTheme.nearlyWhite,
-            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-            border: Border.all(color: DesignAppTheme.nearlyBlue)),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.white24,
-            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-            onTap: () {
-              setState(() {
-                categoryType = categoryTypeData;
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 12, bottom: 12, left: 18, right: 18),
-              child: Center(
-                child: Text(
-                  txt,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    letterSpacing: 0.27,
-                    color: isSelected
-                        ? DesignAppTheme.nearlyWhite
-                        : DesignAppTheme.nearlyBlue,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget getSearchBarUI() {
     final TextEditingController searchController = TextEditingController();
@@ -547,7 +487,7 @@ Future<void> uploadFile(String filePath) async {
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecentFilesListView()));
+            .push(MaterialPageRoute(builder: (context) => SearchFilesListView(keyword:searchController.text)));
                           // savedSearch(searchController.text);
                           // print('ini ketikan');
                           // print(searchController.text);
@@ -622,8 +562,3 @@ Future<void> uploadFile(String filePath) async {
   }
 }
 
-enum CategoryType {
-  ui,
-  coding,
-  basic,
-}
