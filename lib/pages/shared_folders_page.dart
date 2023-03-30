@@ -16,7 +16,7 @@ class SharedFoldersPage extends StatefulWidget {
 
 class _SharedFoldersPageState extends State<SharedFoldersPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
