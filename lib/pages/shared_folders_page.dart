@@ -139,8 +139,10 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => DesignHomeScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DesignHomeScreen(
+                  folder_parent_id: "0",
+                )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));

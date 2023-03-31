@@ -13,7 +13,7 @@ class ApiFolders extends ChangeNotifier {
   List<CategoryModel> get dataDetail => _dataDetail;
   List<CategoryModel> _dataRecent = [];
   List<CategoryModel> get dataRecentFolders => _dataRecent;
-   List<CategoryModel> _dataSearch = [];
+  List<CategoryModel> _dataSearch = [];
   List<CategoryModel> get dataSearchFolders => _dataSearch;
   late SharedPreferences sharedPreferences;
   String email = "unknown";
@@ -34,13 +34,17 @@ class ApiFolders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<CategoryModel>?> getAllFolder() async {
+  Future<List<CategoryModel>?> getAllFolder(String folder_parent_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
         'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-    final response = await http.get(url + '?user_token=' + user_token);
+    final response = await http.get(url +
+        '?user_token=' +
+        user_token +
+        '&folder_parent_id=' +
+        folder_parent_id);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         print('masuk 200');
@@ -59,19 +63,24 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
+
   Future<List<CategoryModel>?> getDetailFolder(String folder_parent_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
         'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-    final response = await http.get(url + '?user_token=' + user_token + '&folder_parent_id='+folder_parent_id);
+    final response = await http.get(url +
+        '?user_token=' +
+        user_token +
+        '&folder_parent_id=' +
+        folder_parent_id);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         print('masuk 200');
         final result =
             json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-       print(result);
+        print(result);
 
         _dataDetail = result
             .map<CategoryModel>((json) => CategoryModel.fromJson(json))
@@ -84,19 +93,21 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
+
   Future<List<CategoryModel>?> getSearchFolder(String keyword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
         'https://192.168.1.119/leap_integra/master/dms/api/files/search';
-    final response = await http.get(url + '?user_token=' + user_token + '&keyword='+keyword);
+    final response = await http
+        .get(url + '?user_token=' + user_token + '&keyword=' + keyword);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         print('masuk 200');
         final result =
             json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-       print(result);
+        print(result);
 
         _dataSearch = result
             .map<CategoryModel>((json) => CategoryModel.fromJson(json))
@@ -109,6 +120,7 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
+
   Future<List<CategoryModel>?> getRecentFiles() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';

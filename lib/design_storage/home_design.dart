@@ -32,6 +32,8 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 
 class DesignHomeScreen extends StatefulWidget {
+  final String folder_parent_id;
+  DesignHomeScreen({required this.folder_parent_id});
   @override
   _DesignHomeScreenState createState() => _DesignHomeScreenState();
 }
@@ -69,7 +71,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
     _panelHeightOpen = MediaQuery.of(context).size.height * .40;
-
+    // print("folder parent id = " + widget.folder_parent_id);
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),
       topRight: Radius.circular(24.0),
@@ -119,7 +121,9 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: Column(
                     children: <Widget>[
                       getSearchBarUI(),
-                      CategoryListView(),
+                      CategoryListView(
+                        folder_parent_id: widget.folder_parent_id,
+                      ),
                       // Flexible(
                       // child: Positioned(
                       //   // adjust the position as needed
@@ -187,7 +191,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (_selectedIndex == 1) {
+      if (_selectedIndex == 0) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DesignHomeScreen(
+                  folder_parent_id: "0",
+                )));
+      } else if (_selectedIndex == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));
       } else if (_selectedIndex == 2) {

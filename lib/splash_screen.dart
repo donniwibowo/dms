@@ -22,7 +22,9 @@ class _MyHomePageState extends State<SplashSreen> {
     if (sharedPreferences.getString("user_token") != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => DesignHomeScreen()),
+              builder: (BuildContext context) => DesignHomeScreen(
+                    folder_parent_id: "0",
+                  )),
           (Route<dynamic> route) => false);
     } else {
       Timer(

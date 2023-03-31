@@ -85,6 +85,7 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.folder_parent_id);
     final key = GlobalObjectKey<ExpandableFabState>(context);
     return Theme(
       data: ThemeData(
@@ -139,7 +140,8 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => DesignHomeScreen()));
+                        builder: (context) =>
+                            DesignHomeScreen(folder_parent_id: "0")));
               },
             ),
           ],
@@ -242,7 +244,7 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
         TextButton(
           child: Text("Create"),
           onPressed: () {
-            createFolder(namaController.text,widget.folder_parent_id);
+            createFolder(namaController.text, widget.folder_parent_id);
             Navigator.pop(context);
           },
         ),
@@ -319,7 +321,7 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
   createFolder(String name, String parent_folder) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
-    Map data = {'name': name,'parent_folder':parent_folder};
+    Map data = {'name': name, 'parent_folder': parent_folder};
     var jsonResponse = null;
     var response = await http.post(
         "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +

@@ -23,7 +23,9 @@ class _MyappState extends State<LoginView> {
     if (sharedPreferences.getString("user_token") != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => DesignHomeScreen()),
+              builder: (BuildContext context) => DesignHomeScreen(
+                    folder_parent_id: "0",
+                  )),
           (Route<dynamic> route) => false);
     }
   }
@@ -165,7 +167,9 @@ class _MyappState extends State<LoginView> {
         sharedPreferences.setString("user_id", jsonResponse['data']['user_id']);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (BuildContext context) => DesignHomeScreen()),
+                builder: (BuildContext context) => DesignHomeScreen(
+                      folder_parent_id: "0",
+                    )),
             (Route<dynamic> route) => false);
       }
     } else {

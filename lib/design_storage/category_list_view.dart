@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
+import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,9 @@ import '../controller.dart';
 
 class CategoryListView extends StatefulWidget {
   // final PanelController slidingUpController;
-  const CategoryListView({Key? key, this.callBack}) : super(key: key);
+  final String folder_parent_id;
+  const CategoryListView({Key? key, this.callBack, this.folder_parent_id = "0"})
+      : super(key: key);
 
   final Function()? callBack;
   @override
@@ -55,7 +58,6 @@ class _CategoryListViewState extends State<CategoryListView>
 
   Widget _attributeDetail(String name, String desc, String user_access,
       String created_by, String created_on, String updated_on) {
-    print('masuk slide up');
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
       child: Padding(
@@ -160,15 +162,15 @@ class _CategoryListViewState extends State<CategoryListView>
   @override
   Widget build(BuildContext context) {
     ScrollController sc = new ScrollController();
-
+    print('parent id = ' + widget.folder_parent_id);
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
         height: 660,
         width: double.infinity,
         child: FutureBuilder(
-          future:
-              Provider.of<ApiFolders>(context, listen: false).getAllFolder(),
+          future: Provider.of<ApiFolders>(context, listen: false)
+              .getAllFolder(widget.folder_parent_id),
           builder: (BuildContext context, snapshot) {
             print(snapshot);
             print('masuk sini');
@@ -200,7 +202,7 @@ class _CategoryListViewState extends State<CategoryListView>
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    DetailFilesListView(
+                                    DesignHomeScreen(
                                         folder_parent_id:
                                             data.dataFolders[index].folder_id)),
                             (Route<dynamic> route) => false);
