@@ -13,6 +13,8 @@ import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:best_flutter_ui_templates/login_view.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import '../controller.dart';
 import '../pages/recent_files_page.dart';
 import '../pages/shared_folders_page.dart';
 import 'design_app_theme.dart';
@@ -36,30 +38,42 @@ class DesignHomeScreen extends StatefulWidget {
 
 class _DesignHomeScreenState extends State<DesignHomeScreen> {
   int _selectedIndex = 0;
-  void initState(){
+  final double _initFabHeight = 120.0;
+  double _fabHeight = 0;
+  double _panelHeightOpen = 0;
+  double _panelHeightClosed = 95.0;
+
+  void initState() {
     super.initState();
     checkLoginStatus();
   }
-   late SharedPreferences sharedPreferences;
-   late String search='';
-   checkLoginStatus() async {
+
+  late SharedPreferences sharedPreferences;
+  late String search = '';
+  checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-   SharedPreferences prefs = await SharedPreferences.getInstance();
-     search = await prefs.getString('search') ?? '';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    search = await prefs.getString('search') ?? '';
     if (sharedPreferences.getString("user_token") == null) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => LoginView()),
+          MaterialPageRoute(builder: (BuildContext context) => LoginView()),
           (Route<dynamic> route) => false);
     }
   }
-  
+
   final TextEditingController searchController = new TextEditingController();
   final TextEditingController _title = TextEditingController();
   final TextEditingController _status = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
+    _fabHeight = _initFabHeight;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .40;
+
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
     return Container(
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
@@ -105,8 +119,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: Column(
                     children: <Widget>[
                       getSearchBarUI(),
-                      CategoryListView(
-                      ),
+                      CategoryListView(),
                       // Flexible(
                       // child: Positioned(
                       //   // adjust the position as needed
@@ -123,6 +136,26 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   ),
                 ),
               ),
+            ),
+            SlidingUpPanel(
+              defaultPanelState: PanelState.CLOSED,
+              maxHeight: _panelHeightOpen,
+              minHeight: 0,
+              controller: panelController,
+              panel: StreamBuilder<Widget?>(
+                stream: pageController.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) return const SizedBox.shrink();
+                  return snapshot.data!;
+                },
+              ),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
+              onPanelSlide: (double pos) => setState(() {
+                _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                    _initFabHeight;
+              }),
             ),
           ],
         ),
@@ -164,34 +197,41 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
       print(_selectedIndex);
     });
   }
-  Future<Response> sendForm(
-    String url, Map<String, dynamic> data, Map<String, File> files) async {
-  Map<String, MultipartFile> fileMap = {};
-  for (MapEntry fileEntry in files.entries) {
-    File file = fileEntry.value;
-    String fileName = path.basename(file.path);
-    fileMap[fileEntry.key] =
-        MultipartFile(file.openRead(), await file.length(), filename: fileName);
-  }
-  data.addAll(fileMap);
-  var formData = FormData.fromMap(data);
-  Dio dio = new Dio();
-  return await dio.post(url,
-      data: formData, options: Options(contentType: 'multipart/form-data'));
-}
-Future<void> uploadFile(String filePath) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-    String user_token = await prefs.getString('user_token') ?? 'unknown';
-  var request = http.MultipartRequest('POST', Uri.parse('https://localhost/leap_integra/master/dms/api/files/upload'+'?user_token=' + user_token));
-  request.files.add(await http.MultipartFile.fromPath('file', filePath));
-  var response = await request.send();
 
-  if (response.statusCode == 200) {
-    print('File uploaded successfully');
-  } else {
-    print('File upload failed with status: ${response.statusCode}');
+  Future<Response> sendForm(
+      String url, Map<String, dynamic> data, Map<String, File> files) async {
+    Map<String, MultipartFile> fileMap = {};
+    for (MapEntry fileEntry in files.entries) {
+      File file = fileEntry.value;
+      String fileName = path.basename(file.path);
+      fileMap[fileEntry.key] = MultipartFile(
+          file.openRead(), await file.length(),
+          filename: fileName);
+    }
+    data.addAll(fileMap);
+    var formData = FormData.fromMap(data);
+    Dio dio = new Dio();
+    return await dio.post(url,
+        data: formData, options: Options(contentType: 'multipart/form-data'));
   }
-}
+
+  Future<void> uploadFile(String filePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('https://localhost/leap_integra/master/dms/api/files/upload' +
+            '?user_token=' +
+            user_token));
+    request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('File uploaded successfully');
+    } else {
+      print('File upload failed with status: ${response.statusCode}');
+    }
+  }
 
 // Future uploadFiles() async {
 //     if (userFile == null) {
@@ -218,7 +258,7 @@ Future<void> uploadFile(String filePath) async {
 //    catch (e) {
 //    }
 //   }
- File? _selectedFile;
+  File? _selectedFile;
 
   Future<void> _openFilePicker() async {
     final result = await FilePicker.platform.pickFiles();
@@ -229,46 +269,60 @@ Future<void> uploadFile(String filePath) async {
       });
     }
   }
+
   _selectFile() async {
     final result = await FilePicker.platform.pickFiles();
-     if(result != null) {
-    // Do something with the file
-     try{
+    if (result != null) {
+      // Do something with the file
+      try {
         _selectedFile = File(result.files.single.path!);
-     print('upload started');
-     //upload image
-     //scenario  one - upload image as poart of formdata
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String user_token = await prefs.getString('user_token') ?? 'unknown';
-     var res1 = await sendForm('https://dms.tigajayabahankue.com/api/files/upload'+'?user_token=' + user_token,
-         {'parent_folder': 0, 'perihal': 'test', 'nomor': 'test123', 'description': 'test', 'related_document_ids': 'test','user_access':'[]'}, {'file': _selectedFile!});
-     print("res-1 $res1");
-      print('data masuk upload');
-     print('data masuk upload');
-     if (res1.statusCode == HttpStatus.OK||res1.statusCode == 200) {
-       showAlertDialog(context, "File Uploaded.");
-     } else {
-       showAlertDialog(context, "Failed Upload.");
-     }
-   }
-   catch (e) {
-    print('error message');
-     showAlertDialog(context, "Failed Upload (Error).");
-     print(e);
-   }
-  } else {
-    // User canceled the picker
-    showAlertDialog(context, "Failed Upload.");
-  }
+        print('upload started');
+        //upload image
+        //scenario  one - upload image as poart of formdata
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String user_token = await prefs.getString('user_token') ?? 'unknown';
+        var res1 = await sendForm(
+            'https://192.168.1.119/leap_integra/master/dms/api/files/upload' +
+                '?user_token=' +
+                user_token,
+            {
+              'parent_folder': 0,
+              'perihal': 'test',
+              'nomor': 'test123',
+              'description': 'test',
+              'related_document_ids': 'test',
+              'user_access': '[]'
+            },
+            {
+              'file': _selectedFile!
+            });
+        print("res-1 $res1");
+        print('data masuk upload');
+        print('data masuk upload');
+        if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
+          showAlertDialog(context, "File Uploaded.");
+        } else {
+          showAlertDialog(context, "Failed Upload.");
+        }
+      } catch (e) {
+        print('error message');
+        showAlertDialog(context, "Failed Upload (Error).");
+        print(e);
+      }
+    } else {
+      // User canceled the picker
+      showAlertDialog(context, "Failed Upload.");
+    }
     setState(() {});
   }
+
   createFolder(String name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     Map data = {'name': name};
     var jsonResponse = null;
     var response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
+        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
     // var response = await http.post(
@@ -283,9 +337,7 @@ Future<void> uploadFile(String filePath) async {
     } else {
       showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
     }
-     setState(() {
-          
-        });
+    setState(() {});
   }
 
   showAlertDialog(BuildContext context, String message) {
@@ -391,15 +443,13 @@ Future<void> uploadFile(String filePath) async {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: Row(
-            children: <Widget>[
-            ],
+            children: <Widget>[],
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        CategoryListView(
-        ),
+        CategoryListView(),
       ],
     );
   }
@@ -478,30 +528,33 @@ Future<void> uploadFile(String filePath) async {
                         color: HexColor('#B9BABC'),
                       ),
                     ),
-                    onEditingComplete: () {
-                    },
+                    onEditingComplete: () {},
                   ),
                 ),
               ),
               Container(
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SearchFilesListView(keyword:searchController.text)));
-                          // savedSearch(searchController.text);
-                          // print('ini ketikan');
-                          // print(searchController.text);
-                          // print(sharedPreferences.getString("search") );
-                          // setState(() {});
-                      }, child: Icon(Icons.search))),
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SearchFilesListView(
+                                keyword: searchController.text)));
+                        // savedSearch(searchController.text);
+                        // print('ini ketikan');
+                        // print(searchController.text);
+                        // print(sharedPreferences.getString("search") );
+                        // setState(() {});
+                      },
+                      child: Icon(Icons.search))),
               // Container(
               //     child:
               //         ElevatedButton(onPressed: () {}, child: Icon(Icons.add))),
             ]));
   }
-   savedSearch(String search) async {
-      sharedPreferences.setString("search", search);
+
+  savedSearch(String search) async {
+    sharedPreferences.setString("search", search);
   }
+
   Widget getAppBarUI() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
@@ -561,4 +614,3 @@ Future<void> uploadFile(String filePath) async {
     );
   }
 }
-

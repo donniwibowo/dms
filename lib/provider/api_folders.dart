@@ -39,7 +39,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-        'https://dms.tigajayabahankue.com/api/files/getfiles';
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
     final response = await http.get(url + '?user_token=' + user_token);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -64,7 +64,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-        'https://dms.tigajayabahankue.com/api/files/getfiles';
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
     final response = await http.get(url + '?user_token=' + user_token + '&folder_parent_id='+folder_parent_id);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -89,7 +89,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getfiles';
-        'https://dms.tigajayabahankue.com/api/files/search';
+        'https://192.168.1.119/leap_integra/master/dms/api/files/search';
     final response = await http.get(url + '?user_token=' + user_token + '&keyword='+keyword);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -114,7 +114,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getrecentfiles';
-        'https://dms.tigajayabahankue.com/api/files/getrecentfiles';
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getrecentfiles';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
         // 'https://192.168.1.119/leap_integra/master/dms/api/files/getsharedfolder';
-        'https://dms.tigajayabahankue.com/api/files/getsharedfolder';
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getsharedfolder';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {

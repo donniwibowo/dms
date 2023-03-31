@@ -171,7 +171,7 @@ class _SettingsOnePageState extends State<Settings> {
                         //open edit profile
                       },
                       title: Text(
-                        "$username" ?? 'unknown',
+                        "$username",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,

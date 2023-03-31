@@ -55,12 +55,22 @@ class _CategoryListViewState extends State<CategoryListView>
 
   Widget _attributeDetail(String name, String desc, String user_access,
       String created_by, String created_on, String updated_on) {
+    print('masuk slide up');
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
       child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 25),
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
         child: Column(
           children: [
+            Container(
+              height: 10,
+              width: 60,
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             Container(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
@@ -191,9 +201,8 @@ class _CategoryListViewState extends State<CategoryListView>
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     DetailFilesListView(
-                                        folder_parent_id: data
-                                            .dataFolders[index]
-                                            .folder_id)),
+                                        folder_parent_id:
+                                            data.dataFolders[index].folder_id)),
                             (Route<dynamic> route) => false);
                       },
                       child: AnimatedBuilder(
@@ -228,278 +237,323 @@ class _CategoryListViewState extends State<CategoryListView>
                                               ),
                                             ),
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 15),
-                                                  child: data.dataFolders[index]
-                                                              .type ==
-                                                          'Folder'
-                                                      ? Icon(
-                                                          Icons.folder,
-                                                          color: Colors
-                                                              .blue.shade200,
-                                                        )
-                                                      : Icon(
-                                                          Icons.picture_as_pdf,
-                                                          color: Colors
-                                                              .red.shade300,
-                                                        ),
-                                                ),
-                                                Container(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              data
+                                                Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 15),
+                                                      child: data
                                                                   .dataFolders[
                                                                       index]
-                                                                  .name,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 16,
-                                                                letterSpacing:
-                                                                    0.27,
-                                                                color: DesignAppTheme
-                                                                    .darkerText,
+                                                                  .type ==
+                                                              'Folder'
+                                                          ? Icon(
+                                                              Icons.folder,
+                                                              color: Colors.blue
+                                                                  .shade200,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .picture_as_pdf,
+                                                              color: Colors
+                                                                  .red.shade300,
+                                                            ),
+                                                    ),
+                                                    Container(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Text(
+                                                                  data
+                                                                      .dataFolders[
+                                                                          index]
+                                                                      .name,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        16,
+                                                                    letterSpacing:
+                                                                        0.27,
+                                                                    color: DesignAppTheme
+                                                                        .darkerText,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                data.dataFolders[index].type ==
+                                                                        'Folder'
+                                                                    ? data
+                                                                        .dataFolders[
+                                                                            index]
+                                                                        .type
+                                                                    : data
+                                                                        .dataFolders[
+                                                                            index]
+                                                                        .format,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w100,
+                                                                  fontSize: 14,
+                                                                  letterSpacing:
+                                                                      0.27,
+                                                                  color: Colors
+                                                                      .blueGrey
+                                                                      .shade300,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            Container(
-                                                              child:
-                                                                  PopupMenuButton<
-                                                                          String>(
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(20).copyWith(
-                                                                              topRight: Radius.circular(
-                                                                                  0))),
-                                                                      padding: EdgeInsets.all(
-                                                                          10),
-                                                                      elevation:
-                                                                          10,
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade100,
-                                                                      itemBuilder: (BuildContext
-                                                                              context) =>
-                                                                          <
-                                                                              PopupMenuEntry<
-                                                                                  String>>[
-                                                                            PopupMenuItem<String>(
-                                                                              value: 'view',
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Row(
-                                                                                    children: [
-                                                                                      Icon(
-                                                                                        Icons.info_rounded,
-                                                                                        size: 20,
-                                                                                        color: Colors.green,
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 5,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        'Info',
-                                                                                        style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                  Divider()
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            PopupMenuItem<String>(
-                                                                              value: 'edit',
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Row(
-                                                                                    children: [
-                                                                                      Icon(
-                                                                                        Icons.edit,
-                                                                                        size: 20,
-                                                                                        color: Colors.green,
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 5,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        'Edit',
-                                                                                        style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                  Divider()
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            PopupMenuItem<String>(
-                                                                              value: 'delete',
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Row(
-                                                                                    children: [
-                                                                                      Icon(
-                                                                                        Icons.delete,
-                                                                                        size: 20,
-                                                                                        color: Colors.green,
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 5,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        'Delete',
-                                                                                        style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                  Divider()
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                      onSelected:
-                                                                          (String
-                                                                              value) {
-                                                                        // Handle menu item selection here
-                                                                        if (value ==
-                                                                            'view') {
-                                                                          var name = data
-                                                                              .dataFolders[index]
-                                                                              .name;
-                                                                          var description = data
-                                                                              .dataFolders[index]
-                                                                              .description;
-                                                                          var user_access = data
-                                                                              .dataFolders[index]
-                                                                              .user_access;
-                                                                          var created_by = data
-                                                                              .dataFolders[index]
-                                                                              .created_by;
-
-                                                                          var created_on = data
-                                                                              .dataFolders[index]
-                                                                              .created_on;
-
-                                                                          var updated_on = data
-                                                                              .dataFolders[index]
-                                                                              .updated_on;
-
-                                                                          Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => Settings()),
-                                                                          );
-                                                                          slidePanelOn(_attributeDetail(
-                                                                              name,
-                                                                              description,
-                                                                              user_access,
-                                                                              created_by,
-                                                                              created_on,
-                                                                              updated_on));
-
-                                                                          // showViewDialog(
-                                                                          //     context,
-                                                                          //     name,
-                                                                          //     description,
-                                                                          //     user_access,
-                                                                          //     created_by);
-                                                                        }
-                                                                        if (value ==
-                                                                            'delete') {
-                                                                          var folder_id = data
-                                                                              .dataFolders[index]
-                                                                              .folder_id;
-                                                                          deleteData(
-                                                                              folder_id);
-                                                                        }
-                                                                      },
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.only(left: 5),
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .info_outlined,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                      )),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        data.dataFolders[index]
-                                                                    .type ==
-                                                                'Folder'
-                                                            ? data
-                                                                .dataFolders[
-                                                                    index]
-                                                                .type
-                                                            : data
-                                                                .dataFolders[
-                                                                    index]
-                                                                .format,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w100,
-                                                          fontSize: 14,
-                                                          letterSpacing: 0.27,
-                                                          color: Colors.blueGrey
-                                                              .shade300,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 65),
-                                                    child: Text(
-                                                      data.dataFolders[index]
-                                                                  .size ==
-                                                              null
-                                                          ? ''
-                                                          : data
-                                                              .dataFolders[
-                                                                  index]
-                                                              .size
-                                                              .toString(),
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w200,
-                                                        fontSize: 13,
-                                                        letterSpacing: 0.27,
-                                                        color:
-                                                            DesignAppTheme.grey,
+                                                              Container(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              15),
+                                                                  child: Text(
+                                                                    data.dataFolders[index].size ==
+                                                                            null
+                                                                        ? ''
+                                                                        : data
+                                                                            .dataFolders[index]
+                                                                            .size
+                                                                            .toString(),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .right,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w200,
+                                                                      fontSize:
+                                                                          13,
+                                                                      letterSpacing:
+                                                                          0.27,
+                                                                      color: DesignAppTheme
+                                                                          .grey,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ),
-                                                )
+                                                  ],
+                                                ),
+                                                Container(
+                                                  child:
+                                                      PopupMenuButton<String>(
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                      .circular(
+                                                                          20)
+                                                                  .copyWith(
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              0))),
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          elevation: 10,
+                                                          color: Colors
+                                                              .grey.shade100,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context) =>
+                                                                  <
+                                                                      PopupMenuEntry<
+                                                                          String>>[
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'view',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.info_rounded,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Info',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'edit',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.edit,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Edit',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'delete',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.delete,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Delete',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                          onSelected:
+                                                              (String value) {
+                                                            // Handle menu item selection here
+                                                            if (value ==
+                                                                'view') {
+                                                              var name = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .name;
+                                                              var description = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .description;
+                                                              var user_access = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .user_access;
+                                                              var created_by = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .created_by;
+
+                                                              var created_on = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .created_on;
+
+                                                              var updated_on = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .updated_on;
+
+                                                              // Navigator.push(
+                                                              //   context,
+                                                              //   MaterialPageRoute(
+                                                              //       builder:
+                                                              //           (context) =>
+                                                              //               Settings()),
+                                                              // );
+                                                              slidePanelOn(_attributeDetail(
+                                                                  name,
+                                                                  description,
+                                                                  user_access,
+                                                                  created_by,
+                                                                  created_on,
+                                                                  updated_on));
+
+                                                              // showViewDialog(
+                                                              //     context,
+                                                              //     name,
+                                                              //     description,
+                                                              //     user_access,
+                                                              //     created_by);
+                                                            }
+                                                            if (value ==
+                                                                'delete') {
+                                                              var folder_id = data
+                                                                  .dataFolders[
+                                                                      index]
+                                                                  .folder_id;
+                                                              deleteData(
+                                                                  folder_id);
+                                                            }
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 5),
+                                                            child: Icon(
+                                                              Icons.more_vert,
+                                                              color:
+                                                                  Colors.black,
+                                                              size: 20,
+                                                            ),
+                                                          )),
+                                                ),
                                               ],
                                             ),
                                           )
@@ -568,19 +622,16 @@ class _CategoryListViewState extends State<CategoryListView>
     var user_token = sharedPreferences.getString("user_token");
     var jsonResponse = null;
     final response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/delete?user_token=" +
+        "https://192.168.1.119/leap_integra/master/dms/api/files/delete?user_token=" +
             user_token!,
         body: data);
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         showAlertDialog(context, 'File Deleted');
-       
       } else {
         showAlertDialog(context, 'Failed Delete Data' + response.body);
       }
-       setState(() {
-          
-        });
+      setState(() {});
     } else {
       print('Terjadi disini kesalahannya');
     }

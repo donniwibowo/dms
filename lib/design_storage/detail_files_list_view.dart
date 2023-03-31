@@ -282,7 +282,7 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String user_token = await prefs.getString('user_token') ?? 'unknown';
         var res1 = await sendForm(
-            'https://dms.tigajayabahankue.com/api/files/upload' +
+            'https://192.168.1.119/leap_integra/master/dms/api/files/upload' +
                 '?user_token=' +
                 user_token,
             {
@@ -322,7 +322,7 @@ class _DetailFilesListViewState extends State<DetailFilesListView>
     Map data = {'name': name,'parent_folder':parent_folder};
     var jsonResponse = null;
     var response = await http.post(
-        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
+        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
     // var response = await http.post(
