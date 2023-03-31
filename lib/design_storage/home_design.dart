@@ -82,6 +82,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: ExpandableFab(
+          type: ExpandableFabType.up,
           distance: 60,
           child: Icon(Icons.add),
           backgroundColor: Colors.red,
