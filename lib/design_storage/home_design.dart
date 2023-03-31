@@ -33,7 +33,8 @@ import 'dart:async';
 
 class DesignHomeScreen extends StatefulWidget {
   final String folder_parent_id;
-  DesignHomeScreen({required this.folder_parent_id});
+  final String keyword;
+  DesignHomeScreen({required this.folder_parent_id, this.keyword = ""});
   @override
   _DesignHomeScreenState createState() => _DesignHomeScreenState();
 }
@@ -71,7 +72,9 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
     _panelHeightOpen = MediaQuery.of(context).size.height * .40;
-    // print("folder parent id = " + widget.folder_parent_id);
+
+    print("Ini keywordnya = " + widget.keyword);
+
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),
       topRight: Radius.circular(24.0),
@@ -124,6 +127,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                       getSearchBarUI(),
                       CategoryListView(
                         folder_parent_id: widget.folder_parent_id,
+                        keyword: widget.keyword,
                       ),
                       // Flexible(
                       // child: Positioned(
@@ -547,8 +551,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SearchFilesListView(
+                            builder: (context) => DesignHomeScreen(
+                                folder_parent_id: "0",
                                 keyword: searchController.text)));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => SearchFilesListView(
+                        //         keyword: searchController.text)));
                         // savedSearch(searchController.text);
                         // print('ini ketikan');
                         // print(searchController.text);

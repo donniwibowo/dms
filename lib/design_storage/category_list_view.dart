@@ -14,7 +14,9 @@ import '../controller.dart';
 class CategoryListView extends StatefulWidget {
   // final PanelController slidingUpController;
   final String folder_parent_id;
-  const CategoryListView({Key? key, this.callBack, this.folder_parent_id = "0"})
+  final String keyword;
+  const CategoryListView(
+      {Key? key, this.callBack, this.folder_parent_id = "0", this.keyword = ""})
       : super(key: key);
 
   final Function()? callBack;
@@ -162,7 +164,6 @@ class _CategoryListViewState extends State<CategoryListView>
   @override
   Widget build(BuildContext context) {
     ScrollController sc = new ScrollController();
-    print('parent id = ' + widget.folder_parent_id);
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
@@ -170,16 +171,15 @@ class _CategoryListViewState extends State<CategoryListView>
         width: double.infinity,
         child: FutureBuilder(
           future: Provider.of<ApiFolders>(context, listen: false)
-              .getAllFolder(widget.folder_parent_id),
+              .getAllFolder(widget.folder_parent_id, widget.keyword),
           builder: (BuildContext context, snapshot) {
-            print(snapshot);
-            print('masuk sini');
+            // print(snapshot);
+            // print('masuk sini');
             if (!snapshot.hasData) {
               return const SizedBox();
             } else {
               return Consumer<ApiFolders>(builder: (context, data, _) {
                 folders_length = data.dataFolders.length;
-
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                       top: 0, bottom: 150, right: 16, left: 16),
