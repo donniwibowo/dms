@@ -198,8 +198,9 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     DesignHomeScreen(
-                                        folder_parent_id:
-                                            data.dataFolders[index].folder_id)),
+                                        folder_parent_id: data
+                                            .dataRecentFolders[index]
+                                            .folder_id)),
                             (Route<dynamic> route) => false);
                       },
                       child: AnimatedBuilder(
@@ -244,7 +245,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                       padding: EdgeInsets.only(
                                                           right: 15),
                                                       child: data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .type ==
                                                               'Folder'
@@ -271,7 +272,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                               children: [
                                                                 Text(
                                                                   data
-                                                                      .dataFolders[
+                                                                      .dataRecentFolders[
                                                                           index]
                                                                       .name,
                                                                   textAlign:
@@ -299,14 +300,14 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                           Row(
                                                             children: [
                                                               Text(
-                                                                data.dataFolders[index].type ==
+                                                                data.dataRecentFolders[index].type ==
                                                                         'Folder'
                                                                     ? data
-                                                                        .dataFolders[
+                                                                        .dataRecentFolders[
                                                                             index]
                                                                         .type
                                                                     : data
-                                                                        .dataFolders[
+                                                                        .dataRecentFolders[
                                                                             index]
                                                                         .format,
                                                                 textAlign:
@@ -332,11 +333,11 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                           left:
                                                                               15),
                                                                   child: Text(
-                                                                    data.dataFolders[index].size ==
+                                                                    data.dataRecentFolders[index].size ==
                                                                             null
                                                                         ? ''
                                                                         : data
-                                                                            .dataFolders[index]
+                                                                            .dataRecentFolders[index]
                                                                             .size
                                                                             .toString(),
                                                                     textAlign:
@@ -481,29 +482,29 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                             if (value ==
                                                                 'view') {
                                                               var name = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .name;
                                                               var description = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .description;
                                                               var user_access = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .user_access;
                                                               var created_by = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .created_by;
 
                                                               var created_on = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .created_on;
 
                                                               var updated_on = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .updated_on;
 
@@ -532,7 +533,7 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                             if (value ==
                                                                 'delete') {
                                                               var folder_id = data
-                                                                  .dataFolders[
+                                                                  .dataRecentFolders[
                                                                       index]
                                                                   .folder_id;
                                                               // deleteData(
