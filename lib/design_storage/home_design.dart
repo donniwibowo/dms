@@ -95,7 +95,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               child: const Icon(Icons.folder_outlined),
               backgroundColor: Colors.red,
               onPressed: () {
-                showInputDialog(context, 'test');
+                showInputDialog(context, 'test', widget.folder_parent_id);
               },
             ),
             FloatingActionButton.small(
@@ -326,10 +326,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     setState(() {});
   }
 
-  createFolder(String name) async {
+  createFolder(String name, String folder_parent_id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
-    Map data = {'name': name};
+    Map data = {'name': name, 'parent_folder': folder_parent_id};
     var jsonResponse = null;
     var response = await http.post(
         "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
@@ -398,7 +398,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
-  showInputDialog(BuildContext context, String message) {
+  showInputDialog(
+      BuildContext context, String message, String folder_parent_id) {
     final TextEditingController namaController = new TextEditingController();
     final TextEditingController descriptionController =
         new TextEditingController();
@@ -413,7 +414,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         TextButton(
           child: Text("Create"),
           onPressed: () {
-            createFolder(namaController.text);
+            createFolder(namaController.text, folder_parent_id);
             Navigator.pop(context);
           },
         ),
