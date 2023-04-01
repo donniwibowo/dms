@@ -191,9 +191,8 @@ class _CategoryListViewState extends State<CategoryListView>
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     DetailFilesListView(
-                                        folder_parent_id: data
-                                            .dataFolders[index]
-                                            .folder_id)),
+                                        folder_parent_id:
+                                            data.dataFolders[index].folder_id)),
                             (Route<dynamic> route) => false);
                       },
                       child: AnimatedBuilder(
@@ -397,25 +396,20 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                               .dataFolders[index]
                                                                               .updated_on;
 
-                                                                          Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => Settings()),
-                                                                          );
-                                                                          slidePanelOn(_attributeDetail(
-                                                                              name,
-                                                                              description,
-                                                                              user_access,
-                                                                              created_by,
-                                                                              created_on,
-                                                                              updated_on));
-
-                                                                          // showViewDialog(
-                                                                          //     context,
+                                                                          // slidePanelOn(_attributeDetail(
                                                                           //     name,
                                                                           //     description,
                                                                           //     user_access,
-                                                                          //     created_by);
+                                                                          //     created_by,
+                                                                          //     created_on,
+                                                                          //     updated_on));
+
+                                                                          showViewDialog(
+                                                                              context,
+                                                                              name,
+                                                                              description,
+                                                                              user_access,
+                                                                              created_by);
                                                                         }
                                                                         if (value ==
                                                                             'delete') {
@@ -574,13 +568,10 @@ class _CategoryListViewState extends State<CategoryListView>
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
         showAlertDialog(context, 'File Deleted');
-       
       } else {
         showAlertDialog(context, 'Failed Delete Data' + response.body);
       }
-       setState(() {
-          
-        });
+      setState(() {});
     } else {
       print('Terjadi disini kesalahannya');
     }
