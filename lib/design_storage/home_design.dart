@@ -409,14 +409,14 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         new TextEditingController();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Create Folder"),
+      title: Text("Buat Folder"),
       content: TextField(
         controller: namaController,
-        decoration: InputDecoration(hintText: 'Enter some text'),
+        decoration: InputDecoration(hintText: 'Input nama folder'),
       ),
       actions: [
         TextButton(
-          child: Text("Create"),
+          child: Text("Buat"),
           onPressed: () {
             createFolder(namaController.text, folder_parent_id);
             Navigator.pop(context);
@@ -524,7 +524,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                       fontFamily: 'WorkSans',
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: DesignAppTheme.nearlyBlue,
+                      // color: DesignAppTheme.nearlyBlue,
                     ),
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
