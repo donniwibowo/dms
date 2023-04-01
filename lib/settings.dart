@@ -110,7 +110,9 @@ class _SettingsOnePageState extends State<Settings> {
     if (sharedPreferences.getString("user_token") == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => DesignHomeScreen()),
+              builder: (BuildContext context) => DesignHomeScreen(
+                    folder_parent_id: "0",
+                  )),
           (Route<dynamic> route) => false);
     }
   }
@@ -171,7 +173,7 @@ class _SettingsOnePageState extends State<Settings> {
                         //open edit profile
                       },
                       title: Text(
-                        "$username" ?? 'unknown',
+                        "$username",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,

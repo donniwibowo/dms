@@ -16,7 +16,7 @@ class SharedFoldersPage extends StatefulWidget {
 
 class _SharedFoldersPageState extends State<SharedFoldersPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -39,6 +39,7 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: ExpandableFab(
+          type: ExpandableFabType.up,
           distance: 60,
           child: Icon(Icons.add),
           backgroundColor: Colors.red,
@@ -139,8 +140,10 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => DesignHomeScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DesignHomeScreen(
+                  folder_parent_id: "0",
+                )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));

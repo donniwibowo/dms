@@ -198,8 +198,6 @@ class _SearchFilesListViewState extends State<SearchFilesListView>
     );
   }
 
-  
-
   File? _selectedFile;
 
   Future<void> _openFilePicker() async {

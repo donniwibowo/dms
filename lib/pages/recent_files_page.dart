@@ -15,7 +15,7 @@ class RecentPage extends StatefulWidget {
 
 class _RecentPageState extends State<RecentPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -38,6 +38,7 @@ class _RecentPageState extends State<RecentPage> {
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: ExpandableFab(
+          type: ExpandableFabType.up,
           distance: 60,
           child: Icon(Icons.add),
           backgroundColor: Colors.red,
@@ -138,8 +139,10 @@ class _RecentPageState extends State<RecentPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => DesignHomeScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DesignHomeScreen(
+                  folder_parent_id: "0",
+                )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));
@@ -147,6 +150,7 @@ class _RecentPageState extends State<RecentPage> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       }
+      print(_selectedIndex);
     });
   }
 

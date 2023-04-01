@@ -7,6 +7,7 @@ import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controller.dart';
+import 'home_design.dart';
 
 class RecentFilesListView extends StatefulWidget {
   // final PanelController slidingUpController;
@@ -28,15 +29,16 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
     super.initState();
     checkLoginStatus();
   }
- checkLoginStatus() async {
+
+  checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.getString("user_token") == null) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => LoginView()),
+          MaterialPageRoute(builder: (BuildContext context) => LoginView()),
           (Route<dynamic> route) => false);
     }
   }
+
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
@@ -55,9 +57,18 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
       child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 25),
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
         child: Column(
           children: [
+            Container(
+              height: 10,
+              width: 60,
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             Container(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
@@ -180,313 +191,380 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                 curve: Interval((1 / count) * index, 1.0,
                                     curve: Curves.fastOutSlowIn)));
                     animationController?.forward();
-                    return AnimatedBuilder(
-                      animation: animationController!,
-                      builder: (BuildContext context, Widget? child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: Transform(
-                            transform: Matrix4.translationValues(
-                                0.0, 50 * (1.0 - animation.value), 0.0),
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              child: SizedBox(
-                                // height: 100,
-                                child: Stack(
-                                  alignment: AlignmentDirectional.bottomCenter,
-                                  children: <Widget>[
-                                    Container(
-                                        child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.grey.shade300),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 15),
-                                                child: data
-                                                            .dataRecentFolders[
-                                                                index]
-                                                            .type ==
-                                                        'Folder'
-                                                    ? Icon(
-                                                        Icons.folder,
-                                                        color: Colors
-                                                            .blue.shade200,
-                                                      )
-                                                    : Icon(
-                                                        Icons.picture_as_pdf,
-                                                        color:
-                                                            Colors.red.shade300,
-                                                      ),
+                    return InkWell(
+                      onTap: () {
+                        // handle tap on item
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DesignHomeScreen(
+                                        folder_parent_id: data
+                                            .dataRecentFolders[index]
+                                            .folder_id)),
+                            (Route<dynamic> route) => false);
+                      },
+                      child: AnimatedBuilder(
+                        animation: animationController!,
+                        builder: (BuildContext context, Widget? child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: Transform(
+                              transform: Matrix4.translationValues(
+                                  0.0, 50 * (1.0 - animation.value), 0.0),
+                              child: InkWell(
+                                splashColor: Colors.transparent,
+                                child: SizedBox(
+                                  // height: 100,
+                                  child: Stack(
+                                    alignment:
+                                        AlignmentDirectional.bottomCenter,
+                                    children: <Widget>[
+                                      Container(
+                                          child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                    width: 1.0,
+                                                    color:
+                                                        Colors.grey.shade300),
                                               ),
-                                              Container(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Container(
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            data
-                                                                .dataRecentFolders[
-                                                                    index]
-                                                                .name,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16,
-                                                              letterSpacing:
-                                                                  0.27,
-                                                              color:
-                                                                  DesignAppTheme
-                                                                      .darkerText,
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            child:
-                                                                PopupMenuButton<
-                                                                        String>(
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius: BorderRadius.circular(20).copyWith(
-                                                                            topRight: Radius.circular(
-                                                                                0))),
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            10),
-                                                                    elevation:
-                                                                        10,
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context) =>
-                                                                            <
-                                                                                PopupMenuEntry<
-                                                                                    String>>[
-                                                                              PopupMenuItem<String>(
-                                                                                value: 'view',
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    Row(
-                                                                                      children: [
-                                                                                        Icon(
-                                                                                          Icons.info_rounded,
-                                                                                          size: 20,
-                                                                                          color: Colors.green,
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          width: 5,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          'Info',
-                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                    Divider()
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              PopupMenuItem<String>(
-                                                                                value: 'edit',
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    Row(
-                                                                                      children: [
-                                                                                        Icon(
-                                                                                          Icons.edit,
-                                                                                          size: 20,
-                                                                                          color: Colors.green,
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          width: 5,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          'Edit',
-                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                    Divider()
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              PopupMenuItem<String>(
-                                                                                value: 'delete',
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    Row(
-                                                                                      children: [
-                                                                                        Icon(
-                                                                                          Icons.delete,
-                                                                                          size: 20,
-                                                                                          color: Colors.green,
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          width: 5,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          'Delete',
-                                                                                          style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                    Divider()
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                    onSelected:
-                                                                        (String
-                                                                            value) {
-                                                                      // Handle menu item selection here
-                                                                      if (value ==
-                                                                          'view') {
-                                                                        var name = data
-                                                                            .dataRecentFolders[index]
-                                                                            .name;
-                                                                        var description = data
-                                                                            .dataRecentFolders[index]
-                                                                            .description;
-                                                                        var user_access = data
-                                                                            .dataRecentFolders[index]
-                                                                            .user_access;
-                                                                        var created_by = data
-                                                                            .dataRecentFolders[index]
-                                                                            .created_by;
-
-                                                                        var created_on = data
-                                                                            .dataFolders[index]
-                                                                            .created_on;
-
-                                                                        var updated_on = data
-                                                                            .dataFolders[index]
-                                                                            .updated_on;
-
-                                                                        slidePanelOn(_attributeDetail(
-                                                                            name,
-                                                                            description,
-                                                                            user_access,
-                                                                            created_by,
-                                                                            created_on,
-                                                                            updated_on));
-
-                                                                        // showViewDialog(
-                                                                        //     context,
-                                                                        //     name,
-                                                                        //     description,
-                                                                        //     user_access,
-                                                                        //     created_by);
-                                                                      }
-                                                                    },
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                          left:
-                                                                              5),
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .info_outlined,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        size:
-                                                                            20,
-                                                                      ),
-                                                                    )),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Text(
-                                                      data
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 15),
+                                                      child: data
                                                                   .dataRecentFolders[
                                                                       index]
                                                                   .type ==
                                                               'Folder'
-                                                          ? data
-                                                              .dataRecentFolders[
-                                                                  index]
-                                                              .type
-                                                          : data
-                                                              .dataRecentFolders[
-                                                                  index]
-                                                              .format,
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w100,
-                                                        fontSize: 14,
-                                                        letterSpacing: 0.27,
-                                                        color: Colors
-                                                            .blueGrey.shade300,
+                                                          ? Icon(
+                                                              Icons.folder,
+                                                              color: Colors.blue
+                                                                  .shade200,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .picture_as_pdf,
+                                                              color: Colors
+                                                                  .red.shade300,
+                                                            ),
+                                                    ),
+                                                    Container(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Text(
+                                                                  data
+                                                                      .dataRecentFolders[
+                                                                          index]
+                                                                      .name,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        16,
+                                                                    letterSpacing:
+                                                                        0.27,
+                                                                    color: DesignAppTheme
+                                                                        .darkerText,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                data.dataRecentFolders[index].type ==
+                                                                        'Folder'
+                                                                    ? data
+                                                                        .dataRecentFolders[
+                                                                            index]
+                                                                        .type
+                                                                    : data
+                                                                        .dataRecentFolders[
+                                                                            index]
+                                                                        .format,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w100,
+                                                                  fontSize: 14,
+                                                                  letterSpacing:
+                                                                      0.27,
+                                                                  color: Colors
+                                                                      .blueGrey
+                                                                      .shade300,
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              15),
+                                                                  child: Text(
+                                                                    data.dataRecentFolders[index].size ==
+                                                                            null
+                                                                        ? ''
+                                                                        : data
+                                                                            .dataRecentFolders[index]
+                                                                            .size
+                                                                            .toString(),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .right,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w200,
+                                                                      fontSize:
+                                                                          13,
+                                                                      letterSpacing:
+                                                                          0.27,
+                                                                      color: DesignAppTheme
+                                                                          .grey,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              Container(
-                                                child: Padding(
-                                                  padding:
-                                                      EdgeInsets.only(left: 65),
-                                                  child: Text(
-                                                    data
-                                                                .dataRecentFolders[
-                                                                    index]
-                                                                .size ==
-                                                            null
-                                                        ? ''
-                                                        : data
-                                                            .dataRecentFolders[
-                                                                index]
-                                                            .size
-                                                            .toString(),
-                                                    textAlign: TextAlign.right,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w200,
-                                                      fontSize: 13,
-                                                      letterSpacing: 0.27,
-                                                      color:
-                                                          DesignAppTheme.grey,
-                                                    ),
-                                                  ),
+                                                Container(
+                                                  child:
+                                                      PopupMenuButton<String>(
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                      .circular(
+                                                                          20)
+                                                                  .copyWith(
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              0))),
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          elevation: 10,
+                                                          color: Colors
+                                                              .grey.shade100,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context) =>
+                                                                  <
+                                                                      PopupMenuEntry<
+                                                                          String>>[
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'view',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.info_rounded,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Info',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'edit',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.edit,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Edit',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    PopupMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          'delete',
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.delete,
+                                                                                size: 20,
+                                                                                color: Colors.green,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Delete',
+                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Divider()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                          onSelected:
+                                                              (String value) {
+                                                            // Handle menu item selection here
+                                                            if (value ==
+                                                                'view') {
+                                                              var name = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .name;
+                                                              var description = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .description;
+                                                              var user_access = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .user_access;
+                                                              var created_by = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .created_by;
+
+                                                              var created_on = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .created_on;
+
+                                                              var updated_on = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .updated_on;
+
+                                                              // Navigator.push(
+                                                              //   context,
+                                                              //   MaterialPageRoute(
+                                                              //       builder:
+                                                              //           (context) =>
+                                                              //               Settings()),
+                                                              // );
+                                                              slidePanelOn(_attributeDetail(
+                                                                  name,
+                                                                  description,
+                                                                  user_access,
+                                                                  created_by,
+                                                                  created_on,
+                                                                  updated_on));
+
+                                                              // showViewDialog(
+                                                              //     context,
+                                                              //     name,
+                                                              //     description,
+                                                              //     user_access,
+                                                              //     created_by);
+                                                            }
+                                                            if (value ==
+                                                                'delete') {
+                                                              var folder_id = data
+                                                                  .dataRecentFolders[
+                                                                      index]
+                                                                  .folder_id;
+                                                              // deleteData(
+                                                              //     folder_id);
+                                                            }
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 5),
+                                                            child: Icon(
+                                                              Icons.more_vert,
+                                                              color:
+                                                                  Colors.black,
+                                                              size: 20,
+                                                            ),
+                                                          )),
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )),
-                                  ],
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   },
                 );

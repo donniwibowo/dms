@@ -23,7 +23,9 @@ class _MyappState extends State<LoginView> {
     if (sharedPreferences.getString("user_token") != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => DesignHomeScreen()),
+              builder: (BuildContext context) => DesignHomeScreen(
+                    folder_parent_id: "0",
+                  )),
           (Route<dynamic> route) => false);
     }
   }
@@ -150,7 +152,7 @@ class _MyappState extends State<LoginView> {
     Map data = {'email': email, 'password': password};
     var jsonResponse = null;
     var response = await http.post(
-        // "https://192.168.1.119/leap_integra/master/dms/api/user/login",
+        // "https://dms.tigajayabahankue.com/api/user/login",
         "https://dms.tigajayabahankue.com/api/user/login",
         body: data);
     jsonResponse = json.decode(response.body);
@@ -165,7 +167,9 @@ class _MyappState extends State<LoginView> {
         sharedPreferences.setString("user_id", jsonResponse['data']['user_id']);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (BuildContext context) => DesignHomeScreen()),
+                builder: (BuildContext context) => DesignHomeScreen(
+                      folder_parent_id: "0",
+                    )),
             (Route<dynamic> route) => false);
       }
     } else {

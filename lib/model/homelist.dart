@@ -26,7 +26,9 @@ class HomeList {
     // ),
     HomeList(
       imagePath: 'assets/design_course/design_course.png',
-      navigateScreen: DesignHomeScreen(),
+      navigateScreen: DesignHomeScreen(
+        folder_parent_id: "0",
+      ),
     ),
   ];
 }
