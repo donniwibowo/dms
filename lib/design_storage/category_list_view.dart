@@ -628,7 +628,7 @@ class _CategoryListViewState extends State<CategoryListView>
     var user_token = sharedPreferences.getString("user_token");
     var jsonResponse = null;
     final response = await http.post(
-        "https://192.168.1.119/leap_integra/master/dms/api/files/delete?user_token=" +
+        "https://dms.tigajayabahankue.com/api/files/delete?user_token=" +
             user_token!,
         body: data);
     if (response.body.isNotEmpty) {

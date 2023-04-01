@@ -296,7 +296,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String user_token = await prefs.getString('user_token') ?? 'unknown';
         var res1 = await sendForm(
-            'https://192.168.1.119/leap_integra/master/dms/api/files/upload' +
+            'https://dms.tigajayabahankue.com/api/files/upload' +
                 '?user_token=' +
                 user_token,
             {
@@ -336,11 +336,11 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     Map data = {'name': name, 'parent_folder': folder_parent_id};
     var jsonResponse = null;
     var response = await http.post(
-        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
+        "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
     // var response = await http.post(
-    //     "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
+    //     "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
     //         user_token!,
     //     body: data);
     jsonResponse = json.decode(response.body);
