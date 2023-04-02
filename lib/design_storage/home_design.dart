@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
+import '../custom_widget/custom_widget.dart';
 import '../pages/recent_files_page.dart';
 import '../pages/shared_folders_page.dart';
 import 'design_app_theme.dart';
@@ -117,30 +118,21 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             SizedBox(
               height: MediaQuery.of(context).padding.top,
             ),
-            getAppBarUI(),
+            TopHeader(
+              title: 'DMS',
+              subtitle: 'Dashboard',
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      getSearchBarUI(),
+                      SearchBar(),
                       CategoryListView(
                         folder_parent_id: widget.folder_parent_id,
                         keyword: widget.keyword,
                       ),
-                      // Flexible(
-                      // child: Positioned(
-                      //   // adjust the position as needed
-                      //   child: FloatingActionButton(
-                      //     splashColor: Colors.blueGrey,
-                      //     onPressed: () {
-                      //       // Add button action
-                      //     },
-                      //     child: Icon(Icons.add),
-                      //   ),
-                      // ),
-                      // ),
                     ],
                   ),
                 ),
@@ -507,129 +499,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   //   );
   // }
 
-  Widget getSearchBarUI() {
-    final TextEditingController searchController = TextEditingController();
-    return Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: TextFormField(
-                    controller: searchController,
-                    style: TextStyle(
-                      fontFamily: 'WorkSans',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      // color: DesignAppTheme.nearlyBlue,
-                    ),
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: search,
-                      labelText: 'Cari dokumen di sini',
-                      // border: InputBorder.none,
-                      helperStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: HexColor('#B9BABC'),
-                      ),
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        letterSpacing: 0.2,
-                        color: HexColor('#B9BABC'),
-                      ),
-                    ),
-                    onEditingComplete: () {},
-                  ),
-                ),
-              ),
-              Container(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DesignHomeScreen(
-                                folder_parent_id: "0",
-                                keyword: searchController.text)));
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => SearchFilesListView(
-                        //         keyword: searchController.text)));
-                        // savedSearch(searchController.text);
-                        // print('ini ketikan');
-                        // print(searchController.text);
-                        // print(sharedPreferences.getString("search") );
-                        // setState(() {});
-                      },
-                      child: Icon(Icons.search))),
-              // Container(
-              //     child:
-              //         ElevatedButton(onPressed: () {}, child: Icon(Icons.add))),
-            ]));
-  }
-
   savedSearch(String search) async {
     sharedPreferences.setString("search", search);
-  }
-
-  Widget getAppBarUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // Text(
-                //   'save/share your folder',
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.w400,
-                //     fontSize: 14,
-                //     letterSpacing: 0.2,
-                //     color: DesignAppTheme.grey,
-                //   ),
-                // ),
-                Text(
-                  'DMS',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    letterSpacing: 0.27,
-                    color: DesignAppTheme.darkerText,
-                  ),
-                ),
-                Text(
-                  'Kelola Dokumen Anda',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.2,
-                    color: DesignAppTheme.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
-            },
-            child: Container(
-              width: 60,
-              height: 60,
-              child: Image.asset('assets/design_storage/userImage.png'),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
