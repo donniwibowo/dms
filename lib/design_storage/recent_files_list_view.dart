@@ -7,6 +7,7 @@ import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controller.dart';
+import '../custom_widget/custom_widget.dart';
 import 'home_design.dart';
 
 class RecentFilesListView extends StatefulWidget {
@@ -51,109 +52,6 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
   }
 
   int folders_length = 0;
-
-  Widget _attributeDetail(String name, String desc, String user_access,
-      String created_by, String created_on, String updated_on) {
-    return Container(
-      // decoration: BoxDecoration(color: Colors.amber),
-      child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
-        child: Column(
-          children: [
-            Container(
-              height: 10,
-              width: 60,
-              margin: EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text(
-                      'Nama : ',
-                    ),
-                  ),
-                  Text(name)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Deskripsi : '),
-                  ),
-                  Text(desc)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Akses : '),
-                  ),
-                  Flexible(child: Text(user_access))
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Dibuat Oleh : '),
-                  ),
-                  Text(created_by)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Dibuat : '),
-                  ),
-                  Text(created_on)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Diperbaharui : '),
-                  ),
-                  Text(updated_on)
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -508,27 +406,20 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                       index]
                                                                   .updated_on;
 
-                                                              // Navigator.push(
-                                                              //   context,
-                                                              //   MaterialPageRoute(
-                                                              //       builder:
-                                                              //           (context) =>
-                                                              //               Settings()),
-                                                              // );
-                                                              slidePanelOn(_attributeDetail(
-                                                                  name,
-                                                                  description,
-                                                                  user_access,
-                                                                  created_by,
-                                                                  created_on,
-                                                                  updated_on));
-
-                                                              // showViewDialog(
-                                                              //     context,
-                                                              //     name,
-                                                              //     description,
-                                                              //     user_access,
-                                                              //     created_by);
+                                                              slidePanelOn(
+                                                                  SlideUpView(
+                                                                name: name,
+                                                                desc:
+                                                                    description,
+                                                                user_access:
+                                                                    user_access,
+                                                                created_by:
+                                                                    created_by,
+                                                                created_on:
+                                                                    created_on,
+                                                                updated_on:
+                                                                    updated_on,
+                                                              ));
                                                             }
                                                             if (value ==
                                                                 'delete') {

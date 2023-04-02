@@ -5,8 +5,11 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
+import '../custom_widget/custom_widget.dart';
 import '../design_storage/design_app_theme.dart';
+import '../design_storage/recent_activities_list_view.dart';
 import '../design_storage/recent_files_list_view.dart';
+import '../design_storage/shared_folders_list_view.dart';
 
 class RecentPage extends StatefulWidget {
   @override
@@ -15,7 +18,7 @@ class RecentPage extends StatefulWidget {
 
 class _RecentPageState extends State<RecentPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -26,7 +29,7 @@ class _RecentPageState extends State<RecentPage> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .40;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .45;
 
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),
@@ -65,14 +68,49 @@ class _RecentPageState extends State<RecentPage> {
             SizedBox(
               height: MediaQuery.of(context).padding.top,
             ),
-            getAppBarUI(),
+            TopHeader(
+              title: 'DMS',
+              subtitle: 'Recent File / Activity',
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      RecentFilesListView(),
+                      // SearchBar(),
+                      DefaultTabController(
+                          length: 2, // length of tabs
+                          initialIndex: 0,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Container(
+                                  child: TabBar(
+                                    labelColor: Colors.green,
+                                    unselectedLabelColor: Colors.black,
+                                    tabs: [
+                                      Tab(text: 'Recent File'),
+                                      Tab(text: 'Recent Activity'),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                    height: 400, //height of TabBarView
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            top: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: TabBarView(children: <Widget>[
+                                      Container(
+                                        child: RecentFilesListView(),
+                                      ),
+                                      Container(
+                                        child: RecentActivitiesListView(),
+                                      ),
+                                    ]))
+                              ])),
                     ],
                   ),
                 ),
@@ -107,31 +145,18 @@ class _RecentPageState extends State<RecentPage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.av_timer),
-              label: 'Recent',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.folder_shared),
               label: 'Shared',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
             ),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
         ),
       ),
-    );
-  }
-
-  Widget _scrollingList(ScrollController sc) {
-    return ListView.builder(
-      controller: sc,
-      itemCount: 50,
-      itemBuilder: (BuildContext context, int i) {
-        return Container(
-          padding: const EdgeInsets.all(12.0),
-          child: Text("$i"),
-        );
-      },
     );
   }
 
@@ -145,61 +170,12 @@ class _RecentPageState extends State<RecentPage> {
                 )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecentPage()));
+            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       } else if (_selectedIndex == 2) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
       }
       print(_selectedIndex);
     });
-  }
-
-  Widget getAppBarUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'DMS',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    letterSpacing: 0.27,
-                    color: DesignAppTheme.darkerText,
-                  ),
-                ),
-                Text(
-                  'Recent Files',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.2,
-                    color: DesignAppTheme.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
-            },
-            child: Container(
-              width: 60,
-              height: 60,
-              child: Image.asset('assets/design_storage/userImage.png'),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

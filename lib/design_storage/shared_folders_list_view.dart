@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controller.dart';
+import '../custom_widget/custom_widget.dart';
 import 'home_design.dart';
 
 class SharedFoldersListView extends StatefulWidget {
@@ -40,109 +41,6 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
 
   int folders_length = 0;
 
-  Widget _attributeDetail(String name, String desc, String user_access,
-      String created_by, String created_on, String updated_on) {
-    return Container(
-      // decoration: BoxDecoration(color: Colors.amber),
-      child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
-        child: Column(
-          children: [
-            Container(
-              height: 10,
-              width: 60,
-              margin: EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text(
-                      'Nama : ',
-                    ),
-                  ),
-                  Text(name)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Deskripsi : '),
-                  ),
-                  Text(desc)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Akses : '),
-                  ),
-                  Flexible(child: Text(user_access))
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Dibuat Oleh : '),
-                  ),
-                  Text(created_by)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Dibuat : '),
-                  ),
-                  Text(created_on)
-                ],
-              ),
-            ),
-            Divider(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Diperbaharui : '),
-                  ),
-                  Text(updated_on)
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     ScrollController sc = new ScrollController();
@@ -162,16 +60,16 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
               return const SizedBox();
             } else {
               return Consumer<ApiFolders>(builder: (context, data, _) {
-                folders_length = data.dataFolders.length;
+                folders_length = data.dataSharedFolder.length;
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                       top: 0, bottom: 150, right: 16, left: 16),
-                  itemCount: data.dataFolders.length,
+                  itemCount: data.dataSharedFolder.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
-                    final int count = data.dataFolders.length > 10
+                    final int count = data.dataSharedFolder.length > 10
                         ? 10
-                        : data.dataFolders.length;
+                        : data.dataSharedFolder.length;
                     final Animation<double> animation =
                         Tween<double>(begin: 0.0, end: 1.0).animate(
                             CurvedAnimation(
@@ -186,8 +84,9 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     DesignHomeScreen(
-                                        folder_parent_id:
-                                            data.dataFolders[index].folder_id)),
+                                        folder_parent_id: data
+                                            .dataSharedFolder[index]
+                                            .folder_id)),
                             (Route<dynamic> route) => false);
                       },
                       child: AnimatedBuilder(
@@ -232,7 +131,7 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                       padding: EdgeInsets.only(
                                                           right: 15),
                                                       child: data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .type ==
                                                               'Folder'
@@ -259,7 +158,7 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                               children: [
                                                                 Text(
                                                                   data
-                                                                      .dataFolders[
+                                                                      .dataSharedFolder[
                                                                           index]
                                                                       .name,
                                                                   textAlign:
@@ -287,14 +186,14 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                           Row(
                                                             children: [
                                                               Text(
-                                                                data.dataFolders[index].type ==
+                                                                data.dataSharedFolder[index].type ==
                                                                         'Folder'
                                                                     ? data
-                                                                        .dataFolders[
+                                                                        .dataSharedFolder[
                                                                             index]
                                                                         .type
                                                                     : data
-                                                                        .dataFolders[
+                                                                        .dataSharedFolder[
                                                                             index]
                                                                         .format,
                                                                 textAlign:
@@ -320,11 +219,11 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                                           left:
                                                                               15),
                                                                   child: Text(
-                                                                    data.dataFolders[index].size ==
+                                                                    data.dataSharedFolder[index].size ==
                                                                             null
                                                                         ? ''
                                                                         : data
-                                                                            .dataFolders[index]
+                                                                            .dataSharedFolder[index]
                                                                             .size
                                                                             .toString(),
                                                                     textAlign:
@@ -469,58 +368,51 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                             if (value ==
                                                                 'view') {
                                                               var name = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .name;
                                                               var description = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .description;
                                                               var user_access = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .user_access;
                                                               var created_by = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .created_by;
 
                                                               var created_on = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .created_on;
 
                                                               var updated_on = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .updated_on;
 
-                                                              // Navigator.push(
-                                                              //   context,
-                                                              //   MaterialPageRoute(
-                                                              //       builder:
-                                                              //           (context) =>
-                                                              //               Settings()),
-                                                              // );
-                                                              slidePanelOn(_attributeDetail(
-                                                                  name,
-                                                                  description,
-                                                                  user_access,
-                                                                  created_by,
-                                                                  created_on,
-                                                                  updated_on));
-
-                                                              // showViewDialog(
-                                                              //     context,
-                                                              //     name,
-                                                              //     description,
-                                                              //     user_access,
-                                                              //     created_by);
+                                                              slidePanelOn(
+                                                                  SlideUpView(
+                                                                name: name,
+                                                                desc:
+                                                                    description,
+                                                                user_access:
+                                                                    user_access,
+                                                                created_by:
+                                                                    created_by,
+                                                                created_on:
+                                                                    created_on,
+                                                                updated_on:
+                                                                    updated_on,
+                                                              ));
                                                             }
                                                             if (value ==
                                                                 'delete') {
                                                               var folder_id = data
-                                                                  .dataFolders[
+                                                                  .dataSharedFolder[
                                                                       index]
                                                                   .folder_id;
                                                               // deleteData(

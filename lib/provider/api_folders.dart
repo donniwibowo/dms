@@ -15,6 +15,10 @@ class ApiFolders extends ChangeNotifier {
   List<CategoryModel> get dataRecentFolders => _dataRecent;
   List<CategoryModel> _dataSearch = [];
   List<CategoryModel> get dataSearchFolders => _dataSearch;
+  List<CategoryModel> _dataActivities = [];
+  List<CategoryModel> get dataRecentActivities => _dataActivities;
+  List<CategoryModel> _dataSharedFolder = [];
+  List<CategoryModel> get dataSharedFolder => _dataSharedFolder;
   late SharedPreferences sharedPreferences;
   String email = "unknown";
   String user_id = "";
@@ -60,53 +64,6 @@ class ApiFolders extends ChangeNotifier {
     } else {
       throw Exception('Failed to load Data');
     }
-
-    // if (keyword != "") {
-    //   final url =
-    //       'https://dms.tigajayabahankue.com/api/files/search';
-    //   final response = await http
-    //       .get(url + '?user_token=' + user_token + '&keyword=' + keyword);
-
-    //   if (response.body.isNotEmpty) {
-    //     if (response.statusCode == 200) {
-    //       print('masuk 200');
-    //       final result =
-    //           json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-    //       _dataSearch = result
-    //           .map<CategoryModel>((json) => CategoryModel.fromJson(json))
-    //           .toList();
-    //       return _dataSearch;
-    //     } else {
-    //       print('masuk selain 200');
-    //     }
-    //   } else {
-    //     print('Terjadi disini kesalahannya');
-    //   }
-    // } else {
-    //   final url =
-    //       'https://dms.tigajayabahankue.com/api/files/getfiles';
-    //   final response = await http.get(url +
-    //       '?user_token=' +
-    //       user_token +
-    //       '&folder_parent_id=' +
-    //       folder_parent_id);
-
-    //   if (response.body.isNotEmpty) {
-    //     if (response.statusCode == 200) {
-    //       print('masuk 200');
-    //       final result =
-    //           json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-    //       _data = result
-    //           .map<CategoryModel>((json) => CategoryModel.fromJson(json))
-    //           .toList();
-    //       return _data;
-    //     } else {
-    //       print('masuk selain 200');
-    //     }
-    //   } else {
-    //     print('Terjadi disini kesalahannya');
-    //   }
-    // }
   }
 
   Future<List<CategoryModel>?> getDetailFolder(String folder_parent_id) async {
@@ -200,10 +157,10 @@ class ApiFolders extends ChangeNotifier {
         final result =
             json.decode(response.body)['data'].cast<Map<String, dynamic>>();
 
-        _data = result
+        _dataSharedFolder = result
             .map<CategoryModel>((json) => CategoryModel.fromJson(json))
             .toList();
-        return _data;
+        return _dataSharedFolder;
       } else {
         print('masuk selain 200');
       }
@@ -211,46 +168,28 @@ class ApiFolders extends ChangeNotifier {
       print('Terjadi disini kesalahannya');
     }
   }
-// //ADD DATA
-// Future<bool> storeEmployee(String name, String salary, String age) async {
-//   final url = 'http://employee-crud-flutter.daengweb.id/add.php';
-//   final response = await http.post(url, body: {
-//     'employee_name': name,
-//     'employee_salary': salary,
-//     'employee_age': age
-//   });
 
-//   final result = json.decode(response.body);
-//   if (response.statusCode == 200 && result['message'] == 'success') {
-//     notifyListeners();
-//     return true;
-//   }
-//   return false;
-// }
+  Future<List<CategoryModel>?> getRecentActivities() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    final url =
+        'https://dms.tigajayabahankue.com/api/files/getrecentactivities';
+    final response = await http.get(url + '?user_token=' + user_token + '');
+    if (response.body.isNotEmpty) {
+      if (response.statusCode == 200) {
+        print('masuk 200');
+        final result =
+            json.decode(response.body)['data'].cast<Map<String, dynamic>>();
 
-// Future<EmployeeModel> findEmployee(String id) async {
-//   return _data.firstWhere((i) => i.id == id);
-// }
-
-// Future<bool> updateEmployee(id, name, salary, age) async {
-//   final url = 'http://employee-crud-flutter.daengweb.id/update.php';
-//   final response = await http.post(url, body: {
-//     'id': id,
-//     'employee_name': name,
-//     'employee_salary': salary,
-//     'employee_age': age
-//   });
-
-//   final result = json.decode(response.body);
-//   if (response.statusCode == 200 && result['message'] == 'success') {
-//     notifyListeners();
-//     return true;
-//   }
-//   return false;
-// }
-
-// Future<void> deleteEmployee(String id) async {
-//   final url = 'http://employee-crud-flutter.daengweb.id/delete.php';
-//   await http.get(url + '?id=$id');
-// }
+        _dataActivities = result
+            .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+            .toList();
+        return _dataActivities;
+      } else {
+        print('masuk selain 200');
+      }
+    } else {
+      print('Terjadi disini kesalahannya');
+    }
+  }
 }
