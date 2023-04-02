@@ -165,13 +165,19 @@ class SlideUpView extends StatelessWidget {
               child: Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
                     child: Text(
-                      'Nama : ',
+                      'Nama',
+                      style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ),
-                  Text(name)
+                  Text(
+                    name,
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500),
+                  )
                 ],
               ),
             ),
@@ -180,11 +186,17 @@ class SlideUpView extends StatelessWidget {
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
-                    child: Text('Deskripsi : '),
+                    child: Text(
+                      'Deskripsi',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
-                  Text(desc)
+                  Text(desc,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500))
                 ],
               ),
             ),
@@ -193,11 +205,19 @@ class SlideUpView extends StatelessWidget {
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
-                    child: Text('Akses : '),
+                    child: Text(
+                      'Akses',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
-                  Flexible(child: Text(user_access))
+                  Flexible(
+                      child: Text(user_access,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500)))
                 ],
               ),
             ),
@@ -206,11 +226,17 @@ class SlideUpView extends StatelessWidget {
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
-                    child: Text('Dibuat Oleh : '),
+                    child: Text(
+                      'Dibuat Oleh',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
-                  Text(created_by)
+                  Text(created_by,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500))
                 ],
               ),
             ),
@@ -219,11 +245,17 @@ class SlideUpView extends StatelessWidget {
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Dibuat : '),
+                    child: Text(
+                      'Tanggal Dibuat',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
-                  Text(created_on)
+                  Text(created_on,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500))
                 ],
               ),
             ),
@@ -232,11 +264,17 @@ class SlideUpView extends StatelessWidget {
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
               child: Row(
                 children: [
-                  Padding(
+                  Container(
+                    width: 130,
                     padding: EdgeInsets.only(right: 10),
-                    child: Text('Tanggal Diperbaharui : '),
+                    child: Text(
+                      'Tanggal Diperbaharui',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
-                  Text(updated_on)
+                  Text(updated_on,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500))
                 ],
               ),
             ),

@@ -72,7 +72,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .40;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .45;
 
     print("Ini keywordnya = " + widget.keyword);
 
