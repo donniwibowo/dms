@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/pages/recent_files_page.dart';
+import 'package:best_flutter_ui_templates/pages/recent_page.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -17,7 +17,7 @@ class SharedFoldersPage extends StatefulWidget {
 
 class _SharedFoldersPageState extends State<SharedFoldersPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -113,12 +113,12 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.av_timer),
-              label: 'Recent',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.folder_shared),
               label: 'Shared',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -138,10 +138,10 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
                 )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecentPage()));
+            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       } else if (_selectedIndex == 2) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
       }
     });
   }

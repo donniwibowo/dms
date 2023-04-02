@@ -7,7 +7,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
 import '../custom_widget/custom_widget.dart';
 import '../design_storage/design_app_theme.dart';
+import '../design_storage/recent_activities_list_view.dart';
 import '../design_storage/recent_files_list_view.dart';
+import '../design_storage/shared_folders_list_view.dart';
 
 class RecentPage extends StatefulWidget {
   @override
@@ -16,7 +18,7 @@ class RecentPage extends StatefulWidget {
 
 class _RecentPageState extends State<RecentPage> {
   // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -68,7 +70,7 @@ class _RecentPageState extends State<RecentPage> {
             ),
             TopHeader(
               title: 'DMS',
-              subtitle: 'Recent File / Folder',
+              subtitle: 'Recent File / Activity',
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -76,8 +78,39 @@ class _RecentPageState extends State<RecentPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      SearchBar(),
-                      RecentFilesListView(),
+                      // SearchBar(),
+                      DefaultTabController(
+                          length: 2, // length of tabs
+                          initialIndex: 0,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Container(
+                                  child: TabBar(
+                                    labelColor: Colors.green,
+                                    unselectedLabelColor: Colors.black,
+                                    tabs: [
+                                      Tab(text: 'Recent File'),
+                                      Tab(text: 'Recent Activity'),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                    height: 400, //height of TabBarView
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            top: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: TabBarView(children: <Widget>[
+                                      Container(
+                                        child: RecentFilesListView(),
+                                      ),
+                                      Container(
+                                        child: RecentActivitiesListView(),
+                                      ),
+                                    ]))
+                              ])),
                     ],
                   ),
                 ),
@@ -112,12 +145,12 @@ class _RecentPageState extends State<RecentPage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.av_timer),
-              label: 'Recent',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.folder_shared),
               label: 'Shared',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -137,10 +170,10 @@ class _RecentPageState extends State<RecentPage> {
                 )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecentPage()));
+            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       } else if (_selectedIndex == 2) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
       }
       print(_selectedIndex);
     });

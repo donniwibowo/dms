@@ -16,7 +16,7 @@ import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
 import '../custom_widget/custom_widget.dart';
-import '../pages/recent_files_page.dart';
+import '../pages/recent_page.dart';
 import '../pages/shared_folders_page.dart';
 import 'design_app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -167,12 +167,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.av_timer),
-              label: 'Recent',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.folder_shared),
               label: 'Shared',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.av_timer),
+              label: 'Recent',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -195,10 +195,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                 )));
       } else if (_selectedIndex == 1) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecentPage()));
+            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
       } else if (_selectedIndex == 2) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SharedFoldersPage()));
+            .push(MaterialPageRoute(builder: (context) => RecentPage()));
       }
       print(_selectedIndex);
     });
