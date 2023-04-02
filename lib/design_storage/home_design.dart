@@ -410,10 +410,15 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Buat Folder"),
-      content: TextField(
+      content: Container(
+        child: <Widget>
+        TextField(
         controller: namaController,
         decoration: InputDecoration(hintText: 'Input nama folder'),
-      ),
+      ),[
+
+        ] ,
+      )
       actions: [
         TextButton(
           child: Text("Buat"),
