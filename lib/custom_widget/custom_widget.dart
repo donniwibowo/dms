@@ -64,8 +64,16 @@ class TopHeader extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
+  final String searchPlaceHolder;
+
+  const SearchBar({
+    Key? key,
+    this.searchPlaceHolder = "",
+  }) : super(key: key);
+
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
+    searchController.text = searchPlaceHolder;
     return Padding(
         padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
         child: Row(
@@ -86,7 +94,7 @@ class SearchBar extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       // hintText: search,
-                      labelText: 'Cari dokumen di sini',
+                      labelText: 'Cari dokumen..',
                       // border: InputBorder.none,
                       helperStyle: TextStyle(
                         fontWeight: FontWeight.bold,

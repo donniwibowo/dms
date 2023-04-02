@@ -128,7 +128,9 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      SearchBar(),
+                      SearchBar(
+                        searchPlaceHolder: widget.keyword,
+                      ),
                       CategoryListView(
                         folder_parent_id: widget.folder_parent_id,
                         keyword: widget.keyword,
