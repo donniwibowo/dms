@@ -43,6 +43,7 @@ dependencies:
     shared_preferences: any
     flutter_expandable_fab: ^1.7.1
     sliding_up_panel: ^2.0.0+1
+    multi_select_flutter: ^4.0.0
 dev_dependencies:
     flutter_test:
         sdk: flutter

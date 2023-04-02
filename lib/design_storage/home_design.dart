@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
 // import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
@@ -7,7 +8,7 @@ import 'package:best_flutter_ui_templates/settings.dart';
 // import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 // import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-
+import 'package:best_flutter_ui_templates/design_storage/models/category.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class DesignHomeScreen extends StatefulWidget {
   final String folder_parent_id;
@@ -46,7 +48,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   double _fabHeight = 0;
   double _panelHeightOpen = 0;
   double _panelHeightClosed = 95.0;
-
+  ApiFolders serviceAPI = ApiFolders();
+  late Future<List<CategoryModel>> listData;
   void initState() {
     super.initState();
     checkLoginStatus();
@@ -108,7 +111,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               backgroundColor: Colors.red,
               onPressed: () {
                 //file upload
-                _selectFile();
+                showInputFileDialog(context, 'test', widget.folder_parent_id);
+                // _selectFile();
               },
             ),
           ],
@@ -278,8 +282,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     }
   }
 
-  _selectFile() async {
+  _selectFile(String perihalController, String nomorController,
+      String descriptionController, String folder_parent_id) async {
     final result = await FilePicker.platform.pickFiles();
+    String user = sharedPreferences.getString("user_id").toString();
     if (result != null) {
       // Do something with the file
       try {
@@ -294,12 +300,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                 '?user_token=' +
                 user_token,
             {
-              'parent_folder': 0,
-              'perihal': 'test',
-              'nomor': 'test123',
-              'description': 'test',
-              'related_document_ids': 'test',
-              'user_access': '[]'
+              'parent_folder': folder_parent_id,
+              'perihal': perihalController,
+              'nomor': nomorController,
+              'description': descriptionController,
+              'related_document_ids': '[]',
+              'user_access': '['+user+']'
             },
             {
               'file': _selectedFile!
@@ -324,10 +330,17 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     setState(() {});
   }
 
-  createFolder(String name, String folder_parent_id) async {
+  createFolder(String name, String descriptionController,
+      String folder_parent_id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
-    Map data = {'name': name, 'parent_folder': folder_parent_id};
+    String user = sharedPreferences.getString("user_id").toString();
+    Map data = {
+      'name': name,
+      'description': descriptionController,
+      'parent_folder': folder_parent_id,
+      'users': '[' + user + ']'
+    };
     var jsonResponse = null;
     var response = await http.post(
         "https://dms.tigajayabahankue.com/api/files/createfolder?user_token=" +
@@ -338,9 +351,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     //         user_token!,
     //     body: data);
     jsonResponse = json.decode(response.body);
+    print(jsonResponse);
     if (response.statusCode == 200) {
       if (jsonResponse != null) {
         showAlertDialog(context, "Folder Uploaded.");
+      } else {
+        showAlertDialog(context, "Folder Failed Upload.");
       }
     } else {
       showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
@@ -396,28 +412,100 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
+  //untuk upload folder
   showInputDialog(
       BuildContext context, String message, String folder_parent_id) {
     final TextEditingController namaController = new TextEditingController();
     final TextEditingController descriptionController =
         new TextEditingController();
+
+    final selectedItems = <String>{};
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Buat Folder"),
-      content: Container(
-        child: <Widget>
-        TextField(
-        controller: namaController,
-        decoration: InputDecoration(hintText: 'Input nama folder'),
-      ),[
-
-        ] ,
-      )
+      title: Text("Upload File"),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            controller: namaController,
+            decoration: InputDecoration(hintText: 'Input Nama Folder'),
+          ),
+          TextField(
+            controller: descriptionController,
+            decoration: InputDecoration(hintText: 'Input Deskripsi Folder'),
+          ),
+        ],
+      ),
       actions: [
+        TextButton(
+          child: Text("Batal"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         TextButton(
           child: Text("Buat"),
           onPressed: () {
-            createFolder(namaController.text, folder_parent_id);
+            createFolder(namaController.text, descriptionController.text,
+                folder_parent_id);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  //untuk upload file
+  showInputFileDialog(
+      BuildContext context, String message, String folder_parent_id) {
+    final TextEditingController perihalController = new TextEditingController();
+    final TextEditingController nomorController = new TextEditingController();
+    final TextEditingController descriptionController =
+        new TextEditingController();
+
+    final selectedItems = <String>{};
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Buat Folder"),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            controller: perihalController,
+            decoration: InputDecoration(hintText: 'Perihal'),
+          ),
+          TextField(
+            controller: nomorController,
+            decoration: InputDecoration(hintText: 'Nomor'),
+          ),
+          TextField(
+            controller: descriptionController,
+            decoration: InputDecoration(hintText: 'Description'),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          child: Text("Batal"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        TextButton(
+          child: Text("Pilih File"),
+          onPressed: () {
+            _selectFile(perihalController.text, nomorController.text,
+                descriptionController.text, folder_parent_id);
             Navigator.pop(context);
           },
         ),
