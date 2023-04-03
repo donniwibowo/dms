@@ -325,6 +325,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         } else {
           showAlertDialog(context, "Failed Upload.");
         }
+        setState(() {});
       } catch (e) {
         print('error message');
         showAlertDialog(context, "Failed Upload (Error).");
@@ -473,6 +474,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             decoration: InputDecoration(hintText: 'Input Deskripsi Folder'),
           ),
           MultiSelectDialogField(
+            title: Text("Pilih Akses User"),
+            buttonText: Text("Pilih Akses User"),
             items: _items,
             listType: MultiSelectListType.CHIP,
             onConfirm: (values) {
@@ -498,6 +501,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               selectedItems,
             );
             Navigator.pop(context);
+            setState(() {});
           },
         ),
       ],
@@ -544,6 +548,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               decoration: InputDecoration(hintText: 'Description'),
             ),
             MultiSelectDialogField(
+              title: Text("Pilih Akses User"),
+              buttonText: Text("Pilih Akses User"),
               items: _items,
               listType: MultiSelectListType.CHIP,
               onConfirm: (values) {
@@ -551,6 +557,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               },
             ),
             MultiSelectDialogField(
+              title: Text("Pilih Related Item"),
+              buttonText: Text("Pilih Related Item"),
               items: _relatedItems,
               listType: MultiSelectListType.CHIP,
               onConfirm: (values) {
