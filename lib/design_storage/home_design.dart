@@ -53,6 +53,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   void initState() {
     super.initState();
     checkLoginStatus();
+    fillItemsList();
   }
 
   late SharedPreferences sharedPreferences;
@@ -305,7 +306,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               'nomor': nomorController,
               'description': descriptionController,
               'related_document_ids': '[]',
-              'user_access': '['+user+']'
+              'user_access': '[' + user + ']'
             },
             {
               'file': _selectedFile!
@@ -331,15 +332,17 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   }
 
   createFolder(String name, String descriptionController,
-      String folder_parent_id) async {
+      String folder_parent_id,selectedUsers) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     String user = sharedPreferences.getString("user_id").toString();
+    print(selectedUsers);
+    print('selected user');
     Map data = {
       'name': name,
       'description': descriptionController,
       'parent_folder': folder_parent_id,
-      'users': '[' + user + ']'
+      'users': selectedUsers.toString()
     };
     var jsonResponse = null;
     var response = await http.post(
@@ -412,14 +415,49 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
+  // Future<List<MultiSelectItem<String>>> fetchAnimals() async {
+  //    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   var user_token = sharedPreferences.getString("user_token");
+  //   final response = await http.get(Uri.parse(
+  //       'https://dms.tigajayabahankue.com/api/files/getrelateddocumentbyuser'));
+  //   if (response.statusCode == 200) {
+  //     // If the server returns a successful response, parse the JSON
+  //     // response and return a list of MultiSelectItems.
+  //     final List<dynamic> data = json.decode(response.body);
+  //     print('data multiselect --------------------------------?');
+  //     print(data);
+  //      throw Exception('Failed to fetch animals');
+  //     return data
+  //         .map((data) =>
+  //             MultiSelectItem<String>(data['name'], data['file_id']))
+  //         .toList();
+  //   } else {
+  //     // If the server did not return a successful response, throw an error.
+  //     throw Exception('Failed to fetch animals');
+  //   }
+  // }
+
+  List<MultiSelectItem<String>> _items = [];
+  Future<void> fillItemsList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    final response = await http.get(Uri.parse('https://dms.tigajayabahankue.com/api/user/getallusers?user_token='+user_token!));
+    final jsonResponse = json.decode(response.body);
+    final List<dynamic> itemList = jsonResponse['users'];
+    print(itemList);
+    _items = itemList
+        .map((data) => MultiSelectItem<String>(data['user_id'], data['fullname']))
+        .toList();
+    print(_items);
+  }
+
   //untuk upload folder
   showInputDialog(
       BuildContext context, String message, String folder_parent_id) {
     final TextEditingController namaController = new TextEditingController();
     final TextEditingController descriptionController =
         new TextEditingController();
-
-    final selectedItems = <String>{};
+    List<String>? selectedItems= [];
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Upload File"),
@@ -435,6 +473,14 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             controller: descriptionController,
             decoration: InputDecoration(hintText: 'Input Deskripsi Folder'),
           ),
+          MultiSelectDialogField(
+            items: _items,
+            listType: MultiSelectListType.CHIP,
+            onConfirm: (values) 
+            {
+              selectedItems=values.cast<String>();
+            },
+          ),
         ],
       ),
       actions: [
@@ -448,7 +494,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           child: Text("Buat"),
           onPressed: () {
             createFolder(namaController.text, descriptionController.text,
-                folder_parent_id);
+                folder_parent_id,selectedItems);
             Navigator.pop(context);
           },
         ),
