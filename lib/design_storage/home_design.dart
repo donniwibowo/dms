@@ -53,6 +53,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   void initState() {
     super.initState();
     checkLoginStatus();
+    fillItemsList();
+    relatedDocumentByUserList();
   }
 
   late SharedPreferences sharedPreferences;
@@ -282,8 +284,13 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     }
   }
 
-  _selectFile(String perihalController, String nomorController,
-      String descriptionController, String folder_parent_id) async {
+  _selectFile(
+      String perihalController,
+      String nomorController,
+      String descriptionController,
+      String folder_parent_id,
+      selectedUsers,
+      relatedItems) async {
     final result = await FilePicker.platform.pickFiles();
     String user = sharedPreferences.getString("user_id").toString();
     if (result != null) {
@@ -304,8 +311,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               'perihal': perihalController,
               'nomor': nomorController,
               'description': descriptionController,
-              'related_document_ids': '[]',
-              'user_access': '['+user+']'
+              'related_document_ids': relatedItems.toString(),
+              'user_access': selectedUsers.toString()
             },
             {
               'file': _selectedFile!
@@ -318,6 +325,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         } else {
           showAlertDialog(context, "Failed Upload.");
         }
+        setState(() {});
       } catch (e) {
         print('error message');
         showAlertDialog(context, "Failed Upload (Error).");
@@ -331,15 +339,17 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   }
 
   createFolder(String name, String descriptionController,
-      String folder_parent_id) async {
+      String folder_parent_id, selectedUsers) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     String user = sharedPreferences.getString("user_id").toString();
+    print(selectedUsers);
+    print('selected user');
     Map data = {
       'name': name,
       'description': descriptionController,
       'parent_folder': folder_parent_id,
-      'users': '[' + user + ']'
+      'users': selectedUsers.toString()
     };
     var jsonResponse = null;
     var response = await http.post(
@@ -412,17 +422,45 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
+  List<MultiSelectItem<String>> _items = [];
+  Future<void> fillItemsList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    final response = await http.get(Uri.parse(
+        'https://dms.tigajayabahankue.com/api/user/getallusers?user_token=' +
+            user_token!));
+    final jsonResponse = json.decode(response.body);
+    final List<dynamic> itemList = jsonResponse['users'];
+    _items = itemList
+        .map((data) =>
+            MultiSelectItem<String>(data['user_id'], data['fullname']))
+        .toList();
+  }
+
+  List<MultiSelectItem<String>> _relatedItems = [];
+  Future<void> relatedDocumentByUserList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    final response = await http.get(Uri.parse(
+        'https://dms.tigajayabahankue.com/api/files/getrelateddocumentbyuser?user_token=' +
+            user_token!));
+    final jsonResponse = json.decode(response.body);
+    final List<dynamic> itemList = jsonResponse['data'];
+    _relatedItems = itemList
+        .map((data) => MultiSelectItem<String>(data['file_id'], data['name']))
+        .toList();
+  }
+
   //untuk upload folder
   showInputDialog(
       BuildContext context, String message, String folder_parent_id) {
     final TextEditingController namaController = new TextEditingController();
     final TextEditingController descriptionController =
         new TextEditingController();
-
-    final selectedItems = <String>{};
+    List<String>? selectedItems = [];
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Upload File"),
+      title: Text("Upload Folder"),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -434,6 +472,15 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           TextField(
             controller: descriptionController,
             decoration: InputDecoration(hintText: 'Input Deskripsi Folder'),
+          ),
+          MultiSelectDialogField(
+            title: Text("Pilih Akses User"),
+            buttonText: Text("Pilih Akses User"),
+            items: _items,
+            listType: MultiSelectListType.CHIP,
+            onConfirm: (values) {
+              selectedItems = values.cast<String>();
+            },
           ),
         ],
       ),
@@ -447,9 +494,14 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         TextButton(
           child: Text("Buat"),
           onPressed: () {
-            createFolder(namaController.text, descriptionController.text,
-                folder_parent_id);
+            createFolder(
+              namaController.text,
+              descriptionController.text,
+              folder_parent_id,
+              selectedItems,
+            );
             Navigator.pop(context);
+            setState(() {});
           },
         ),
       ],
@@ -472,27 +524,49 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     final TextEditingController descriptionController =
         new TextEditingController();
 
-    final selectedItems = <String>{};
+    List<String>? selectedItems = [];
+    List<String>? relatedItems = [];
+    relatedDocumentByUserList();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Buat Folder"),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          TextField(
-            controller: perihalController,
-            decoration: InputDecoration(hintText: 'Perihal'),
-          ),
-          TextField(
-            controller: nomorController,
-            decoration: InputDecoration(hintText: 'Nomor'),
-          ),
-          TextField(
-            controller: descriptionController,
-            decoration: InputDecoration(hintText: 'Description'),
-          ),
-        ],
+      title: Text("Buat File"),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              controller: perihalController,
+              decoration: InputDecoration(hintText: 'Perihal'),
+            ),
+            TextField(
+              controller: nomorController,
+              decoration: InputDecoration(hintText: 'Nomor'),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(hintText: 'Description'),
+            ),
+            MultiSelectDialogField(
+              title: Text("Pilih Akses User"),
+              buttonText: Text("Pilih Akses User"),
+              items: _items,
+              listType: MultiSelectListType.CHIP,
+              onConfirm: (values) {
+                selectedItems = values.cast<String>();
+              },
+            ),
+            MultiSelectDialogField(
+              title: Text("Pilih Related Item"),
+              buttonText: Text("Pilih Related Item"),
+              items: _relatedItems,
+              listType: MultiSelectListType.CHIP,
+              onConfirm: (values) {
+                relatedItems = values.cast<String>();
+              },
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -504,8 +578,13 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         TextButton(
           child: Text("Pilih File"),
           onPressed: () {
-            _selectFile(perihalController.text, nomorController.text,
-                descriptionController.text, folder_parent_id);
+            _selectFile(
+                perihalController.text,
+                nomorController.text,
+                descriptionController.text,
+                folder_parent_id,
+                selectedItems,
+                relatedItems);
             Navigator.pop(context);
           },
         ),
