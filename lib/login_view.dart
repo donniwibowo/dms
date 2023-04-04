@@ -152,8 +152,8 @@ class _MyappState extends State<LoginView> {
     Map data = {'email': email, 'password': password};
     var jsonResponse = null;
     var response = await http.post(
-        // "https://dms.tigajayabahankue.com/api/user/login",
-        "https://dms.tigajayabahankue.com/api/user/login",
+        // "https://192.168.1.28/leap_integra/master/dms/api/user/login",
+        "https://192.168.1.28/leap_integra/master/dms/api/user/login",
         body: data);
     jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -164,6 +164,7 @@ class _MyappState extends State<LoginView> {
         sharedPreferences.setString("email", jsonResponse['data']['email']);
         sharedPreferences.setString(
             "fullname", jsonResponse['data']['fullname']);
+        sharedPreferences.setString("phone", jsonResponse['data']['phone']);
         sharedPreferences.setString("user_id", jsonResponse['data']['user_id']);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(

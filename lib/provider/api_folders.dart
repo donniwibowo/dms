@@ -44,7 +44,7 @@ class ApiFolders extends ChangeNotifier {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
 
     final url =
-        'https://dms.tigajayabahankue.com/api/files/getfiles';
+        'https://192.168.1.28/leap_integra/master/dms/api/files/getfiles';
     final response = await http.get(url +
         '?user_token=' +
         user_token +
@@ -70,7 +70,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://dms.tigajayabahankue.com/api/files/getfiles';
+        'https://192.168.1.28/leap_integra/master/dms/api/files/getfiles';
     final response = await http.get(url +
         '?user_token=' +
         user_token +
@@ -98,8 +98,7 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getSearchFolder(String keyword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url =
-        'https://dms.tigajayabahankue.com/api/files/search';
+    final url = 'https://192.168.1.28/leap_integra/master/dms/api/files/search';
     final response = await http
         .get(url + '?user_token=' + user_token + '&keyword=' + keyword);
     if (response.body.isNotEmpty) {
@@ -125,7 +124,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://dms.tigajayabahankue.com/api/files/getrecentfiles';
+        'https://192.168.1.28/leap_integra/master/dms/api/files/getrecentfiles';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -149,7 +148,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://dms.tigajayabahankue.com/api/files/getsharedfolder';
+        'https://192.168.1.28/leap_integra/master/dms/api/files/getsharedfolder';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -173,7 +172,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://dms.tigajayabahankue.com/api/files/getrecentactivities';
+        'https://192.168.1.28/leap_integra/master/dms/api/files/getrecentactivities';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {

@@ -22,6 +22,8 @@ class Settings extends StatefulWidget {
 class _SettingsOnePageState extends State<Settings> {
   late bool _dark;
   String username = "";
+  String email = "";
+  String phone = "";
   String user_token = "";
   String profile = "";
   String nama = "";
@@ -77,6 +79,8 @@ class _SettingsOnePageState extends State<Settings> {
       setState(() {
         username = prefs.getString("fullname")!;
         user_token = prefs.getString("user_token")!;
+        email = prefs.getString("email")!;
+        phone = prefs.getString("phone")!;
         // print(username);
       });
     }
@@ -159,106 +163,213 @@ class _SettingsOnePageState extends State<Settings> {
           fit: StackFit.expand,
           children: <Widget>[
             SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              // padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Card(
-                    elevation: 8.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    color: Color(0xff132137),
-                    child: ListTile(
-                      onTap: () {
-                        //open edit profile
-                      },
-                      title: Text(
-                        "$username",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Card(
-                    elevation: 4.0,
-                    margin: const EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                  Container(
+                    // height: 250,
+                    // decoration: BoxDecoration(
+                    //   gradient: LinearGradient(
+                    //     colors: [Colors.red, Colors.deepOrange.shade300],
+                    //     begin: Alignment.centerLeft,
+                    //     end: Alignment.centerRight,
+                    //     stops: [0.5, 0.9],
+                    //   ),
+                    // ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // ListTile(
-                        //   leading: Icon(
-                        //     Icons.lock_outline,
-                        //     color: Color(0xffb31e63),
-                        //   ),
-                        //   title: Text("Ubah Kata Sandi"),
-                        //   trailing: Icon(Icons.keyboard_arrow_right),
-                        //   onTap: () {},
-                        // ),
-                        // _buildDivider(),
-                        // ListTile(
-                        //   leading: Icon(
-                        //     Icons.edit,
-                        //     color: Color(0xff132137),
-                        //   ),
-                        //   title: Text("Ubah Biodata"),
-                        //   trailing: Icon(Icons.keyboard_arrow_right),
-                        //   onTap: () {},
-                        // ),
-                        // _buildDivider(),
-                        ListTile(
-                          leading: Icon(
-                            Icons.people,
-                            color: Color(0xff132137),
-                          ),
-                          title: Text("Ubah Detail Akun"),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {},
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            // CircleAvatar(
+                            //   backgroundColor: Colors.red.shade300,
+                            //   minRadius: 35.0,
+                            //   child: Icon(
+                            //     Icons.call,
+                            //     size: 30.0,
+                            //   ),
+                            // ),
+                            CircleAvatar(
+                              backgroundColor: Colors.white70,
+                              minRadius: 60.0,
+                              child: CircleAvatar(
+                                radius: 50.0,
+                                backgroundImage: NetworkImage(
+                                    'https://avatars0.githubusercontent.com/u/28812093?s=460&u=06471c90e03cfd8ce2855d217d157c93060da490&v=4'),
+                              ),
+                            ),
+                            // CircleAvatar(
+                            //   backgroundColor: Colors.red.shade300,
+                            //   minRadius: 35.0,
+                            //   child: Icon(
+                            //     Icons.message,
+                            //     size: 30.0,
+                            //   ),
+                            // ),
+                          ],
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Email",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w100,
+                                            color: Colors.grey.shade400),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "$email",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Nama",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w100,
+                                            color: Colors.grey.shade400),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "$username",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "No. Telp",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w100,
+                                            color: Colors.grey.shade400),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "$phone",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Text(
+                        //   'Leonardo Palmeiro',
+                        //   style: TextStyle(
+                        //     fontSize: 35,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
+                        // Text(
+                        //   'Flutter Developer',
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: 25,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20.0),
-                  // Text(
-                  //   "Notification Settings",
-                  //   style: TextStyle(
-                  //     fontSize: 20.0,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Colors.indigo,
+
+                  // Card(
+                  //   elevation: 8.0,
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10.0)),
+                  //   color: Color(0xff132137),
+                  //   child: ListTile(
+                  //     onTap: () {
+                  //       //open edit profile
+                  //     },
+                  //     title: Text(
+                  //       "$username",
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontWeight: FontWeight.w500,
+                  //       ),
+                  //     ),
                   //   ),
                   // ),
-                  // SwitchListTile(
-                  //   activeColor: Colors.purple,
-                  //   contentPadding: const EdgeInsets.all(0),
-                  //   value: true,
-                  //   title: Text("Received notification"),
-                  //   onChanged: (val) {},
+                  // const SizedBox(height: 10.0),
+                  // Card(
+                  //   elevation: 4.0,
+                  //   margin: const EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10.0)),
+                  //   child: Column(
+                  //     children: <Widget>[
+
+                  //       ListTile(
+                  //         leading: Icon(
+                  //           Icons.people,
+                  //           color: Color(0xff132137),
+                  //         ),
+                  //         title: Text("Ubah Detail Akun"),
+                  //         trailing: Icon(Icons.keyboard_arrow_right),
+                  //         onTap: () {},
+                  //       ),
+                  //     ],
+                  //   ),
                   // ),
-                  // SwitchListTile(
-                  //   activeColor: Colors.purple,
-                  //   contentPadding: const EdgeInsets.all(0),
-                  //   value: false,
-                  //   title: Text("Received newsletter"),
-                  //   onChanged: null,
-                  // ),
-                  // SwitchListTile(
-                  //   activeColor: Colors.purple,
-                  //   contentPadding: const EdgeInsets.all(0),
-                  //   value: true,
-                  //   title: Text("Received Offer Notification"),
-                  //   onChanged: (val) {},
-                  // ),
-                  // SwitchListTile(
-                  //   activeColor: Colors.purple,
-                  //   contentPadding: const EdgeInsets.all(0),
-                  //   value: true,
-                  //   title: Text("Received App Updates"),
-                  //   onChanged: null,
-                  // ),
-                  // const SizedBox(height: 60.0),
+                  // const SizedBox(height: 20.0),
                 ],
               ),
             ),
