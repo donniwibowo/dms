@@ -132,7 +132,7 @@ class _SettingsOnePageState extends State<Settings> {
         brightness: _getBrightness(),
       ),
       child: Scaffold(
-        backgroundColor: _dark ? null : Colors.grey.shade200,
+        // backgroundColor: _dark ? null : Colors.grey.shade200,
         appBar: AppBar(
           elevation: 0,
           brightness: _getBrightness(),
@@ -181,136 +181,96 @@ class _SettingsOnePageState extends State<Settings> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            // CircleAvatar(
-                            //   backgroundColor: Colors.red.shade300,
-                            //   minRadius: 35.0,
-                            //   child: Icon(
-                            //     Icons.call,
-                            //     size: 30.0,
-                            //   ),
-                            // ),
-                            CircleAvatar(
-                              backgroundColor: Colors.white70,
-                              minRadius: 60.0,
-                              child: CircleAvatar(
-                                radius: 50.0,
-                                backgroundImage: NetworkImage(
-                                    'https://avatars0.githubusercontent.com/u/28812093?s=460&u=06471c90e03cfd8ce2855d217d157c93060da490&v=4'),
-                              ),
-                            ),
-                            // CircleAvatar(
-                            //   backgroundColor: Colors.red.shade300,
-                            //   minRadius: 35.0,
-                            //   child: Icon(
-                            //     Icons.message,
-                            //     size: 30.0,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
                         Container(
-                          padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
-                          child: Column(
-                            children: [
-                              Row(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Column(
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Email",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w100,
-                                            color: Colors.grey.shade400),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "$email",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  )
+                                  Image.asset(
+                                      'assets/design_storage/userImage.png'),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(25, 10, 25, 10),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffc9ccff),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      "PROFILE",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
                                 ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Nama",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w100,
-                                            color: Colors.grey.shade400),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "$username",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "No. Telp",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w100,
-                                            color: Colors.grey.shade400),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "$phone",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
+                              )
                             ],
                           ),
                         ),
+
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                title: Text(
+                                  'Email',
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '$email',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                              Divider(),
+                              ListTile(
+                                title: Text(
+                                  'Nama',
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '$username',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                              Divider(),
+                              ListTile(
+                                title: Text(
+                                  'No. Telp',
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '$phone',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                         // Text(
                         //   'Leonardo Palmeiro',
                         //   style: TextStyle(

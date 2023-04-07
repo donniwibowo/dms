@@ -303,7 +303,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String user_token = await prefs.getString('user_token') ?? 'unknown';
         var res1 = await sendForm(
-            'https://192.168.1.28/leap_integra/master/dms/api/files/upload' +
+            'https://192.168.1.119/leap_integra/master/dms/api/files/upload' +
                 '?user_token=' +
                 user_token,
             {
@@ -353,11 +353,11 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     };
     var jsonResponse = null;
     var response = await http.post(
-        "https://192.168.1.28/leap_integra/master/dms/api/files/createfolder?user_token=" +
+        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
     // var response = await http.post(
-    //     "https://192.168.1.28/leap_integra/master/dms/api/files/createfolder?user_token=" +
+    //     "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
     //         user_token!,
     //     body: data);
     jsonResponse = json.decode(response.body);
@@ -427,14 +427,14 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://dms.tigajayabahankue.com/api/user/getallusers?user_token=' +
-            user_token!));
+        'https://192.168.1.119/api/user/getallusers?user_token=' + user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['users'];
     _items = itemList
         .map((data) =>
             MultiSelectItem<String>(data['user_id'], data['fullname']))
         .toList();
+    print(_items);
   }
 
   List<MultiSelectItem<String>> _relatedItems = [];
@@ -442,7 +442,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://dms.tigajayabahankue.com/api/files/getrelateddocumentbyuser?user_token=' +
+        'https://192.168.1.119/api/files/getrelateddocumentbyuser?user_token=' +
             user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['data'];
@@ -458,24 +458,25 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     final TextEditingController descriptionController =
         new TextEditingController();
     List<String>? selectedItems = [];
+    fillItemsList();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Upload Folder"),
+      title: Text("Tambah Folder Baru"),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: namaController,
-            decoration: InputDecoration(hintText: 'Input Nama Folder'),
+            decoration: InputDecoration(hintText: 'Nama'),
           ),
           TextField(
             controller: descriptionController,
-            decoration: InputDecoration(hintText: 'Input Deskripsi Folder'),
+            decoration: InputDecoration(hintText: 'Deskripsi'),
           ),
           MultiSelectDialogField(
-            title: Text("Pilih Akses User"),
-            buttonText: Text("Pilih Akses User"),
+            title: Text("User Akses"),
+            buttonText: Text("User Akses"),
             items: _items,
             listType: MultiSelectListType.CHIP,
             onConfirm: (values) {
@@ -529,7 +530,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     relatedDocumentByUserList();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Buat File"),
+      title: Text("Upload File"),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
