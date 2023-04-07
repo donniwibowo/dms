@@ -307,6 +307,10 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                                         String>(
                                                                       value:
                                                                           'edit',
+                                                                      enabled: data.dataSharedFolder[index].is_owner ==
+                                                                              "1"
+                                                                          ? true
+                                                                          : false,
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:
@@ -336,6 +340,10 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                                         String>(
                                                                       value:
                                                                           'delete',
+                                                                      enabled: data.dataSharedFolder[index].is_owner ==
+                                                                              "1"
+                                                                          ? true
+                                                                          : false,
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:

@@ -319,6 +319,10 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                         String>(
                                                                       value:
                                                                           'edit',
+                                                                      enabled: data.dataRecentFolders[index].is_owner ==
+                                                                              "1"
+                                                                          ? true
+                                                                          : false,
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:
@@ -348,6 +352,10 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                         String>(
                                                                       value:
                                                                           'delete',
+                                                                      enabled: data.dataRecentFolders[index].is_owner ==
+                                                                              "1"
+                                                                          ? true
+                                                                          : false,
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:
@@ -427,8 +435,6 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                   .dataRecentFolders[
                                                                       index]
                                                                   .folder_id;
-                                                              // deleteData(
-                                                              //     folder_id);
                                                             }
                                                           },
                                                           child: Padding(
