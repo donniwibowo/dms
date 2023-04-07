@@ -1,6 +1,8 @@
 import 'package:best_flutter_ui_templates/main.dart';
+import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:flutter/material.dart';
 
+import '../design_storage/models/category.dart';
 import '../design_storage/design_app_theme.dart';
 import '../design_storage/home_design.dart';
 import '../settings.dart';
@@ -8,57 +10,109 @@ import '../settings.dart';
 class TopHeader extends StatelessWidget {
   final String title;
   final String subtitle;
-  const TopHeader({
-    Key? key,
-    this.title = "",
-    this.subtitle = "",
-  }) : super(key: key);
+  final String folder_id;
+  const TopHeader(
+      {Key? key, this.title = "", this.subtitle = "", this.folder_id = "0"})
+      : super(key: key);
+
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+    ApiFolders serviceAPI = ApiFolders();
+    String dirname = "Dashboard";
+    String folder_parent_id = "0";
+    bool isVisible = false;
+    double custom_left_padding = 18;
+
+    if (folder_id != "0") {
+      isVisible = true;
+    }
+
+    return FutureBuilder<List<CategoryModel>>(
+      future: serviceAPI.getFolderInfo(folder_id),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          List<CategoryModel>? isiData = snapshot.data!;
+          if (isiData.length > 0) {
+            dirname = isiData[0].name;
+            folder_parent_id = isiData[0].folder_parent_id;
+            custom_left_padding = 0;
+          }
+          return Padding(
+            padding:
+                EdgeInsets.only(top: 8.0, left: custom_left_padding, right: 18),
+            child: Row(
               children: <Widget>[
-                Text(
-                  title,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    letterSpacing: 0.27,
-                    color: DesignAppTheme.darkerText,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          Visibility(
+                              visible: isVisible,
+                              child: IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DesignHomeScreen(
+                                                  folder_parent_id:
+                                                      folder_parent_id,
+                                                )));
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios_new))),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                title,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  letterSpacing: 0.27,
+                                  color: DesignAppTheme.darkerText,
+                                ),
+                              ),
+                              Text(
+                                dirname,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  letterSpacing: 0.2,
+                                  color: DesignAppTheme.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.2,
-                    color: DesignAppTheme.grey,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Settings()));
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    child: Image.asset('assets/design_storage/userImage.png'),
                   ),
-                ),
+                )
               ],
             ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
-            },
-            child: Container(
-              width: 60,
-              height: 60,
-              child: Image.asset('assets/design_storage/userImage.png'),
-            ),
-          )
-        ],
-      ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        // By default, show a loading spinner.
+        return const CircularProgressIndicator();
+      },
     );
   }
 }

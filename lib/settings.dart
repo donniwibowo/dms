@@ -71,7 +71,6 @@ class _SettingsOnePageState extends State<Settings> {
     return response;
   }
 
-  //
   void getFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (this.mounted) {
@@ -168,15 +167,6 @@ class _SettingsOnePageState extends State<Settings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    // height: 250,
-                    // decoration: BoxDecoration(
-                    //   gradient: LinearGradient(
-                    //     colors: [Colors.red, Colors.deepOrange.shade300],
-                    //     begin: Alignment.centerLeft,
-                    //     end: Alignment.centerRight,
-                    //     stops: [0.5, 0.9],
-                    //   ),
-                    // ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +201,6 @@ class _SettingsOnePageState extends State<Settings> {
                             ],
                           ),
                         ),
-
                         SizedBox(
                           height: 30,
                         ),
@@ -271,65 +260,9 @@ class _SettingsOnePageState extends State<Settings> {
                             ],
                           ),
                         )
-                        // Text(
-                        //   'Leonardo Palmeiro',
-                        //   style: TextStyle(
-                        //     fontSize: 35,
-                        //     fontWeight: FontWeight.bold,
-                        //     color: Colors.white,
-                        //   ),
-                        // ),
-                        // Text(
-                        //   'Flutter Developer',
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //     fontSize: 25,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
-
-                  // Card(
-                  //   elevation: 8.0,
-                  //   shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(10.0)),
-                  //   color: Color(0xff132137),
-                  //   child: ListTile(
-                  //     onTap: () {
-                  //       //open edit profile
-                  //     },
-                  //     title: Text(
-                  //       "$username",
-                  //       style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontWeight: FontWeight.w500,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10.0),
-                  // Card(
-                  //   elevation: 4.0,
-                  //   margin: const EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
-                  //   shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(10.0)),
-                  //   child: Column(
-                  //     children: <Widget>[
-
-                  //       ListTile(
-                  //         leading: Icon(
-                  //           Icons.people,
-                  //           color: Color(0xff132137),
-                  //         ),
-                  //         title: Text("Ubah Detail Akun"),
-                  //         trailing: Icon(Icons.keyboard_arrow_right),
-                  //         onTap: () {},
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 20.0),
                 ],
               ),
             ),

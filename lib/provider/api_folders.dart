@@ -19,6 +19,8 @@ class ApiFolders extends ChangeNotifier {
   List<CategoryModel> get dataRecentActivities => _dataActivities;
   List<CategoryModel> _dataSharedFolder = [];
   List<CategoryModel> get dataSharedFolder => _dataSharedFolder;
+  // List<CategoryModel> _folderInfo = [];
+  // List<CategoryModel> get folderInfo => _folderInfo;
   late SharedPreferences sharedPreferences;
   String email = "unknown";
   String user_id = "";
@@ -98,7 +100,8 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getSearchFolder(String keyword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url = 'https://192.168.1.119/leap_integra/master/dms/api/files/search';
+    final url =
+        'https://192.168.1.119/leap_integra/master/dms/api/files/search';
     final response = await http
         .get(url + '?user_token=' + user_token + '&keyword=' + keyword);
     if (response.body.isNotEmpty) {
@@ -189,6 +192,28 @@ class ApiFolders extends ChangeNotifier {
       }
     } else {
       print('Terjadi disini kesalahannya');
+    }
+  }
+
+  Future<List<CategoryModel>> getFolderInfo(String folder_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+
+    final url =
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getfiledata';
+    final response = await http
+        .get(url + '?user_token=' + user_token + '&folder_id=' + folder_id);
+
+    if (response.statusCode == 200) {
+      print('masuk 200');
+      final result =
+          json.decode(response.body)['data'].cast<Map<String, dynamic>>();
+      _data = result
+          .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+          .toList();
+      return _data;
+    } else {
+      throw Exception('Failed to load Data');
     }
   }
 }

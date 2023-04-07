@@ -127,6 +127,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             TopHeader(
               title: 'DMS',
               subtitle: 'Dashboard',
+              folder_id: widget.folder_parent_id,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -427,7 +428,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://192.168.1.119/api/user/getallusers?user_token=' + user_token!));
+        'https://192.168.1.119/api/user/getallusers?user_token=' +
+            user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['users'];
     _items = itemList
