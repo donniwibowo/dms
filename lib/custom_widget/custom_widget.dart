@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
+import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../design_storage/models/category.dart';
 import '../design_storage/design_app_theme.dart';
@@ -187,6 +194,8 @@ class SlideUpView extends StatelessWidget {
   final String created_by;
   final String created_on;
   final String updated_on;
+  final String file_url;
+
   const SlideUpView(
       {Key? key,
       this.name = "",
@@ -194,11 +203,16 @@ class SlideUpView extends StatelessWidget {
       this.user_access = "",
       this.created_by = "",
       this.created_on = "",
-      this.updated_on = ""})
+      this.updated_on = "",
+      this.file_url = ""})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const snackBar = SnackBar(
+      content: Text('Download berhasil'),
+    );
+
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
       child: Padding(
@@ -332,6 +346,74 @@ class SlideUpView extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              padding: EdgeInsets.only(top: 15),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.green, // Background color
+                          ),
+                          icon: Icon(
+                            // <-- Icon
+                            Icons.edit,
+                            size: 15.0,
+                          ),
+                          label: Text('Revisi'), // <-- Text
+                        ),
+                      ),
+                      Container(
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red, // Background color
+                          ),
+                          icon: Icon(
+                            // <-- Icon
+                            Icons.refresh,
+                            size: 15.0,
+                          ),
+                          label: Text('Rollback'), // <-- Text
+                        ),
+                      ),
+                      Container(
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            FileDownloader.downloadFile(
+                                url:
+                                    'https://dms.tigajayabahankue.com/uploads/documents/EF_TestResult.pdf',
+                                onProgress: (name, progress) {
+                                  print(progress);
+                                  // setState(() {
+                                  //   _progress = progress;
+                                  // });
+                                },
+                                onDownloadCompleted: (value) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  // setState(() {
+                                  //   _progress = null;
+                                  // });
+                                });
+                          },
+                          icon: Icon(
+                            // <-- Icon
+                            Icons.download,
+                            size: 15.0,
+                          ),
+                          label: Text('Download'), // <-- Text
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

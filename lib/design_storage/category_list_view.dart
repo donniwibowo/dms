@@ -270,186 +270,185 @@ class _CategoryListViewState extends State<CategoryListView>
                                                   ],
                                                 ),
                                                 Container(
-                                                  child:
-                                                      PopupMenuButton<String>(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius
+                                                  child: PopupMenuButton<
+                                                          String>(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius
+                                                                  .circular(20)
+                                                              .copyWith(
+                                                                  topRight: Radius
                                                                       .circular(
-                                                                          20)
-                                                                  .copyWith(
-                                                                      topRight:
-                                                                          Radius.circular(
-                                                                              0))),
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          elevation: 10,
-                                                          color: Colors
-                                                              .grey.shade100,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context) =>
-                                                                  <
-                                                                      PopupMenuEntry<
-                                                                          String>>[
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'view',
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                          0))),
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      elevation: 10,
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      itemBuilder:
+                                                          (BuildContext
+                                                                  context) =>
+                                                              <
+                                                                  PopupMenuEntry<
+                                                                      String>>[
+                                                                PopupMenuItem<
+                                                                    String>(
+                                                                  value: 'view',
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.info_rounded,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Info',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
+                                                                          Icon(
+                                                                            Icons.info_rounded,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.green,
                                                                           ),
-                                                                          Divider()
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Info',
+                                                                            style: TextStyle(
+                                                                                color: Colors.green,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                    // Visibility(child: child)
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'edit',
-                                                                      enabled: isiData[index].is_owner ==
+                                                                      Divider()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                // Visibility(child: child)
+                                                                PopupMenuItem<
+                                                                    String>(
+                                                                  value: 'edit',
+                                                                  enabled:
+                                                                      isiData[index].is_owner ==
                                                                               "1"
                                                                           ? true
                                                                           : false,
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.edit,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Edit',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
+                                                                          Icon(
+                                                                            Icons.edit,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.green,
                                                                           ),
-                                                                          Divider()
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Edit',
+                                                                            style: TextStyle(
+                                                                                color: Colors.green,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'delete',
-                                                                      enabled: isiData[index].is_owner ==
+                                                                      Divider()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                PopupMenuItem<
+                                                                    String>(
+                                                                  value:
+                                                                      'delete',
+                                                                  enabled:
+                                                                      isiData[index].is_owner ==
                                                                               "1"
                                                                           ? true
                                                                           : false,
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.delete,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Delete',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
+                                                                          Icon(
+                                                                            Icons.delete,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.green,
                                                                           ),
-                                                                          Divider()
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Delete',
+                                                                            style: TextStyle(
+                                                                                color: Colors.green,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                  ],
-                                                          onSelected:
-                                                              (String value) {
-                                                            // Handle menu item selection here
-                                                            if (value ==
-                                                                'view') {
-                                                              var name =
-                                                                  isiData[index]
-                                                                      .name;
-                                                              var description =
-                                                                  isiData[index]
-                                                                      .description;
-                                                              var user_access =
-                                                                  isiData[index]
-                                                                      .user_access;
-                                                              var created_by =
-                                                                  isiData[index]
-                                                                      .created_by;
-
-                                                              var created_on =
-                                                                  isiData[index]
-                                                                      .created_on;
-
-                                                              var updated_on =
-                                                                  isiData[index]
-                                                                      .updated_on;
-
-                                                              slidePanelOn(
-                                                                  SlideUpView(
-                                                                name: name,
-                                                                desc:
-                                                                    description,
-                                                                user_access:
-                                                                    user_access,
-                                                                created_by:
-                                                                    created_by,
-                                                                created_on:
-                                                                    created_on,
-                                                                updated_on:
-                                                                    updated_on,
-                                                              ));
-                                                            }
-                                                            if (value ==
-                                                                'delete') {
-                                                              var folder_id =
-                                                                  isiData[index]
-                                                                      .folder_id;
-                                                              deleteData(
-                                                                  folder_id);
-                                                            }
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 5),
-                                                            child: Icon(
-                                                              Icons.more_vert,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 20,
-                                                            ),
-                                                          )),
+                                                                      Divider()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                      onSelected:
+                                                          (String value) {
+                                                        // Handle menu item selection here
+                                                        if (value == 'view') {
+                                                          slidePanelOn(
+                                                              SlideUpView(
+                                                            name: isiData[index]
+                                                                .name,
+                                                            desc: isiData[index]
+                                                                .description,
+                                                            user_access:
+                                                                isiData[index]
+                                                                    .user_access,
+                                                            created_by:
+                                                                isiData[index]
+                                                                    .created_by,
+                                                            created_on:
+                                                                isiData[index]
+                                                                    .created_on,
+                                                            updated_on:
+                                                                isiData[index]
+                                                                    .updated_on,
+                                                            file_url:
+                                                                isiData[index]
+                                                                    .file_url,
+                                                          ));
+                                                        }
+                                                        if (value == 'delete') {
+                                                          var folder_id =
+                                                              isiData[index]
+                                                                  .folder_id;
+                                                          deleteData(folder_id);
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5),
+                                                        child: Icon(
+                                                          Icons.more_vert,
+                                                          color: Colors.black,
+                                                          size: 20,
+                                                        ),
+                                                      )),
                                                 ),
                                               ],
                                             ),

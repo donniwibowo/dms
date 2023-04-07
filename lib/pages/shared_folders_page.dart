@@ -28,7 +28,7 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .45;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .50;
 
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),
