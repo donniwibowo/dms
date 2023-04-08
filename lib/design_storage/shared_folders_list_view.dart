@@ -375,37 +375,43 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                             // Handle menu item selection here
                                                             if (value ==
                                                                 'view') {
-                                                              slidePanelOn(
-                                                                  SlideUpView(
-                                                                folder_id: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .folder_id,
-                                                                name: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .name,
-                                                                desc: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .description,
-                                                                user_access: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .user_access,
-                                                                created_by: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .created_by,
-                                                                created_on: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .created_on,
-                                                                updated_on: data
-                                                                    .dataRecentFolders[
-                                                                        index]
-                                                                    .updated_on,
-                                                              ));
+                                                              slidePanelOn(SlideUpView(
+                                                                  folder_id: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .folder_id,
+                                                                  name: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .name,
+                                                                  desc: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .description,
+                                                                  user_access: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .user_access,
+                                                                  created_by: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .created_by,
+                                                                  created_on: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .created_on,
+                                                                  updated_on: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .updated_on,
+                                                                  file_url: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .file_url,
+                                                                  type: data
+                                                                      .dataSharedFolder[
+                                                                          index]
+                                                                      .type));
                                                             }
                                                             if (value ==
                                                                 'delete') {

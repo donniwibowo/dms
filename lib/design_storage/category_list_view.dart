@@ -276,8 +276,8 @@ class _CategoryListViewState extends State<CategoryListView>
                                                           borderRadius: BorderRadius
                                                                   .circular(20)
                                                               .copyWith(
-                                                                  topRight: Radius
-                                                                      .circular(
+                                                                  topRight:
+                                                                      Radius.circular(
                                                                           0))),
                                                       padding:
                                                           EdgeInsets.all(10),
@@ -409,31 +409,33 @@ class _CategoryListViewState extends State<CategoryListView>
                                                           (String value) {
                                                         // Handle menu item selection here
                                                         if (value == 'view') {
-                                                          slidePanelOn(
-                                                              SlideUpView(
-                                                            folder_id:
-                                                                isiData[index]
-                                                                    .folder_id,
-                                                            name: isiData[index]
-                                                                .name,
-                                                            desc: isiData[index]
-                                                                .description,
-                                                            user_access:
-                                                                isiData[index]
-                                                                    .user_access,
-                                                            created_by:
-                                                                isiData[index]
-                                                                    .created_by,
-                                                            created_on:
-                                                                isiData[index]
-                                                                    .created_on,
-                                                            updated_on:
-                                                                isiData[index]
-                                                                    .updated_on,
-                                                            file_url:
-                                                                isiData[index]
-                                                                    .file_url,
-                                                          ));
+                                                          slidePanelOn(SlideUpView(
+                                                              folder_id:
+                                                                  isiData[index]
+                                                                      .folder_id,
+                                                              name:
+                                                                  isiData[index]
+                                                                      .name,
+                                                              desc: isiData[index]
+                                                                  .description,
+                                                              user_access:
+                                                                  isiData[index]
+                                                                      .user_access,
+                                                              created_by:
+                                                                  isiData[index]
+                                                                      .created_by,
+                                                              created_on:
+                                                                  isiData[index]
+                                                                      .created_on,
+                                                              updated_on:
+                                                                  isiData[index]
+                                                                      .updated_on,
+                                                              file_url:
+                                                                  isiData[index]
+                                                                      .file_url,
+                                                              type:
+                                                                  isiData[index]
+                                                                      .type));
                                                         }
                                                         if (value == 'delete') {
                                                           var folder_id =
