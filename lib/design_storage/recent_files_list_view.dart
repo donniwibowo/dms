@@ -387,46 +387,36 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                             // Handle menu item selection here
                                                             if (value ==
                                                                 'view') {
-                                                              var name = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .name;
-                                                              var description = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .description;
-                                                              var user_access = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .user_access;
-                                                              var created_by = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .created_by;
-
-                                                              var created_on = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .created_on;
-
-                                                              var updated_on = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .updated_on;
-
                                                               slidePanelOn(
                                                                   SlideUpView(
-                                                                name: name,
-                                                                desc:
-                                                                    description,
-                                                                user_access:
-                                                                    user_access,
-                                                                created_by:
-                                                                    created_by,
-                                                                created_on:
-                                                                    created_on,
-                                                                updated_on:
-                                                                    updated_on,
+                                                                folder_id: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .folder_id,
+                                                                name: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .name,
+                                                                desc: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .description,
+                                                                user_access: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .user_access,
+                                                                created_by: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .created_by,
+                                                                created_on: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .created_on,
+                                                                updated_on: data
+                                                                    .dataRecentFolders[
+                                                                        index]
+                                                                    .updated_on,
                                                               ));
                                                             }
                                                             if (value ==

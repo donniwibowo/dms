@@ -77,7 +77,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .50;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     print("Ini keywordnya = " + widget.keyword);
 
@@ -428,7 +428,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://192.168.1.119/api/user/getallusers?user_token=' +
+        'https://192.168.1.119/leap_integra/master/dms/api/user/getallusers?user_token=' +
             user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['users'];
@@ -444,7 +444,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://192.168.1.119/api/files/getrelateddocumentbyuser?user_token=' +
+        'https://192.168.1.119/leap_integra/master/dms/api/files/getrelateddocumentbyuser?user_token=' +
             user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['data'];
@@ -464,28 +464,31 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Tambah Folder Baru"),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          TextField(
-            controller: namaController,
-            decoration: InputDecoration(hintText: 'Nama'),
-          ),
-          TextField(
-            controller: descriptionController,
-            decoration: InputDecoration(hintText: 'Deskripsi'),
-          ),
-          MultiSelectDialogField(
-            title: Text("User Akses"),
-            buttonText: Text("User Akses"),
-            items: _items,
-            listType: MultiSelectListType.CHIP,
-            onConfirm: (values) {
-              selectedItems = values.cast<String>();
-            },
-          ),
-        ],
+      content: Container(
+        width: 300,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              controller: namaController,
+              decoration: InputDecoration(hintText: 'Nama'),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(hintText: 'Deskripsi'),
+            ),
+            MultiSelectDialogField(
+              title: Text("User Akses"),
+              buttonText: Text("User Akses"),
+              items: _items,
+              listType: MultiSelectListType.CHIP,
+              onConfirm: (values) {
+                selectedItems = values.cast<String>();
+              },
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(

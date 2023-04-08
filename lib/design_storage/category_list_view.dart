@@ -411,6 +411,9 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         if (value == 'view') {
                                                           slidePanelOn(
                                                               SlideUpView(
+                                                            folder_id:
+                                                                isiData[index]
+                                                                    .folder_id,
                                                             name: isiData[index]
                                                                 .name,
                                                             desc: isiData[index]

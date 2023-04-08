@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:best_flutter_ui_templates/design_storage/shared_folders_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:dio/dio.dart';
@@ -188,6 +189,7 @@ class SearchBar extends StatelessWidget {
 
 class SlideUpView extends StatelessWidget {
   // const SlideUpView({super.key});
+  final String folder_id;
   final String name;
   final String desc;
   final String user_access;
@@ -198,6 +200,7 @@ class SlideUpView extends StatelessWidget {
 
   const SlideUpView(
       {Key? key,
+      this.folder_id = "",
       this.name = "",
       this.desc = "",
       this.user_access = "",
@@ -209,6 +212,8 @@ class SlideUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ApiFolders serviceAPI = ApiFolders();
+
     const snackBar = SnackBar(
       content: Text('Download berhasil'),
     );
@@ -369,7 +374,135 @@ class SlideUpView extends StatelessWidget {
                       ),
                       Container(
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text('Pengaturan File'),
+                                      content: Container(
+                                        height: 300,
+                                        width: 400,
+                                        child:
+                                            FutureBuilder<List<CategoryModel>>(
+                                                future: serviceAPI
+                                                    .getRevisionFile(folder_id),
+                                                builder: (BuildContext context,
+                                                    snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    List<CategoryModel>?
+                                                        isiData =
+                                                        snapshot.data!;
+
+                                                    return Container(
+                                                      child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount:
+                                                              isiData.length,
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index) {
+                                                            return Container(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            0,
+                                                                        top: 0),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  border:
+                                                                      Border(
+                                                                    bottom: BorderSide(
+                                                                        width:
+                                                                            1.0,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade300),
+                                                                  ),
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceAround,
+                                                                          children: [
+                                                                            Text(
+                                                                              isiData[index].name,
+                                                                              style: TextStyle(fontWeight: FontWeight.w400),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(left: 5),
+                                                                              child: Text(
+                                                                                '(' + isiData[index].no_revision + ')',
+                                                                                style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        Text(
+                                                                            'Updated : ' +
+                                                                                isiData[index].updated_on,
+                                                                            style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                                                                        Text(
+                                                                            'Oleh : ' +
+                                                                                isiData[index].email,
+                                                                            style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                                                                      ],
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        IconButton(
+                                                                            onPressed:
+                                                                                () {},
+                                                                            icon:
+                                                                                Icon(
+                                                                              Icons.refresh,
+                                                                              color: Colors.amber,
+                                                                            )),
+                                                                        IconButton(
+                                                                            onPressed:
+                                                                                () {},
+                                                                            icon:
+                                                                                Icon(
+                                                                              Icons.download,
+                                                                              color: Colors.blue,
+                                                                            ))
+                                                                      ],
+                                                                    )
+                                                                  ],
+                                                                ));
+                                                          }),
+                                                    );
+                                                  } else {}
+                                                  return Container();
+                                                }),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Tutup'),
+                                        ),
+                                      ],
+                                    ));
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.red, // Background color
                           ),
