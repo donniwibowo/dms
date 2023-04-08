@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:best_flutter_ui_templates/design_storage/shared_folders_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../design_storage/models/category.dart';
 import '../design_storage/design_app_theme.dart';
@@ -25,7 +28,7 @@ class TopHeader extends StatelessWidget {
 
   Widget build(BuildContext context) {
     ApiFolders serviceAPI = ApiFolders();
-    String dirname = "Dashboard";
+    String dirname = subtitle;
     String folder_parent_id = "0";
     bool isVisible = false;
     double custom_left_padding = 18;
@@ -220,10 +223,6 @@ class SlideUpView extends StatelessWidget {
     if (type == "Folder") {
       isVisible = false;
     }
-
-    const snackBar = SnackBar(
-      content: Text('Download berhasil'),
-    );
 
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
@@ -478,13 +477,44 @@ class SlideUpView extends StatelessWidget {
                                                                             CrossAxisAlignment.start,
                                                                         children: [
                                                                           IconButton(
-                                                                              onPressed: () {},
+                                                                              onPressed: () async {
+                                                                                Map data = {
+                                                                                  'active_file_id': folder_id,
+                                                                                  'target_file_id': isiData[index].folder_id
+                                                                                };
+                                                                                print(folder_id);
+                                                                                print(isiData[index].folder_id);
+                                                                                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+                                                                                var user_token = sharedPreferences.getString("user_token");
+
+                                                                                var jsonResponse = null;
+                                                                                var response = await http.post("https://192.168.1.119/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!, body: data);
+                                                                                jsonResponse = json.decode(response.body);
+                                                                                if (response.statusCode == 200) {
+                                                                                  if (jsonResponse != null) {
+                                                                                    Navigator.pop(context);
+                                                                                    const rollbackMsg = SnackBar(
+                                                                                      content: Text('Rollback berhasil'),
+                                                                                    );
+                                                                                    ScaffoldMessenger.of(context).showSnackBar(rollbackMsg);
+                                                                                  }
+                                                                                } else {
+                                                                                  print("error");
+                                                                                }
+                                                                              },
                                                                               icon: Icon(
                                                                                 Icons.refresh,
                                                                                 color: Colors.amber,
                                                                               )),
                                                                           IconButton(
-                                                                              onPressed: () {},
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                                const downloadRevisionFileMsg = SnackBar(
+                                                                                  content: Text('Download berhasil from setting'),
+                                                                                );
+                                                                                ScaffoldMessenger.of(context).showSnackBar(downloadRevisionFileMsg);
+                                                                              },
                                                                               icon: Icon(
                                                                                 Icons.download,
                                                                                 color: Colors.blue,
@@ -532,8 +562,11 @@ class SlideUpView extends StatelessWidget {
                                     // });
                                   },
                                   onDownloadCompleted: (value) {
+                                    const downloadMsg = SnackBar(
+                                      content: Text('Download berhasil'),
+                                    );
                                     ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
+                                        .showSnackBar(downloadMsg);
                                     // setState(() {
                                     //   _progress = null;
                                     // });
