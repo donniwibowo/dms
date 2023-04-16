@@ -29,7 +29,7 @@ class _RecentPageState extends State<RecentPage> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .55;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .50;
 
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),

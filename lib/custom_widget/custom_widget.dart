@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
 import 'package:best_flutter_ui_templates/design_storage/shared_folders_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
+import 'package:best_flutter_ui_templates/pages/manage_user.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -43,7 +45,10 @@ class TopHeader extends StatelessWidget {
         if (snapshot.hasData) {
           List<CategoryModel>? isiData = snapshot.data!;
           if (isiData.length > 0) {
-            dirname = isiData[0].name;
+            if (dirname != 'User Akses') {
+              dirname = isiData[0].name;
+            }
+
             folder_parent_id = isiData[0].folder_parent_id;
             custom_left_padding = 0;
           }
@@ -201,28 +206,29 @@ class SlideUpView extends StatelessWidget {
   final String updated_on;
   final String file_url;
   final String type;
+  // final Function reload;
 
-  const SlideUpView(
-      {Key? key,
-      this.folder_id = "",
-      this.name = "",
-      this.desc = "",
-      this.user_access = "",
-      this.created_by = "",
-      this.created_on = "",
-      this.updated_on = "",
-      this.file_url = "",
-      this.type = ""})
-      : super(key: key);
+  const SlideUpView({
+    Key? key,
+    this.folder_id = "",
+    this.name = "",
+    this.desc = "",
+    this.user_access = "",
+    this.created_by = "",
+    this.created_on = "",
+    this.updated_on = "",
+    this.file_url = "",
+    this.type = "",
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ApiFolders serviceAPI = ApiFolders();
-    bool isVisible = true;
+    // bool isVisible = true;
 
-    if (type == "Folder") {
-      isVisible = false;
-    }
+    // if (type == "Folder") {
+    //   isVisible = false;
+    // }
 
     return Container(
       // decoration: BoxDecoration(color: Colors.amber),
@@ -357,233 +363,567 @@ class SlideUpView extends StatelessWidget {
                 ],
               ),
             ),
-            Visibility(
-              visible: isVisible,
-              child: Container(
-                padding: EdgeInsets.only(top: 15),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// slide up untuk setting
+class SlideUpSetting extends StatelessWidget {
+  final String folder_id;
+  final String name;
+  final String desc;
+  final String user_access;
+  final String created_by;
+  final String created_on;
+  final String updated_on;
+  final String file_url;
+  final String type;
+  final String is_owner;
+  final Function reloadData;
+
+  const SlideUpSetting(
+      {Key? key,
+      this.folder_id = "",
+      this.name = "",
+      this.desc = "",
+      this.user_access = "",
+      this.created_by = "",
+      this.created_on = "",
+      this.updated_on = "",
+      this.file_url = "",
+      this.type = "",
+      this.is_owner = "",
+      required this.reloadData})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ApiFolders serviceAPI = ApiFolders();
+    bool isVisible = true;
+
+    if (type == "Folder") {
+      isVisible = false;
+    }
+
+    return Container(
+      // decoration: BoxDecoration(color: Colors.amber),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
+        child: Column(
+          children: [
+            Container(
+              height: 10,
+              width: 60,
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ManageUser(
+                                name: name,
+                                folder_parent_id: folder_id,
+                              )));
+                    },
+                    child: Row(
                       children: [
-                        Container(
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.green, // Background color
-                            ),
-                            icon: Icon(
-                              // <-- Icon
-                              Icons.edit,
-                              size: 15.0,
-                            ),
-                            label: Text('Revisi'), // <-- Text
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 8, right: 8, top: 10, bottom: 10),
+                          child: Icon(
+                            Icons.people,
+                            size: 20,
                           ),
                         ),
-                        Container(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: Text('Pengaturan File'),
-                                        content: Container(
-                                          height: 300,
-                                          width: 400,
-                                          child:
-                                              FutureBuilder<
-                                                      List<CategoryModel>>(
-                                                  future: serviceAPI
-                                                      .getRevisionFile(
-                                                          folder_id),
-                                                  builder:
-                                                      (BuildContext context,
-                                                          snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      List<CategoryModel>?
-                                                          isiData =
-                                                          snapshot.data!;
-
-                                                      return Container(
-                                                        child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount:
-                                                                isiData.length,
-                                                            scrollDirection:
-                                                                Axis.vertical,
-                                                            itemBuilder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    int index) {
-                                                              return Container(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          bottom:
-                                                                              0,
-                                                                          top:
-                                                                              0),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    border:
-                                                                        Border(
-                                                                      bottom: BorderSide(
-                                                                          width:
-                                                                              1.0,
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .shade300),
-                                                                    ),
-                                                                  ),
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceAround,
-                                                                            children: [
-                                                                              Text(
-                                                                                isiData[index].name,
-                                                                                style: TextStyle(fontWeight: FontWeight.w400),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.only(left: 5),
-                                                                                child: Text(
-                                                                                  '(' + isiData[index].no_revision + ')',
-                                                                                  style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                5,
-                                                                          ),
-                                                                          Text(
-                                                                              'Updated : ' + isiData[index].updated_on,
-                                                                              style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
-                                                                          Text(
-                                                                              'Oleh : ' + isiData[index].email,
-                                                                              style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
-                                                                        ],
-                                                                      ),
-                                                                      Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          IconButton(
-                                                                              onPressed: () async {
-                                                                                Map data = {
-                                                                                  'active_file_id': folder_id,
-                                                                                  'target_file_id': isiData[index].folder_id
-                                                                                };
-                                                                                print(folder_id);
-                                                                                print(isiData[index].folder_id);
-                                                                                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-                                                                                var user_token = sharedPreferences.getString("user_token");
-
-                                                                                var jsonResponse = null;
-                                                                                var response = await http.post("https://192.168.1.119/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!, body: data);
-                                                                                jsonResponse = json.decode(response.body);
-                                                                                if (response.statusCode == 200) {
-                                                                                  if (jsonResponse != null) {
-                                                                                    Navigator.pop(context);
-                                                                                    const rollbackMsg = SnackBar(
-                                                                                      content: Text('Rollback berhasil'),
-                                                                                    );
-                                                                                    ScaffoldMessenger.of(context).showSnackBar(rollbackMsg);
-                                                                                  }
-                                                                                } else {
-                                                                                  print("error");
-                                                                                }
-                                                                              },
-                                                                              icon: Icon(
-                                                                                Icons.refresh,
-                                                                                color: Colors.amber,
-                                                                              )),
-                                                                          IconButton(
-                                                                              onPressed: () {
-                                                                                Navigator.pop(context);
-                                                                                const downloadRevisionFileMsg = SnackBar(
-                                                                                  content: Text('Download berhasil from setting'),
-                                                                                );
-                                                                                ScaffoldMessenger.of(context).showSnackBar(downloadRevisionFileMsg);
-                                                                              },
-                                                                              icon: Icon(
-                                                                                Icons.download,
-                                                                                color: Colors.blue,
-                                                                              ))
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ));
-                                                            }),
-                                                      );
-                                                    } else {}
-                                                    return Container();
-                                                  }),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Tutup'),
-                                          ),
-                                        ],
-                                      ));
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red, // Background color
-                            ),
-                            icon: Icon(
-                              // <-- Icon
-                              Icons.refresh,
-                              size: 15.0,
-                            ),
-                            label: Text('Rollback'), // <-- Text
-                          ),
-                        ),
-                        Container(
-                          child: ElevatedButton.icon(
-                            onPressed: () async {
-                              FileDownloader.downloadFile(
-                                  url:
-                                      'https://dms.tigajayabahankue.com/uploads/documents/EF_TestResult.pdf',
-                                  onProgress: (name, progress) {
-                                    print(progress);
-                                    // setState(() {
-                                    //   _progress = progress;
-                                    // });
-                                  },
-                                  onDownloadCompleted: (value) {
-                                    const downloadMsg = SnackBar(
-                                      content: Text('Download berhasil'),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(downloadMsg);
-                                    // setState(() {
-                                    //   _progress = null;
-                                    // });
-                                  });
-                            },
-                            icon: Icon(
-                              // <-- Icon
-                              Icons.download,
-                              size: 15.0,
-                            ),
-                            label: Text('Download'), // <-- Text
-                          ),
-                        ),
+                        Text('User Akses')
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  )),
+                  // Divider(),
+                  Visibility(
+                    visible: is_owner == "1" && type == 'File' ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () {
+                        const downloadMsg = SnackBar(
+                          content: Text('Dokumen Terkait'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.file_copy,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Dokumen Terkait')
+                        ],
+                      ),
+                    )),
+                  ),
+                  Visibility(
+                    visible: is_owner == "1" && type == 'File' ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () {
+                        const downloadMsg = SnackBar(
+                          content: Text('Revisi'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Revisi')
+                        ],
+                      ),
+                    )),
+                  ),
+                  Visibility(
+                    visible: is_owner == "1" && type == 'File' ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text('Pengaturan File'),
+                                  content: Container(
+                                    height: 300,
+                                    width: 400,
+                                    child: FutureBuilder<List<CategoryModel>>(
+                                        future: serviceAPI
+                                            .getRevisionFile(folder_id),
+                                        builder:
+                                            (BuildContext context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            List<CategoryModel>? isiData =
+                                                snapshot.data!;
+                                            if (isiData.length < 1) {
+                                              return Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 8),
+                                                child: Text(
+                                                  "Tidak ada data",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          Colors.grey.shade600),
+                                                ),
+                                              );
+                                            }
+                                            return Container(
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: isiData.length,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 0,
+                                                                top: 0),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 1.0,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceAround,
+                                                                  children: [
+                                                                    Text(
+                                                                      isiData[index]
+                                                                          .name,
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.w400),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              5),
+                                                                      child:
+                                                                          Text(
+                                                                        '(' +
+                                                                            isiData[index].no_revision +
+                                                                            ')',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                13,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                    'Updated : ' +
+                                                                        isiData[index]
+                                                                            .updated_on,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade600)),
+                                                                Text(
+                                                                    'Oleh : ' +
+                                                                        isiData[index]
+                                                                            .email,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade600)),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                IconButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      // set up the buttons
+                                                                      Widget
+                                                                          cancelButton =
+                                                                          ElevatedButton(
+                                                                        child: Text(
+                                                                            "Tutup"),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      );
+                                                                      Widget
+                                                                          continueButton =
+                                                                          ElevatedButton(
+                                                                        child: Text(
+                                                                            "Rollback"),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          // do rollback
+
+                                                                          Map data =
+                                                                              {
+                                                                            'active_file_id':
+                                                                                folder_id,
+                                                                            'target_file_id':
+                                                                                isiData[index].folder_id
+                                                                          };
+                                                                          print(
+                                                                              folder_id);
+                                                                          print(
+                                                                              isiData[index].folder_id);
+                                                                          SharedPreferences
+                                                                              sharedPreferences =
+                                                                              await SharedPreferences.getInstance();
+
+                                                                          var user_token =
+                                                                              sharedPreferences.getString("user_token");
+
+                                                                          var jsonResponse =
+                                                                              null;
+                                                                          var response = await http.post(
+                                                                              "https://192.168.1.119/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!,
+                                                                              body: data);
+                                                                          jsonResponse =
+                                                                              json.decode(response.body);
+                                                                          if (response.statusCode ==
+                                                                              200) {
+                                                                            if (jsonResponse !=
+                                                                                null) {
+                                                                              Navigator.pop(context);
+                                                                              const rollbackMsg = SnackBar(
+                                                                                content: Text('Rollback berhasil'),
+                                                                              );
+                                                                              ScaffoldMessenger.of(context).showSnackBar(rollbackMsg);
+                                                                              reloadData();
+                                                                            }
+                                                                          } else {
+                                                                            print("error");
+                                                                          }
+
+                                                                          // end of do rollback
+                                                                        },
+                                                                      );
+                                                                      // set up the AlertDialog
+                                                                      AlertDialog
+                                                                          alert =
+                                                                          AlertDialog(
+                                                                        title: Text(
+                                                                            "AlertDialog"),
+                                                                        content:
+                                                                            Text("Apakah anda yakin untuk melakukan rollback pada file ini?"),
+                                                                        actions: [
+                                                                          cancelButton,
+                                                                          continueButton,
+                                                                        ],
+                                                                      );
+                                                                      // show the dialog
+                                                                      showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                                context) {
+                                                                          return alert;
+                                                                        },
+                                                                      );
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .refresh,
+                                                                      color: Colors
+                                                                          .amber,
+                                                                    )),
+                                                                IconButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      const downloadRevisionFileMsg =
+                                                                          SnackBar(
+                                                                        content:
+                                                                            Text('Download berhasil from setting'),
+                                                                      );
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              downloadRevisionFileMsg);
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .download,
+                                                                      color: Colors
+                                                                          .blue,
+                                                                    ))
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ));
+                                                  }),
+                                            );
+                                          } else {}
+                                          return Container();
+                                        }),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Cancel'),
+                                      child: const Text('Tutup'),
+                                    ),
+                                  ],
+                                ));
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.refresh,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Rollback')
+                        ],
+                      ),
+                    )),
+                  ),
+                  Visibility(
+                    visible: type == 'File' ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () {
+                        FileDownloader.downloadFile(
+                            url:
+                                'https://github.com/c14190074/leap_integra/blob/main/master/dms/uploads/documents/Document%201.pdf',
+                            onProgress: (name, progress) {
+                              print(progress);
+                              // setState(() {
+                              //   _progress = progress;
+                              // });
+                            },
+                            onDownloadCompleted: (value) {
+                              const downloadMsg = SnackBar(
+                                content: Text('Download berhasil'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(downloadMsg);
+                              // setState(() {
+                              //   _progress = null;
+                              // });
+                            });
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.download,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Download')
+                        ],
+                      ),
+                    )),
+                  ),
+                  // Divider(),
+                  Visibility(
+                    visible: is_owner == "1" ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () {
+                        const downloadMsg = SnackBar(
+                          content: Text('Edit'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Edit')
+                        ],
+                      ),
+                    )),
+                  ),
+                  // Divider(),
+                  Visibility(
+                    visible: is_owner == "1" ? true : false,
+                    child: Container(
+                        child: InkWell(
+                      onTap: () async {
+                        // set up the buttons
+                        Widget cancelButton = ElevatedButton(
+                          child: Text("Tutup"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                        Widget continueButton = ElevatedButton(
+                          child: Text("Hapus"),
+                          onPressed: () async {
+                            SharedPreferences sharedPreferences =
+                                await SharedPreferences.getInstance();
+                            Map data = {'file_id': folder_id};
+                            var user_token =
+                                sharedPreferences.getString("user_token");
+                            var jsonResponse = null;
+                            final response = await http.post(
+                                "https://192.168.1.119/leap_integra/master/dms/api/files/delete?user_token=" +
+                                    user_token!,
+                                body: data);
+                            if (response.body.isNotEmpty) {
+                              if (response.statusCode == 200) {
+                                Navigator.pop(context);
+                                const downloadMsg = SnackBar(
+                                  content: Text('File berhasil dihapus'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(downloadMsg);
+                                reloadData();
+                              } else {
+                                print(response.body);
+                              }
+                            } else {
+                              print('Gagal menghapus data');
+                            }
+                          },
+                        );
+                        // set up the AlertDialog
+                        AlertDialog alert = AlertDialog(
+                          title: Text("AlertDialog"),
+                          content:
+                              Text("Apakah anda yakin menghapus file ini?"),
+                          actions: [
+                            cancelButton,
+                            continueButton,
+                          ],
+                        );
+                        // show the dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert;
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 10, bottom: 10),
+                            child: Icon(
+                              Icons.delete,
+                              size: 20,
+                            ),
+                          ),
+                          Text('Hapus')
+                        ],
+                      ),
+                    )),
+                  ),
+                ],
               ),
             )
           ],

@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/pages/recent_page.dart';
+import 'package:best_flutter_ui_templates/pages/shared_folders_page.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -7,33 +8,26 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../controller.dart';
 import '../custom_widget/custom_widget.dart';
 import '../design_storage/design_app_theme.dart';
+import '../design_storage/recent_activities_list_view.dart';
 import '../design_storage/recent_files_list_view.dart';
 import '../design_storage/shared_folders_list_view.dart';
 
-class SharedFoldersPage extends StatefulWidget {
+class ManageUser extends StatefulWidget {
+  final String name;
+  final String folder_parent_id;
+
+  ManageUser({required this.name, this.folder_parent_id = "0"});
   @override
-  _SharedFoldersPageState createState() => _SharedFoldersPageState();
+  _ManageUserState createState() => _ManageUserState();
 }
 
-class _SharedFoldersPageState extends State<SharedFoldersPage> {
-  // CategoryType categoryType = CategoryType.ui;
-  int _selectedIndex = 1;
-
-  final double _initFabHeight = 120.0;
-  double _fabHeight = 0;
-  double _panelHeightOpen = 0;
-  double _panelHeightClosed = 95.0;
+class _ManageUserState extends State<ManageUser> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
-    _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .50;
 
-    BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0),
-      topRight: Radius.circular(24.0),
-    );
     return Container(
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
@@ -69,40 +63,18 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
             ),
             TopHeader(
               title: 'DMS',
-              subtitle: 'Shared Folder',
+              subtitle: 'User Akses',
+              folder_id: widget.folder_parent_id,
             ),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      SearchBar(),
-                      SharedFoldersListView(),
-                    ],
+                  child: Row(
+                    children: <Widget>[],
                   ),
                 ),
               ),
-            ),
-            SlidingUpPanel(
-              defaultPanelState: PanelState.CLOSED,
-              maxHeight: _panelHeightOpen,
-              minHeight: 0,
-              controller: panelController,
-              panel: StreamBuilder<Widget?>(
-                stream: pageController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.data == null) return const SizedBox.shrink();
-                  return snapshot.data!;
-                },
-              ),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0)),
-              onPanelSlide: (double pos) => setState(() {
-                _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
-                    _initFabHeight;
-              }),
             ),
           ],
         ),
@@ -143,6 +115,7 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => RecentPage()));
       }
+      print(_selectedIndex);
     });
   }
 }

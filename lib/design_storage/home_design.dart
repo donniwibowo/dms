@@ -34,9 +34,14 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+class HomePageController {
+  late void Function() reloadData;
+}
+
 class DesignHomeScreen extends StatefulWidget {
   final String folder_parent_id;
   final String keyword;
+
   DesignHomeScreen({required this.folder_parent_id, this.keyword = ""});
   @override
   _DesignHomeScreenState createState() => _DesignHomeScreenState();
@@ -49,7 +54,9 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   double _panelHeightOpen = 0;
   double _panelHeightClosed = 95.0;
   ApiFolders serviceAPI = ApiFolders();
-  late Future<List<CategoryModel>> listData;
+
+  final HomePageController myController = HomePageController();
+
   void initState() {
     super.initState();
     checkLoginStatus();
@@ -77,9 +84,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     _fabHeight = _initFabHeight;
-    _panelHeightOpen = MediaQuery.of(context).size.height * .55;
-
-    print("Ini keywordnya = " + widget.keyword);
+    _panelHeightOpen = MediaQuery.of(context).size.height * .50;
 
     BorderRadiusGeometry radius = BorderRadius.only(
       topLeft: Radius.circular(24.0),
@@ -112,7 +117,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               child: const Icon(Icons.file_upload),
               backgroundColor: Colors.red,
               onPressed: () {
-                //file upload
+                // file upload
                 showInputFileDialog(context, 'test', widget.folder_parent_id);
                 // _selectFile();
               },
@@ -141,6 +146,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
                       CategoryListView(
                         folder_parent_id: widget.folder_parent_id,
                         keyword: widget.keyword,
+                        controller: myController,
                       ),
                     ],
                   ),
@@ -322,9 +328,17 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         print('data masuk upload');
         print('data masuk upload');
         if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
-          showAlertDialog(context, "File Uploaded.");
+          // showAlertDialog(context, "File berhasil diupload");
+          const createFolderMsg = SnackBar(
+            content: Text('File berhasil diupload'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
+          myController.reloadData();
         } else {
-          showAlertDialog(context, "Failed Upload.");
+          const createFolderMsg = SnackBar(
+            content: Text('Gagal mengupload file'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
         }
         setState(() {});
       } catch (e) {
@@ -357,20 +371,29 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
-    // var response = await http.post(
-    //     "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
-    //         user_token!,
-    //     body: data);
+
     jsonResponse = json.decode(response.body);
     print(jsonResponse);
     if (response.statusCode == 200) {
       if (jsonResponse != null) {
-        showAlertDialog(context, "Folder Uploaded.");
+        Navigator.pop(context);
+        const createFolderMsg = SnackBar(
+          content: Text('Folder baru berhasil ditambahkan'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
+
+        myController.reloadData();
       } else {
-        showAlertDialog(context, "Folder Failed Upload.");
+        const createFolderMsg = SnackBar(
+          content: Text('Internal server error'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
       }
     } else {
-      showAlertDialog(context, "E-mail atau Kata Sandi Salah.");
+      const createFolderMsg = SnackBar(
+        content: Text('Internal server error'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
     }
     setState(() {});
   }
@@ -463,7 +486,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     fillItemsList();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Tambah Folder Baru"),
+      title: Text("Folder Baru"),
       content: Container(
         width: 300,
         child: Column(
@@ -479,8 +502,12 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               decoration: InputDecoration(hintText: 'Deskripsi'),
             ),
             MultiSelectDialogField(
-              title: Text("User Akses"),
-              buttonText: Text("User Akses"),
+              buttonIcon: Icon(Icons.people),
+              title: Text("Pilih User"),
+              buttonText: Text(
+                "User Akses",
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
               items: _items,
               listType: MultiSelectListType.CHIP,
               onConfirm: (values) {
@@ -492,7 +519,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
       ),
       actions: [
         TextButton(
-          child: Text("Batal"),
+          child: Text("Tutup"),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -506,8 +533,6 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               folder_parent_id,
               selectedItems,
             );
-            Navigator.pop(context);
-            setState(() {});
           },
         ),
       ],
@@ -551,26 +576,26 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             ),
             TextField(
               controller: descriptionController,
-              decoration: InputDecoration(hintText: 'Description'),
+              decoration: InputDecoration(hintText: 'Deskripsi'),
             ),
-            MultiSelectDialogField(
-              title: Text("Pilih Akses User"),
-              buttonText: Text("Pilih Akses User"),
-              items: _items,
-              listType: MultiSelectListType.CHIP,
-              onConfirm: (values) {
-                selectedItems = values.cast<String>();
-              },
-            ),
-            MultiSelectDialogField(
-              title: Text("Pilih Related Item"),
-              buttonText: Text("Pilih Related Item"),
-              items: _relatedItems,
-              listType: MultiSelectListType.CHIP,
-              onConfirm: (values) {
-                relatedItems = values.cast<String>();
-              },
-            ),
+            // MultiSelectDialogField(
+            //   title: Text("Pilih Akses User"),
+            //   buttonText: Text("Pilih Akses User"),
+            //   items: _items,
+            //   listType: MultiSelectListType.CHIP,
+            //   onConfirm: (values) {
+            //     selectedItems = values.cast<String>();
+            //   },
+            // ),
+            // MultiSelectDialogField(
+            //   title: Text("Pilih Related Item"),
+            //   buttonText: Text("Pilih Related Item"),
+            //   items: _relatedItems,
+            //   listType: MultiSelectListType.CHIP,
+            //   onConfirm: (values) {
+            //     relatedItems = values.cast<String>();
+            //   },
+            // ),
           ],
         ),
       ),
@@ -605,79 +630,6 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
       },
     );
   }
-
-  Widget getCategoryUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-          child: Text(
-            'Category',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              letterSpacing: 0.27,
-              color: DesignAppTheme.darkerText,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Row(
-            children: <Widget>[],
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        CategoryListView(),
-      ],
-    );
-  }
-
-  // Widget getPopularCourseUI() {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: <Widget>[
-  //         Text(
-  //           'Folders',
-  //           textAlign: TextAlign.left,
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.w600,
-  //             fontSize: 22,
-  //             letterSpacing: 0.27,
-  //             color: DesignAppTheme.darkerText,
-  //           ),
-  //         ),
-  //         Flexible(
-  //           child: PopularCourseListView(
-  //             callBack: () {
-  //               moveTo();
-  //             },
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // void moveTo() {
-  //   Navigator.push<dynamic>(
-  //     context,
-  //     MaterialPageRoute<dynamic>(
-  //       builder: (BuildContext context) => CategoryListView(search:searchController.text),
-  //     ),
-  //   );
-  // }
 
   savedSearch(String search) async {
     sharedPreferences.setString("search", search);
