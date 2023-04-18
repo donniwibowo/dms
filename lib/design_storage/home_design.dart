@@ -310,7 +310,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String user_token = await prefs.getString('user_token') ?? 'unknown';
         var res1 = await sendForm(
-            'https://192.168.1.119/leap_integra/master/dms/api/files/upload' +
+            'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/upload' +
                 '?user_token=' +
                 user_token,
             {
@@ -368,7 +368,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     };
     var jsonResponse = null;
     var response = await http.post(
-        "https://192.168.1.119/leap_integra/master/dms/api/files/createfolder?user_token=" +
+        "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/createfolder?user_token=" +
             user_token!,
         body: data);
 
@@ -451,7 +451,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://192.168.1.119/leap_integra/master/dms/api/user/getallusers?user_token=' +
+        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/user/getallusers?user_token=' +
             user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['users'];
@@ -467,7 +467,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
     final response = await http.get(Uri.parse(
-        'https://192.168.1.119/leap_integra/master/dms/api/files/getrelateddocumentbyuser?user_token=' +
+        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getrelateddocumentbyuser?user_token=' +
             user_token!));
     final jsonResponse = json.decode(response.body);
     final List<dynamic> itemList = jsonResponse['data'];

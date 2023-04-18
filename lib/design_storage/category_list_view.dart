@@ -433,6 +433,9 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         if (value == 'atur') {
                                                           slidePanelOn(
                                                               SlideUpSetting(
+                                                            folder_parent_id:
+                                                                isiData[index]
+                                                                    .folder_parent_id,
                                                             folder_id:
                                                                 isiData[index]
                                                                     .folder_id,
@@ -553,7 +556,7 @@ class _CategoryListViewState extends State<CategoryListView>
     var user_token = sharedPreferences.getString("user_token");
     var jsonResponse = null;
     final response = await http.post(
-        "https://192.168.1.119/leap_integra/master/dms/api/files/delete?user_token=" +
+        "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/delete?user_token=" +
             user_token!,
         body: data);
     if (response.body.isNotEmpty) {

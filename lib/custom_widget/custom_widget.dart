@@ -372,6 +372,7 @@ class SlideUpView extends StatelessWidget {
 
 // slide up untuk setting
 class SlideUpSetting extends StatelessWidget {
+  final String folder_parent_id;
   final String folder_id;
   final String name;
   final String desc;
@@ -386,6 +387,7 @@ class SlideUpSetting extends StatelessWidget {
 
   const SlideUpSetting(
       {Key? key,
+      this.folder_parent_id = "",
       this.folder_id = "",
       this.name = "",
       this.desc = "",
@@ -433,7 +435,8 @@ class SlideUpSetting extends StatelessWidget {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ManageUser(
                                 name: name,
-                                folder_parent_id: folder_id,
+                                file_id: folder_id,
+                                folder_parent_id: folder_parent_id,
                               )));
                     },
                     child: Row(
@@ -674,7 +677,7 @@ class SlideUpSetting extends StatelessWidget {
                                                                           var jsonResponse =
                                                                               null;
                                                                           var response = await http.post(
-                                                                              "https://192.168.1.119/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!,
+                                                                              "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!,
                                                                               body: data);
                                                                           jsonResponse =
                                                                               json.decode(response.body);
@@ -788,7 +791,7 @@ class SlideUpSetting extends StatelessWidget {
                       onTap: () {
                         FileDownloader.downloadFile(
                             url:
-                                'https://github.com/c14190074/leap_integra/blob/main/master/dms/uploads/documents/Document%201.pdf',
+                                'https://dms.tigajayabahankue.com/uploads/documents/EF_TestResult.pdf',
                             onProgress: (name, progress) {
                               print(progress);
                               // setState(() {
@@ -870,7 +873,7 @@ class SlideUpSetting extends StatelessWidget {
                                 sharedPreferences.getString("user_token");
                             var jsonResponse = null;
                             final response = await http.post(
-                                "https://192.168.1.119/leap_integra/master/dms/api/files/delete?user_token=" +
+                                "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/delete?user_token=" +
                                     user_token!,
                                 body: data);
                             if (response.body.isNotEmpty) {

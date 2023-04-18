@@ -54,8 +54,6 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
           future:
               Provider.of<ApiFolders>(context, listen: false).getSharedFolder(),
           builder: (BuildContext context, snapshot) {
-            print(snapshot);
-            print('masuk sini');
             if (!snapshot.hasData) {
               return const SizedBox();
             } else {
