@@ -23,6 +23,7 @@ import '../design_storage/recent_activities_list_view.dart';
 import '../design_storage/recent_files_list_view.dart';
 import '../design_storage/shared_folders_list_view.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ManageUser extends StatefulWidget {
   final String name;
@@ -41,22 +42,6 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
   ApiUser serviceAPI = ApiUser();
   late Future<List<UserModel>> listUserAccess;
 
-  Future<void> getUserList(String folder_id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final response = await http.get(Uri.parse(
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getuseraccessbyfolder?user_token=' +
-            user_token +
-            '&folder_id=' +
-            folder_id));
-    final jsonResponse = json.decode(response.body);
-    final List<dynamic> itemList = jsonResponse['users'];
-    userList = itemList
-        .map((data) =>
-            MultiSelectItem<String>(data['user_id'], data['fullname']))
-        .toList();
-  }
-
   String selectedRole = "view";
   List<DropdownMenuItem<String>> get getRoleList {
     List<DropdownMenuItem<String>> roleList = [
@@ -66,11 +51,29 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
     return roleList;
   }
 
+  Future<List<UserModel>>? _fetchUser(String folder_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+    final response = await http.get(Uri.parse(
+        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getuseraccessbyfolder?user_token=' +
+            user_token +
+            '&folder_id=' +
+            folder_id));
+
+    if (response.statusCode == 200) {
+      var json =
+          jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
+      var user_data =
+          List<UserModel>.from(json.map((i) => UserModel.fromJson(i)));
+      return user_data;
+    } else {
+      throw Exception('Failed to get albums');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
-    getUserList(widget.folder_parent_id);
     listUserAccess = serviceAPI.getUserAccessByFile(widget.file_id);
   }
 
@@ -84,11 +87,6 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
     List<String>? selectedUser = [];
-
-    setState(() {
-      getUserList(widget.folder_parent_id);
-    });
-
     return Container(
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
@@ -225,23 +223,40 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                         height: 10,
                       ),
                       Container(
-                        child: FutureBuilder(
-                            // future: listUser,
-                            builder: (context, snapshot) {
-                          return MultiSelectDialogField(
-                            buttonIcon: Icon(Icons.people),
-                            title: Text("Pilih User"),
-                            buttonText: Text(
-                              "User",
-                              style: TextStyle(color: Colors.grey.shade600),
-                            ),
-                            items: userList,
-                            listType: MultiSelectListType.CHIP,
-                            onConfirm: (values) {
-                              selectedUser = values.cast<String>();
-                            },
-                          );
-                        }),
+                        child: FutureBuilder<List<UserModel>>(
+                            future: _fetchUser(widget.folder_parent_id),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<UserModel>> snapshot) {
+                              Widget result;
+                              if (snapshot.hasData) {
+                                List<UserModel>? isiData = snapshot.data!;
+
+                                userList = isiData
+                                    .map((data) => MultiSelectItem<String>(
+                                        data.user_id, data.fullname))
+                                    .toList();
+
+                                result = MultiSelectDialogField(
+                                  buttonIcon: Icon(Icons.people),
+                                  title: Text("Pilih User"),
+                                  buttonText: Text(
+                                    "User",
+                                    style:
+                                        TextStyle(color: Colors.grey.shade600),
+                                  ),
+                                  items: userList,
+                                  listType: MultiSelectListType.CHIP,
+                                  onConfirm: (values) {
+                                    selectedUser = values.cast<String>();
+                                  },
+                                );
+                              } else if (snapshot.hasError) {
+                                result = Text('Error: ${snapshot.error}');
+                              } else {
+                                result = const Text('Awaiting result...');
+                              }
+                              return result;
+                            }),
                       ),
                       Container(
                         child: FutureBuilder<List<UserModel>>(
