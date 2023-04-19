@@ -22,6 +22,7 @@ class CategoryModel {
   String file_url;
   String no_revision;
   String email;
+  String is_shared;
 
   CategoryModel(
       {required this.folder_id,
@@ -41,7 +42,8 @@ class CategoryModel {
       required this.is_owner,
       required this.file_url,
       required this.no_revision,
-      required this.email});
+      required this.email,
+      required this.is_shared});
   //FORMAT TO JSON
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
       folder_id: json["folder_id"],
@@ -61,5 +63,6 @@ class CategoryModel {
       is_owner: json["is_owner"],
       file_url: json["file_url"],
       no_revision: json["no_revision"],
-      email: json["email"]);
+      email: json["email"],
+      is_shared: json["is_shared"]);
 }

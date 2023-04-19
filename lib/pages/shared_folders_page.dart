@@ -38,30 +38,30 @@ class _SharedFoldersPageState extends State<SharedFoldersPage> {
       color: DesignAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        floatingActionButtonLocation: ExpandableFab.location,
-        floatingActionButton: ExpandableFab(
-          type: ExpandableFabType.up,
-          distance: 60,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.red,
-          closeButtonStyle: const ExpandableFabCloseButtonStyle(
-            backgroundColor: Colors.red,
-          ),
-          children: [
-            FloatingActionButton.small(
-              heroTag: null,
-              child: const Icon(Icons.folder_outlined),
-              backgroundColor: Colors.red,
-              onPressed: () {},
-            ),
-            FloatingActionButton.small(
-              heroTag: null,
-              child: const Icon(Icons.file_upload),
-              backgroundColor: Colors.red,
-              onPressed: () {},
-            ),
-          ],
-        ),
+        // floatingActionButtonLocation: ExpandableFab.location,
+        // floatingActionButton: ExpandableFab(
+        //   type: ExpandableFabType.up,
+        //   distance: 60,
+        //   child: Icon(Icons.add),
+        //   backgroundColor: Colors.red,
+        //   closeButtonStyle: const ExpandableFabCloseButtonStyle(
+        //     backgroundColor: Colors.red,
+        //   ),
+        //   children: [
+        //     FloatingActionButton.small(
+        //       heroTag: null,
+        //       child: const Icon(Icons.folder_outlined),
+        //       backgroundColor: Colors.red,
+        //       onPressed: () {},
+        //     ),
+        //     FloatingActionButton.small(
+        //       heroTag: null,
+        //       child: const Icon(Icons.file_upload),
+        //       backgroundColor: Colors.red,
+        //       onPressed: () {},
+        //     ),
+        //   ],
+        // ),
         body: Column(
           children: <Widget>[
             SizedBox(

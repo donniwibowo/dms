@@ -237,4 +237,25 @@ class ApiFolders extends ChangeNotifier {
       throw Exception('Failed to load Data');
     }
   }
+
+  Future<List<CategoryModel>> getRelatedDocument(String folder_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_token = await prefs.getString('user_token') ?? 'unknown';
+
+    final url =
+        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getrelateddocumentbyfile';
+    final response = await http
+        .get(url + '?user_token=' + user_token + '&folder_id=' + folder_id);
+
+    if (response.statusCode == 200) {
+      final result =
+          json.decode(response.body)['data'].cast<Map<String, dynamic>>();
+      _data = result
+          .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+          .toList();
+      return _data;
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
 }

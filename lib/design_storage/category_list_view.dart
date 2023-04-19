@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
+import 'package:best_flutter_ui_templates/provider/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -176,22 +177,34 @@ class _CategoryListViewState extends State<CategoryListView>
                                                     Padding(
                                                       padding: EdgeInsets.only(
                                                           right: 15),
-                                                      child:
-                                                          isiData[index].type ==
-                                                                  'Folder'
-                                                              ? Icon(
-                                                                  Icons.folder,
-                                                                  color: Colors
-                                                                      .blue
-                                                                      .shade200,
-                                                                )
-                                                              : Icon(
-                                                                  Icons
-                                                                      .picture_as_pdf,
-                                                                  color: Colors
-                                                                      .red
-                                                                      .shade300,
-                                                                ),
+                                                      child: isiData[index]
+                                                                  .type ==
+                                                              'Folder'
+                                                          ? Icon(
+                                                              isiData[index]
+                                                                          .is_shared ==
+                                                                      "1"
+                                                                  ? Icons
+                                                                      .folder_shared
+                                                                  : Icons
+                                                                      .folder,
+                                                              color: Colors.blue
+                                                                  .shade200,
+                                                            )
+                                                          : Icon(
+                                                              isiData[index]
+                                                                          .format ==
+                                                                      'pdf'
+                                                                  ? MyFlutterApp
+                                                                      .file_pdf
+                                                                  : MyFlutterApp
+                                                                      .file_word,
+                                                              color: isiData[index]
+                                                                          .format ==
+                                                                      'pdf'
+                                                                  ? Colors.red
+                                                                  : Colors.blue,
+                                                            ),
                                                     ),
                                                     Container(
                                                       child: Column(

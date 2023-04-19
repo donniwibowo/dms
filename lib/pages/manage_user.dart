@@ -29,9 +29,13 @@ class ManageUser extends StatefulWidget {
   final String name;
   final String file_id;
   final String folder_parent_id;
+  final String type;
 
   ManageUser(
-      {required this.name, this.file_id = "0", this.folder_parent_id = "0"});
+      {required this.name,
+      this.file_id = "0",
+      this.folder_parent_id = "0",
+      this.type = "folder"});
   @override
   _ManageUserState createState() => _ManageUserState();
 }
@@ -51,14 +55,23 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
     return roleList;
   }
 
-  Future<List<UserModel>>? _fetchUser(String folder_id) async {
+  Future<List<UserModel>>? _fetchUser(String folder_id, String type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final response = await http.get(Uri.parse(
+
+    var url =
         'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getuseraccessbyfolder?user_token=' +
             user_token +
             '&folder_id=' +
-            folder_id));
+            folder_id;
+
+    if (type == 'Folder') {
+      url =
+          'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/user/getallusers?user_token=' +
+              user_token;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var json =
@@ -166,6 +179,13 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                       setState(() {
                                         selectedUser = [];
                                       });
+
+                                      const msg = SnackBar(
+                                        content: Text(
+                                            'User akses berhasil ditambahkan'),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(msg);
                                     },
                                     child: Text("Send"))
                               ],
@@ -207,7 +227,7 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                           //te
                                           color: Colors.black, //Font color
                                           fontSize:
-                                              18 //font size on dropdown button
+                                              16 //font size on dropdown button
                                           ),
 
                                       // dropdownColor: Colors
@@ -224,7 +244,8 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                       ),
                       Container(
                         child: FutureBuilder<List<UserModel>>(
-                            future: _fetchUser(widget.folder_parent_id),
+                            future: _fetchUser(
+                                widget.folder_parent_id, widget.type),
                             builder: (BuildContext context,
                                 AsyncSnapshot<List<UserModel>> snapshot) {
                               Widget result;
@@ -253,11 +274,29 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                               } else if (snapshot.hasError) {
                                 result = Text('Error: ${snapshot.error}');
                               } else {
-                                result = const Text('Awaiting result...');
+                                result = const Text('Please wait...');
                               }
                               return result;
                             }),
                       ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                          padding: EdgeInsets.only(bottom: 20),
+                          // decoration: BoxDecoration(
+                          //     border: Border(
+                          //         top: BorderSide(
+                          //             width: 1, color: Colors.grey))),
+                          child: Row(
+                            children: [
+                              Text(
+                                'User Akses (' + widget.name + ')',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )),
                       Container(
                         child: FutureBuilder<List<UserModel>>(
                             future: listUserAccess,
@@ -280,6 +319,7 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                 List<UserModel>? isiData = snapshot.data!;
                                 if (isiData.length > 0) {
                                   return ListView.builder(
+                                      padding: EdgeInsets.zero,
                                       shrinkWrap: true,
                                       itemCount: isiData.length,
                                       scrollDirection: Axis.vertical,
@@ -367,9 +407,15 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                                               .decode(response
                                                                   .body);
 
-                                                          print(jsonResponse);
-
                                                           reloadData();
+                                                          const msg = SnackBar(
+                                                            content: Text(
+                                                                'User akses berhasil dihapus'),
+                                                          );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  msg);
                                                         },
                                                         icon: Icon(
                                                           Icons.delete,
@@ -385,8 +431,8 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                       });
                                 } else {
                                   return Container(
-                                    padding: EdgeInsets.only(left: 18, top: 15),
-                                    child: Text(""),
+                                    padding: EdgeInsets.only(left: 3),
+                                    child: Text("Tidak ada data"),
                                   );
                                 }
                               }

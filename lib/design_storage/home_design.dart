@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
 // import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
 import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
+import 'package:best_flutter_ui_templates/provider/my_flutter_app_icons.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 // import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
 // import 'package:best_flutter_ui_templates/design_storage/popular_list_view.dart';
@@ -106,16 +107,22 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           children: [
             FloatingActionButton.small(
               heroTag: null,
-              child: const Icon(Icons.folder_outlined),
-              backgroundColor: Colors.red,
+              child: const Icon(
+                MyFlutterApp.folder_plus,
+                size: 20,
+              ),
+              // backgroundColor: Colors.red,
               onPressed: () {
                 showInputDialog(context, 'test', widget.folder_parent_id);
               },
             ),
             FloatingActionButton.small(
               heroTag: null,
-              child: const Icon(Icons.file_upload),
-              backgroundColor: Colors.red,
+              child: const Icon(
+                MyFlutterApp.cloud_upload_alt,
+                size: 20,
+              ),
+              // backgroundColor: Colors.red,
               onPressed: () {
                 // file upload
                 showInputFileDialog(context, 'test', widget.folder_parent_id);
@@ -254,31 +261,6 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     }
   }
 
-// Future uploadFiles() async {
-//     if (userFile == null) {
-//       // return _showSnackbar('Silahkan memilih gambar anda :)');
-//     }
-
-//    try{
-//      var image = userFile;
-//      print('upload started');
-//      //upload image
-//      //scenario  one - upload image as poart of formdata
-//      var res1 = await sendForm('https://localhost/leap_integra/master/dms/api/files/upload',
-//          {'parent_folder': 0, 'perihal': 'test', 'nomor': 'test123', 'description': 'test', 'related_document_ids': 'test','user_access':'[]'}, {'file': userFile});
-//      print("res-1 $res1");
-//      setState(() {
-//        userFile = image;
-//      });
-//      if (res1.statusCode == HttpStatus.OK||res1.statusCode == 200) {
-//        showAlertDialog(context, "File Uploaded.");
-//      } else {
-//        showAlertDialog(context, "Failed Upload.");
-//      }
-//    }
-//    catch (e) {
-//    }
-//   }
   File? _selectedFile;
 
   Future<void> _openFilePicker() async {
@@ -324,9 +306,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
             {
               'file': _selectedFile!
             });
-        print("res-1 $res1");
-        print('data masuk upload');
-        print('data masuk upload');
+
         if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
           // showAlertDialog(context, "File berhasil diupload");
           const createFolderMsg = SnackBar(
@@ -486,7 +466,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     fillItemsList();
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Folder Baru"),
+      title: Text("Buat Folder"),
       content: Container(
         width: 300,
         child: Column(
@@ -601,7 +581,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
       ),
       actions: [
         TextButton(
-          child: Text("Batal"),
+          child: Text("Tutup"),
           onPressed: () {
             Navigator.pop(context);
           },

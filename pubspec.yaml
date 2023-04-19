@@ -99,6 +99,9 @@ flutter:
               - asset: assets/fonts/Roboto-Regular.ttf
               - asset: assets/fonts/Roboto-Medium.ttf
                 weight: 400
+        - family:  MyFlutterApp
+          fonts:
+              - asset: assets/fonts/MyFlutterApp.ttf
     #
     # For details regarding fonts from package dependencies,
     # see https://flutter.dev/custom-fonts/#from-packages

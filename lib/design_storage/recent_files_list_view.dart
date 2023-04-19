@@ -1,5 +1,6 @@
 import 'package:best_flutter_ui_templates/design_storage/design_app_theme.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
+import 'package:best_flutter_ui_templates/provider/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,10 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
   void dispose() {
     animationController?.dispose();
     super.dispose();
+  }
+
+  void reloadData() {
+    setState(() {});
   }
 
   int folders_length = 0;
@@ -148,15 +153,28 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                   .type ==
                                                               'Folder'
                                                           ? Icon(
-                                                              Icons.folder,
+                                                              data.dataRecentFolders[index]
+                                                                          .is_shared ==
+                                                                      "1"
+                                                                  ? Icons.folder_shared
+                                                                  : Icons.folder,
                                                               color: Colors.blue
                                                                   .shade200,
                                                             )
                                                           : Icon(
-                                                              Icons
-                                                                  .picture_as_pdf,
-                                                              color: Colors
-                                                                  .red.shade300,
+                                                              data.dataRecentFolders[index].format ==
+                                                                      'pdf'
+                                                                  ? MyFlutterApp
+                                                                      .file_pdf
+                                                                  : MyFlutterApp
+                                                                      .file_word,
+                                                              color: data
+                                                                          .dataRecentFolders[
+                                                                              index]
+                                                                          .format ==
+                                                                      'pdf'
+                                                                  ? Colors.red
+                                                                  : Colors.blue,
                                                             ),
                                                     ),
                                                     Container(
@@ -264,186 +282,207 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                   ],
                                                 ),
                                                 Container(
-                                                  child:
-                                                      PopupMenuButton<String>(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius
-                                                                      .circular(
-                                                                          20)
-                                                                  .copyWith(
-                                                                      topRight:
-                                                                          Radius.circular(
-                                                                              0))),
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          elevation: 10,
-                                                          color: Colors
-                                                              .grey.shade100,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context) =>
-                                                                  <
-                                                                      PopupMenuEntry<
-                                                                          String>>[
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'view',
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                  child: PopupMenuButton<
+                                                          String>(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20).copyWith(
+                                                              topRight:
+                                                                  Radius.circular(
+                                                                      0))),
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      elevation: 10,
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      itemBuilder:
+                                                          (BuildContext
+                                                                  context) =>
+                                                              <
+                                                                  PopupMenuEntry<
+                                                                      String>>[
+                                                                PopupMenuItem<
+                                                                    String>(
+                                                                  value: 'view',
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.info_rounded,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Info',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
+                                                                          Icon(
+                                                                            Icons.info_rounded,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.green,
                                                                           ),
-                                                                          Divider()
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Info',
+                                                                            style: TextStyle(
+                                                                                color: Colors.green,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'edit',
-                                                                      enabled: data.dataRecentFolders[index].is_owner ==
-                                                                              "1"
-                                                                          ? true
-                                                                          : false,
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                      Divider()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                // Visibility(child: child)
+                                                                PopupMenuItem<
+                                                                    String>(
+                                                                  value: 'atur',
+                                                                  enabled: data
+                                                                              .dataRecentFolders[index]
+                                                                              .is_owner ==
+                                                                          "1"
+                                                                      ? true
+                                                                      : false,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.edit,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Edit',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
+                                                                          Icon(
+                                                                            Icons.settings,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.green,
                                                                           ),
-                                                                          Divider()
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Pengaturan',
+                                                                            style: TextStyle(
+                                                                                color: Colors.green,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                    PopupMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          'delete',
-                                                                      enabled: data.dataRecentFolders[index].is_owner ==
-                                                                              "1"
-                                                                          ? true
-                                                                          : false,
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.delete,
-                                                                                size: 20,
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                'Delete',
-                                                                                style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w500),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          Divider()
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                          onSelected:
-                                                              (String value) {
-                                                            // Handle menu item selection here
-                                                            if (value ==
-                                                                'view') {
-                                                              slidePanelOn(SlideUpView(
-                                                                  folder_id: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .folder_id,
-                                                                  name: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .name,
-                                                                  desc: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .description,
-                                                                  user_access: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .user_access,
-                                                                  created_by: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .created_by,
-                                                                  created_on: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .created_on,
-                                                                  updated_on: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .updated_on,
-                                                                  file_url: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .file_url,
-                                                                  type: data
-                                                                      .dataRecentFolders[
-                                                                          index]
-                                                                      .type));
-                                                            }
-                                                            if (value ==
-                                                                'delete') {
-                                                              var folder_id = data
-                                                                  .dataRecentFolders[
-                                                                      index]
-                                                                  .folder_id;
-                                                            }
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 5),
-                                                            child: Icon(
-                                                              Icons.more_vert,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 20,
-                                                            ),
-                                                          )),
+                                                                      Divider()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                      onSelected:
+                                                          (String value) {
+                                                        // Handle menu item selection here
+                                                        if (value == 'view') {
+                                                          slidePanelOn(
+                                                              SlideUpView(
+                                                            folder_id: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .folder_id,
+                                                            name: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .name,
+                                                            desc: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .description,
+                                                            user_access: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .user_access,
+                                                            created_by: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .created_by,
+                                                            created_on: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .created_on,
+                                                            updated_on: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .updated_on,
+                                                            file_url: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .file_url,
+                                                            type: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .type,
+                                                          ));
+                                                        }
+
+                                                        if (value == 'atur') {
+                                                          slidePanelOn(
+                                                              SlideUpSetting(
+                                                            folder_parent_id: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .folder_parent_id,
+                                                            folder_id: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .folder_id,
+                                                            name: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .name,
+                                                            desc: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .description,
+                                                            user_access: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .user_access,
+                                                            created_by: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .created_by,
+                                                            created_on: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .created_on,
+                                                            updated_on: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .updated_on,
+                                                            file_url: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .file_url,
+                                                            type: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .type,
+                                                            is_owner: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .is_owner,
+                                                            reloadData:
+                                                                reloadData,
+                                                          ));
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5),
+                                                        child: Icon(
+                                                          Icons.more_vert,
+                                                          color: Colors.black,
+                                                          size: 20,
+                                                        ),
+                                                      )),
                                                 ),
                                               ],
                                             ),

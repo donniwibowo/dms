@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
 import 'package:best_flutter_ui_templates/design_storage/shared_folders_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
+import 'package:best_flutter_ui_templates/pages/edit_folder.dart';
 import 'package:best_flutter_ui_templates/pages/manage_user.dart';
+import 'package:best_flutter_ui_templates/pages/related_document.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -93,6 +95,115 @@ class TopHeader extends StatelessWidget {
                               ),
                               Text(
                                 dirname,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  letterSpacing: 0.2,
+                                  color: DesignAppTheme.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Settings()));
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    child: Image.asset('assets/design_storage/userImage.png'),
+                  ),
+                )
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        // By default, show a loading spinner.
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+}
+
+class TopHeaderEditPage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String folder_id;
+  const TopHeaderEditPage(
+      {Key? key, this.title = "", this.subtitle = "", this.folder_id = "0"})
+      : super(key: key);
+
+  Widget build(BuildContext context) {
+    ApiFolders serviceAPI = ApiFolders();
+    String dirname = subtitle;
+    String folder_parent_id = "0";
+    bool isVisible = true;
+    double custom_left_padding = 18;
+
+    return FutureBuilder<List<CategoryModel>>(
+      future: serviceAPI.getFolderInfo(folder_id),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          List<CategoryModel>? isiData = snapshot.data!;
+          if (isiData.length > 0) {
+            if (dirname != 'User Akses') {
+              dirname = isiData[0].name;
+            }
+
+            folder_parent_id = isiData[0].folder_parent_id;
+            custom_left_padding = 0;
+          }
+          return Padding(
+            padding:
+                EdgeInsets.only(top: 8.0, left: custom_left_padding, right: 18),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          Visibility(
+                              visible: isVisible,
+                              child: IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DesignHomeScreen(
+                                                  folder_parent_id:
+                                                      folder_parent_id,
+                                                )));
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios_new))),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                title,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  letterSpacing: 0.27,
+                                  color: DesignAppTheme.darkerText,
+                                ),
+                              ),
+                              Text(
+                                'Edit Folder',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
@@ -437,6 +548,7 @@ class SlideUpSetting extends StatelessWidget {
                                 name: name,
                                 file_id: folder_id,
                                 folder_parent_id: folder_parent_id,
+                                type: type,
                               )));
                     },
                     child: Row(
@@ -459,10 +571,12 @@ class SlideUpSetting extends StatelessWidget {
                     child: Container(
                         child: InkWell(
                       onTap: () {
-                        const downloadMsg = SnackBar(
-                          content: Text('Dokumen Terkait'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RelatedDocument(
+                                  name: name,
+                                  file_id: folder_id,
+                                  folder_parent_id: folder_parent_id,
+                                )));
                       },
                       child: Row(
                         children: [
@@ -826,14 +940,17 @@ class SlideUpSetting extends StatelessWidget {
                   ),
                   // Divider(),
                   Visibility(
-                    visible: is_owner == "1" ? true : false,
+                    visible: type == "Folder" && is_owner == "1" ? true : false,
                     child: Container(
                         child: InkWell(
                       onTap: () {
-                        const downloadMsg = SnackBar(
-                          content: Text('Edit'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => EditFolder(
+                                  folder_parent_id: folder_parent_id,
+                                  folder_id: folder_id,
+                                  name: name,
+                                  description: desc,
+                                )));
                       },
                       child: Row(
                         children: [
