@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:best_flutter_ui_templates/design_storage/category_list_view.dart';
-// import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
-import 'package:best_flutter_ui_templates/design_storage/search_files_view.dart';
 import 'package:best_flutter_ui_templates/provider/my_flutter_app_icons.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
 // import 'package:best_flutter_ui_templates/design_storage/app_info_screen.dart';
@@ -61,8 +59,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
   void initState() {
     super.initState();
     checkLoginStatus();
-    fillItemsList();
-    relatedDocumentByUserList();
+    _fetchUserData();
   }
 
   late SharedPreferences sharedPreferences;
@@ -113,7 +110,7 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               ),
               // backgroundColor: Colors.red,
               onPressed: () {
-                showInputDialog(context, 'test', widget.folder_parent_id);
+                showCreateFolderForm(context, 'test', widget.folder_parent_id);
               },
             ),
             FloatingActionButton.small(
@@ -125,8 +122,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               // backgroundColor: Colors.red,
               onPressed: () {
                 // file upload
-                showInputFileDialog(context, 'test', widget.folder_parent_id);
-                // _selectFile();
+                showFileUploadForm(
+                    context, 'Upload File', widget.folder_parent_id);
               },
             ),
           ],
@@ -204,9 +201,6 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 1: Search'),
-  ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -226,114 +220,93 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     });
   }
 
-  Future<Response> sendForm(
-      String url, Map<String, dynamic> data, Map<String, File> files) async {
-    Map<String, MultipartFile> fileMap = {};
-    for (MapEntry fileEntry in files.entries) {
-      File file = fileEntry.value;
-      String fileName = path.basename(file.path);
-      fileMap[fileEntry.key] = MultipartFile(
-          file.openRead(), await file.length(),
-          filename: fileName);
-    }
-    data.addAll(fileMap);
-    var formData = FormData.fromMap(data);
-    Dio dio = new Dio();
-    return await dio.post(url,
-        data: formData, options: Options(contentType: 'multipart/form-data'));
+  List<MultiSelectItem<String>> listUser = [];
+  Future<void> _fetchUserData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user_token = sharedPreferences.getString("user_token");
+    final response = await http.get(Uri.parse(
+        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/user/getallusers?user_token=' +
+            user_token!));
+    final jsonResponse = json.decode(response.body);
+    final List<dynamic> itemList = jsonResponse['users'];
+    listUser = itemList
+        .map((data) =>
+            MultiSelectItem<String>(data['user_id'], data['fullname']))
+        .toList();
   }
 
-  Future<void> uploadFile(String filePath) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String user_token = await prefs.getString('user_token') ?? 'unknown';
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('https://localhost/leap_integra/master/dms/api/files/upload' +
-            '?user_token=' +
-            user_token));
-    request.files.add(await http.MultipartFile.fromPath('file', filePath));
-    var response = await request.send();
+  //untuk upload folder
+  showCreateFolderForm(
+      BuildContext context, String message, String folder_parent_id) {
+    final TextEditingController namaController = new TextEditingController();
+    final TextEditingController descriptionController =
+        new TextEditingController();
+    List<String>? selectedItems = [];
+    _fetchUserData();
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Buat Folder"),
+      content: Container(
+        width: 300,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              controller: namaController,
+              decoration: InputDecoration(hintText: 'Nama'),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(hintText: 'Deskripsi'),
+            ),
+            MultiSelectDialogField(
+              buttonIcon: Icon(Icons.people),
+              title: Text("Pilih User"),
+              buttonText: Text(
+                "User Akses",
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
+              items: listUser,
+              listType: MultiSelectListType.CHIP,
+              onConfirm: (values) {
+                selectedItems = values.cast<String>();
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text("Tutup"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        TextButton(
+          child: Text("Buat"),
+          onPressed: () {
+            submitFolderData(
+              namaController.text,
+              descriptionController.text,
+              folder_parent_id,
+              selectedItems,
+            );
+          },
+        ),
+      ],
+    );
 
-    if (response.statusCode == 200) {
-      print('File uploaded successfully');
-    } else {
-      print('File upload failed with status: ${response.statusCode}');
-    }
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
-  File? _selectedFile;
-
-  Future<void> _openFilePicker() async {
-    final result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-      });
-    }
-  }
-
-  _selectFile(
-      String perihalController,
-      String nomorController,
-      String descriptionController,
-      String folder_parent_id,
-      selectedUsers,
-      relatedItems) async {
-    final result = await FilePicker.platform.pickFiles();
-    String user = sharedPreferences.getString("user_id").toString();
-    if (result != null) {
-      // Do something with the file
-      try {
-        _selectedFile = File(result.files.single.path!);
-        print('upload started');
-        //upload image
-        //scenario  one - upload image as poart of formdata
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String user_token = await prefs.getString('user_token') ?? 'unknown';
-        var res1 = await sendForm(
-            'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/upload' +
-                '?user_token=' +
-                user_token,
-            {
-              'parent_folder': folder_parent_id,
-              'perihal': perihalController,
-              'nomor': nomorController,
-              'description': descriptionController,
-              'related_document_ids': relatedItems.toString(),
-              'user_access': selectedUsers.toString()
-            },
-            {
-              'file': _selectedFile!
-            });
-
-        if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
-          // showAlertDialog(context, "File berhasil diupload");
-          const createFolderMsg = SnackBar(
-            content: Text('File berhasil diupload'),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
-          myController.reloadData();
-        } else {
-          const createFolderMsg = SnackBar(
-            content: Text('Gagal mengupload file'),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(createFolderMsg);
-        }
-        setState(() {});
-      } catch (e) {
-        print('error message');
-        showAlertDialog(context, "Failed Upload (Error).");
-        print(e);
-      }
-    } else {
-      // User canceled the picker
-      showAlertDialog(context, "Failed Upload.");
-    }
-    setState(() {});
-  }
-
-  createFolder(String name, String descriptionController,
+  submitFolderData(String name, String descriptionController,
       String folder_parent_id, selectedUsers) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user_token = sharedPreferences.getString("user_token");
@@ -378,157 +351,8 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     setState(() {});
   }
 
-  showAlertDialog(BuildContext context, String message) {
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Notification"),
-      content: Text(message),
-      actions: [
-        TextButton(
-          child: Text("OK"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  showViewDialog(BuildContext context, String message) {
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("View"),
-      content: Text('Test'),
-      actions: [
-        TextButton(
-          child: Text("OK"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  List<MultiSelectItem<String>> _items = [];
-  Future<void> fillItemsList() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var user_token = sharedPreferences.getString("user_token");
-    final response = await http.get(Uri.parse(
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/user/getallusers?user_token=' +
-            user_token!));
-    final jsonResponse = json.decode(response.body);
-    final List<dynamic> itemList = jsonResponse['users'];
-    _items = itemList
-        .map((data) =>
-            MultiSelectItem<String>(data['user_id'], data['fullname']))
-        .toList();
-    print(_items);
-  }
-
-  List<MultiSelectItem<String>> _relatedItems = [];
-  Future<void> relatedDocumentByUserList() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var user_token = sharedPreferences.getString("user_token");
-    final response = await http.get(Uri.parse(
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getrelateddocumentbyuser?user_token=' +
-            user_token!));
-    final jsonResponse = json.decode(response.body);
-    final List<dynamic> itemList = jsonResponse['data'];
-    _relatedItems = itemList
-        .map((data) => MultiSelectItem<String>(data['file_id'], data['name']))
-        .toList();
-  }
-
-  //untuk upload folder
-  showInputDialog(
-      BuildContext context, String message, String folder_parent_id) {
-    final TextEditingController namaController = new TextEditingController();
-    final TextEditingController descriptionController =
-        new TextEditingController();
-    List<String>? selectedItems = [];
-    fillItemsList();
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Buat Folder"),
-      content: Container(
-        width: 300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextField(
-              controller: namaController,
-              decoration: InputDecoration(hintText: 'Nama'),
-            ),
-            TextField(
-              controller: descriptionController,
-              decoration: InputDecoration(hintText: 'Deskripsi'),
-            ),
-            MultiSelectDialogField(
-              buttonIcon: Icon(Icons.people),
-              title: Text("Pilih User"),
-              buttonText: Text(
-                "User Akses",
-                style: TextStyle(color: Colors.grey.shade600),
-              ),
-              items: _items,
-              listType: MultiSelectListType.CHIP,
-              onConfirm: (values) {
-                selectedItems = values.cast<String>();
-              },
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          child: Text("Tutup"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        TextButton(
-          child: Text("Buat"),
-          onPressed: () {
-            createFolder(
-              namaController.text,
-              descriptionController.text,
-              folder_parent_id,
-              selectedItems,
-            );
-          },
-        ),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   //untuk upload file
-  showInputFileDialog(
+  showFileUploadForm(
       BuildContext context, String message, String folder_parent_id) {
     final TextEditingController perihalController = new TextEditingController();
     final TextEditingController nomorController = new TextEditingController();
@@ -536,11 +360,9 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
         new TextEditingController();
 
     List<String>? selectedItems = [];
-    List<String>? relatedItems = [];
-    relatedDocumentByUserList();
-    // set up the AlertDialog
+
     AlertDialog alert = AlertDialog(
-      title: Text("Upload File"),
+      title: Text("Upload Dokumen"),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -558,24 +380,6 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
               controller: descriptionController,
               decoration: InputDecoration(hintText: 'Deskripsi'),
             ),
-            // MultiSelectDialogField(
-            //   title: Text("Pilih Akses User"),
-            //   buttonText: Text("Pilih Akses User"),
-            //   items: _items,
-            //   listType: MultiSelectListType.CHIP,
-            //   onConfirm: (values) {
-            //     selectedItems = values.cast<String>();
-            //   },
-            // ),
-            // MultiSelectDialogField(
-            //   title: Text("Pilih Related Item"),
-            //   buttonText: Text("Pilih Related Item"),
-            //   items: _relatedItems,
-            //   listType: MultiSelectListType.CHIP,
-            //   onConfirm: (values) {
-            //     relatedItems = values.cast<String>();
-            //   },
-            // ),
           ],
         ),
       ),
@@ -587,15 +391,10 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
           },
         ),
         TextButton(
-          child: Text("Pilih File"),
+          child: Text("Pilih Dokumen"),
           onPressed: () {
-            _selectFile(
-                perihalController.text,
-                nomorController.text,
-                descriptionController.text,
-                folder_parent_id,
-                selectedItems,
-                relatedItems);
+            _selectFile(perihalController.text, nomorController.text,
+                descriptionController.text, folder_parent_id);
             Navigator.pop(context);
           },
         ),
@@ -611,7 +410,87 @@ class _DesignHomeScreenState extends State<DesignHomeScreen> {
     );
   }
 
-  savedSearch(String search) async {
-    sharedPreferences.setString("search", search);
+  Future<Response> sendForm(
+      String url, Map<String, dynamic> data, Map<String, File> files) async {
+    Map<String, MultipartFile> fileMap = {};
+    for (MapEntry fileEntry in files.entries) {
+      File file = fileEntry.value;
+      String fileName = path.basename(file.path);
+      fileMap[fileEntry.key] = MultipartFile(
+          file.openRead(), await file.length(),
+          filename: fileName);
+    }
+    data.addAll(fileMap);
+    var formData = FormData.fromMap(data);
+
+    Dio dio = new Dio();
+    return await dio.post(url,
+        data: formData, options: Options(contentType: 'multipart/form-data'));
+  }
+
+  File? _selectedFile;
+
+  _selectFile(String perihalController, String nomorController,
+      String descriptionController, String folder_parent_id) async {
+    // final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['docx', 'pdf', 'doc'],
+    );
+
+    if (result != null) {
+      // Do something with the file
+      try {
+        _selectedFile = File(result.files.single.path!);
+        PlatformFile file_data = result.files.first;
+        print(file_data.name);
+        print(file_data.size);
+
+        if (file_data.size / 1024 > 1000) {
+          const fileUploadFailedMsg = SnackBar(
+            content: Text('Batas maksimal ukuran dokumen adalah 1 MB'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+        } else {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String user_token = await prefs.getString('user_token') ?? 'unknown';
+          var res1 = await sendForm(
+              'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/upload' +
+                  '?user_token=' +
+                  user_token,
+              {
+                'parent_folder': folder_parent_id,
+                'perihal': perihalController,
+                'nomor': nomorController,
+                'description': descriptionController
+              },
+              {
+                'file': _selectedFile!
+              });
+
+          if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
+            const fileUploadSuccessMsg = SnackBar(
+              content: Text('Dokumen berhasil diupload'),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(fileUploadSuccessMsg);
+            myController.reloadData();
+          } else {
+            const fileUploadFailedMsg = SnackBar(
+              content: Text('Gagal mengupload dokumen'),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+          }
+        }
+      } catch (e) {
+        print(e);
+        const fileUploadFailedMsg = SnackBar(
+          content: Text('Gagal mengupload dokumen'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+      }
+    } else {
+      // User canceled the picker
+      // showAlertDialog(context, "Failed Upload.");
+    }
   }
 }

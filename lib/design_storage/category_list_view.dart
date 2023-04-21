@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:best_flutter_ui_templates/settings.dart';
-import 'package:best_flutter_ui_templates/design_storage/detail_files_list_view.dart';
 import 'package:http/http.dart' as http;
 import '../controller.dart';
 import 'package:best_flutter_ui_templates/design_storage/models/category.dart';
@@ -476,6 +475,12 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             is_owner:
                                                                 isiData[index]
                                                                     .is_owner,
+                                                            perihal:
+                                                                isiData[index]
+                                                                    .perihal,
+                                                            nomor:
+                                                                isiData[index]
+                                                                    .nomor,
                                                             reloadData:
                                                                 reloadData,
                                                           ));

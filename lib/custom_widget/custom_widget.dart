@@ -9,7 +9,9 @@ import 'package:best_flutter_ui_templates/pages/manage_user.dart';
 import 'package:best_flutter_ui_templates/pages/related_document.dart';
 import 'package:best_flutter_ui_templates/provider/api_folders.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
@@ -17,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controller.dart';
 import '../design_storage/models/category.dart';
 import '../design_storage/design_app_theme.dart';
 import '../design_storage/home_design.dart';
@@ -494,6 +497,8 @@ class SlideUpSetting extends StatelessWidget {
   final String file_url;
   final String type;
   final String is_owner;
+  final String perihal;
+  final String nomor;
   final Function reloadData;
 
   const SlideUpSetting(
@@ -509,6 +514,8 @@ class SlideUpSetting extends StatelessWidget {
       this.file_url = "",
       this.type = "",
       this.is_owner = "",
+      this.perihal = "",
+      this.nomor = "",
       required this.reloadData})
       : super(key: key);
 
@@ -519,6 +526,150 @@ class SlideUpSetting extends StatelessWidget {
 
     if (type == "Folder") {
       isVisible = false;
+    }
+
+    Future<Response> sendForm(
+        String url, Map<String, dynamic> data, Map<String, File> files) async {
+      Map<String, MultipartFile> fileMap = {};
+      for (MapEntry fileEntry in files.entries) {
+        File file = fileEntry.value;
+        String fileName = path.basename(file.path);
+        fileMap[fileEntry.key] = MultipartFile(
+            file.openRead(), await file.length(),
+            filename: fileName);
+      }
+      data.addAll(fileMap);
+      var formData = FormData.fromMap(data);
+
+      Dio dio = new Dio();
+      return await dio.post(url,
+          data: formData, options: Options(contentType: 'multipart/form-data'));
+    }
+
+    File? _selectedFile;
+
+    _selectFile(String perihalController, String nomorController,
+        String descriptionController, String _folder_id) async {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['docx', 'pdf', 'doc'],
+      );
+
+      if (result != null) {
+        try {
+          _selectedFile = File(result.files.single.path!);
+          PlatformFile file_data = result.files.first;
+
+          if (file_data.size / 1024 > 1000) {
+            const fileUploadFailedMsg = SnackBar(
+              content: Text('Batas maksimal ukuran dokumen adalah 1 MB'),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+          } else {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String user_token =
+                await prefs.getString('user_token') ?? 'unknown';
+            var res1 = await sendForm(
+                'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/revisidocument' +
+                    '?user_token=' +
+                    user_token,
+                {
+                  'folder_id': _folder_id,
+                  'perihal': perihalController,
+                  'nomor': nomorController,
+                  'description': descriptionController
+                },
+                {
+                  'file': _selectedFile!
+                });
+
+            if (res1.statusCode == HttpStatus.OK || res1.statusCode == 200) {
+              slidePanelClose();
+              const fileUploadSuccessMsg = SnackBar(
+                content: Text('Revisi dokumen berhasil diupload'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(fileUploadSuccessMsg);
+              reloadData();
+            } else {
+              const fileUploadFailedMsg = SnackBar(
+                content: Text('Gagal mengupload dokumen'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+            }
+          }
+        } catch (e) {
+          print(e);
+          const fileUploadFailedMsg = SnackBar(
+            content: Text('Gagal mengupload dokumen'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(fileUploadFailedMsg);
+        }
+      } else {
+        // User canceled the picker
+      }
+    }
+
+    //untuk upload file
+    showRevisionFile(BuildContext context, String message, String _folder_id,
+        String _nomor, String _perihal, String _desc) {
+      final TextEditingController perihalController =
+          new TextEditingController();
+      final TextEditingController nomorController = new TextEditingController();
+      final TextEditingController descriptionController =
+          new TextEditingController();
+
+      nomorController.text = _nomor;
+      perihalController.text = _perihal;
+      descriptionController.text = _desc;
+
+      List<String>? selectedItems = [];
+      AlertDialog alert = AlertDialog(
+        title: Text("Revisi Dokumen"),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: perihalController,
+                decoration: InputDecoration(hintText: 'Perihal'),
+              ),
+              TextField(
+                controller: nomorController,
+                decoration: InputDecoration(hintText: 'Nomor'),
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(hintText: 'Deskripsi'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text("Tutup"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text("Pilih Dokumen"),
+            onPressed: () {
+              _selectFile(perihalController.text, nomorController.text,
+                  descriptionController.text, _folder_id);
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
     }
 
     return Container(
@@ -598,10 +749,9 @@ class SlideUpSetting extends StatelessWidget {
                     child: Container(
                         child: InkWell(
                       onTap: () {
-                        const downloadMsg = SnackBar(
-                          content: Text('Revisi'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                        // revisi
+                        showRevisionFile(context, 'Revisi Dokumen', folder_id,
+                            nomor, perihal, desc);
                       },
                       child: Row(
                         children: [
@@ -797,15 +947,15 @@ class SlideUpSetting extends StatelessWidget {
                                                                               json.decode(response.body);
                                                                           if (response.statusCode ==
                                                                               200) {
-                                                                            if (jsonResponse !=
-                                                                                null) {
-                                                                              Navigator.pop(context);
-                                                                              const rollbackMsg = SnackBar(
-                                                                                content: Text('Rollback berhasil'),
-                                                                              );
-                                                                              ScaffoldMessenger.of(context).showSnackBar(rollbackMsg);
-                                                                              reloadData();
-                                                                            }
+                                                                            Navigator.pop(context,
+                                                                                'Cancel');
+                                                                            slidePanelClose();
+                                                                            const rollbackMsg =
+                                                                                SnackBar(
+                                                                              content: Text('Rollback berhasil'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(rollbackMsg);
+                                                                            reloadData();
                                                                           } else {
                                                                             print("error");
                                                                           }
@@ -818,7 +968,7 @@ class SlideUpSetting extends StatelessWidget {
                                                                           alert =
                                                                           AlertDialog(
                                                                         title: Text(
-                                                                            "AlertDialog"),
+                                                                            "Rollback Dokumen"),
                                                                         content:
                                                                             Text("Apakah anda yakin untuk melakukan rollback pada file ini?"),
                                                                         actions: [
@@ -846,12 +996,13 @@ class SlideUpSetting extends StatelessWidget {
                                                                 IconButton(
                                                                     onPressed:
                                                                         () {
+                                                                      slidePanelClose();
                                                                       Navigator.pop(
                                                                           context);
                                                                       const downloadRevisionFileMsg =
                                                                           SnackBar(
                                                                         content:
-                                                                            Text('Download berhasil from setting'),
+                                                                            Text('Dokumen berhasil di download'),
                                                                       );
                                                                       ScaffoldMessenger.of(
                                                                               context)
@@ -913,8 +1064,9 @@ class SlideUpSetting extends StatelessWidget {
                               // });
                             },
                             onDownloadCompleted: (value) {
+                              slidePanelClose();
                               const downloadMsg = SnackBar(
-                                content: Text('Download berhasil'),
+                                content: Text('Dokumen berhasil di download'),
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(downloadMsg);
@@ -996,6 +1148,7 @@ class SlideUpSetting extends StatelessWidget {
                             if (response.body.isNotEmpty) {
                               if (response.statusCode == 200) {
                                 Navigator.pop(context);
+                                slidePanelClose();
                                 const downloadMsg = SnackBar(
                                   content: Text('File berhasil dihapus'),
                                 );
@@ -1012,9 +1165,9 @@ class SlideUpSetting extends StatelessWidget {
                         );
                         // set up the AlertDialog
                         AlertDialog alert = AlertDialog(
-                          title: Text("AlertDialog"),
-                          content:
-                              Text("Apakah anda yakin menghapus file ini?"),
+                          title: Text("Hapus Dokumen"),
+                          content: Text(
+                              "Apakah anda yakin untuk menghapus dokumen ini?"),
                           actions: [
                             cancelButton,
                             continueButton,

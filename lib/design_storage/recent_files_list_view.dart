@@ -468,6 +468,14 @@ class _RecentFilesListViewState extends State<RecentFilesListView>
                                                                 .dataRecentFolders[
                                                                     index]
                                                                 .is_owner,
+                                                            perihal: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .perihal,
+                                                            nomor: data
+                                                                .dataRecentFolders[
+                                                                    index]
+                                                                .nomor,
                                                             reloadData:
                                                                 reloadData,
                                                           ));

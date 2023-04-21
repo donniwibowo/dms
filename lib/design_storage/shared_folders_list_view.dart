@@ -454,6 +454,14 @@ class _SharedFoldersListViewState extends State<SharedFoldersListView>
                                                                 .dataSharedFolder[
                                                                     index]
                                                                 .is_owner,
+                                                            perihal: data
+                                                                .dataSharedFolder[
+                                                                    index]
+                                                                .perihal,
+                                                            nomor: data
+                                                                .dataSharedFolder[
+                                                                    index]
+                                                                .nomor,
                                                             reloadData:
                                                                 reloadData,
                                                           ));

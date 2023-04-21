@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:best_flutter_ui_templates/design_storage/models/user.dart';
-import 'package:best_flutter_ui_templates/helpers/constants.dart';
-import 'package:best_flutter_ui_templates/helpers/create_options.dart';
-import 'package:best_flutter_ui_templates/multiple_search_selection.dart';
 import 'package:best_flutter_ui_templates/pages/recent_page.dart';
 import 'package:best_flutter_ui_templates/pages/shared_folders_page.dart';
 import 'package:best_flutter_ui_templates/provider/api_user.dart';

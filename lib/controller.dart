@@ -11,3 +11,7 @@ Future<void> slidePanelOn(Widget screen) async {
   pageController.sink.add(screen);
   await panelController.open();
 }
+
+Future<void> slidePanelClose() async {
+  await panelController.close();
+}
