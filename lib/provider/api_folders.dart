@@ -45,8 +45,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
 
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getfiles';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getfiles';
     final response = await http.get(url +
         '?user_token=' +
         user_token +
@@ -71,8 +70,7 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getDetailFolder(String folder_parent_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getfiles';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getfiles';
     final response = await http.get(url +
         '?user_token=' +
         user_token +
@@ -100,8 +98,7 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getSearchFolder(String keyword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/search';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/search';
     final response = await http
         .get(url + '?user_token=' + user_token + '&keyword=' + keyword);
     if (response.body.isNotEmpty) {
@@ -126,8 +123,7 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getRecentFiles() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getrecentfiles';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getrecentfiles';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -150,8 +146,7 @@ class ApiFolders extends ChangeNotifier {
   Future<List<CategoryModel>?> getSharedFolder() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getsharedfolder';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getsharedfolder';
     final response = await http.get(url + '?user_token=' + user_token + '');
     if (response.body.isNotEmpty) {
       if (response.statusCode == 200) {
@@ -199,8 +194,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
 
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getfiledata';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getfiledata';
     final response = await http
         .get(url + '?user_token=' + user_token + '&folder_id=' + folder_id);
 
@@ -221,8 +215,7 @@ class ApiFolders extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
 
-    final url =
-        'http://34.101.208.151/agutask/dms/api/files/getrevisionfile';
+    final url = 'http://34.101.208.151/agutask/dms/api/files/getrevisionfile';
     final response = await http
         .get(url + '?user_token=' + user_token + '&folder_id=' + folder_id);
 
