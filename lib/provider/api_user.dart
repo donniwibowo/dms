@@ -35,7 +35,7 @@ class ApiUser extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final url =
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getuseraccessbyfile';
+        'http://34.101.208.151/agutask/dms/api/files/getuseraccessbyfile';
     final response = await http
         .get(url + '?user_token=' + user_token + '&folder_id=' + folder_id);
 

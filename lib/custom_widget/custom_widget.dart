@@ -570,7 +570,7 @@ class SlideUpSetting extends StatelessWidget {
             String user_token =
                 await prefs.getString('user_token') ?? 'unknown';
             var res1 = await sendForm(
-                'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/revisidocument' +
+                'http://34.101.208.151/agutask/dms/api/files/revisidocument' +
                     '?user_token=' +
                     user_token,
                 {
@@ -941,7 +941,7 @@ class SlideUpSetting extends StatelessWidget {
                                                                           var jsonResponse =
                                                                               null;
                                                                           var response = await http.post(
-                                                                              "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/rollback?user_token=" + user_token!,
+                                                                              "http://34.101.208.151/agutask/dms/api/files/rollback?user_token=" + user_token!,
                                                                               body: data);
                                                                           jsonResponse =
                                                                               json.decode(response.body);
@@ -1142,7 +1142,7 @@ class SlideUpSetting extends StatelessWidget {
                                 sharedPreferences.getString("user_token");
                             var jsonResponse = null;
                             final response = await http.post(
-                                "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/delete?user_token=" +
+                                "http://34.101.208.151/agutask/dms/api/files/delete?user_token=" +
                                     user_token!,
                                 body: data);
                             if (response.body.isNotEmpty) {

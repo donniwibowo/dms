@@ -19,6 +19,8 @@ class _MyHomePageState extends State<SplashSreen> {
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    // sharedPreferences.clear();
+    // sharedPreferences.commit();
     if (sharedPreferences.getString("user_token") != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

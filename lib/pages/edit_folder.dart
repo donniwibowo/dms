@@ -107,7 +107,7 @@ class _EditFolderState extends State<EditFolder> {
                               };
                               var jsonResponse = null;
                               var response = await http.post(
-                                  "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/editfolder?user_token=" +
+                                  "http://34.101.208.151/agutask/dms/api/files/editfolder?user_token=" +
                                       user_token!,
                                   body: data);
 

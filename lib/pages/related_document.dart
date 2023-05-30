@@ -54,7 +54,7 @@ class _RelatedDocumentState extends State<RelatedDocument> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user_token = await prefs.getString('user_token') ?? 'unknown';
     final response = await http.get(Uri.parse(
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getrelateddocumentbyuser?user_token=' +
+        'http://34.101.208.151/agutask/dms/api/files/getrelateddocumentbyuser?user_token=' +
             user_token));
 
     if (response.statusCode == 200) {
@@ -155,7 +155,7 @@ class _RelatedDocumentState extends State<RelatedDocument> {
                                       };
                                       var jsonResponse = null;
                                       var response = await http.post(
-                                          "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/addrelateddocument?user_token=" +
+                                          "http://34.101.208.151/agutask/dms/api/files/addrelateddocument?user_token=" +
                                               user_token!,
                                           body: data);
 
@@ -436,7 +436,7 @@ class _RelatedDocumentState extends State<RelatedDocument> {
                                                                 null;
                                                             var response =
                                                                 await http.post(
-                                                                    "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/deleterelateddocument?user_token=" +
+                                                                    "http://34.101.208.151/agutask/dms/api/files/deleterelateddocument?user_token=" +
                                                                         user_token!,
                                                                     body: data);
 

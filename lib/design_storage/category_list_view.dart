@@ -89,8 +89,6 @@ class _CategoryListViewState extends State<CategoryListView>
         height: 660,
         width: double.infinity,
         child: FutureBuilder<List<CategoryModel>>(
-          // future: Provider.of<ApiFolders>(context, listen: false)
-          //     .getAllFolder(widget.folder_parent_id, widget.keyword),
           future: listData,
           builder: (BuildContext context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
@@ -135,380 +133,308 @@ class _CategoryListViewState extends State<CategoryListView>
                               (Route<dynamic> route) => false);
                         }
                       },
-                      child: AnimatedBuilder(
-                        animation: animationController!,
-                        builder: (BuildContext context, Widget? child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: Transform(
-                              transform: Matrix4.translationValues(
-                                  0.0, 50 * (1.0 - animation.value), 0.0),
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                child: SizedBox(
-                                  // height: 100,
-                                  child: Stack(
-                                    alignment:
-                                        AlignmentDirectional.bottomCenter,
-                                    children: <Widget>[
-                                      Container(
-                                          child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              border: Border(
-                                                bottom: BorderSide(
-                                                    width: 1.0,
-                                                    color:
-                                                        Colors.grey.shade300),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        child: SizedBox(
+                          // height: 100,
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: <Widget>[
+                              Container(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            width: 1.0,
+                                            color: Colors.grey.shade300),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 15),
+                                              child: isiData[index].type ==
+                                                      'Folder'
+                                                  ? Icon(
+                                                      isiData[index]
+                                                                  .is_shared ==
+                                                              "1"
+                                                          ? Icons.folder_shared
+                                                          : Icons.folder,
+                                                      color:
+                                                          Colors.blue.shade200,
+                                                    )
+                                                  : Icon(
+                                                      isiData[index].format ==
+                                                              'pdf'
+                                                          ? MyFlutterApp
+                                                              .file_pdf
+                                                          : MyFlutterApp
+                                                              .file_word,
+                                                      color: isiData[index]
+                                                                  .format ==
+                                                              'pdf'
+                                                          ? Colors.red
+                                                          : Colors.blue,
+                                                    ),
+                                            ),
+                                            Container(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          isiData[index].name,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                DesignAppTheme
+                                                                    .darkerText,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        isiData[index].type ==
+                                                                'Folder'
+                                                            ? isiData[index]
+                                                                .type
+                                                            : isiData[index]
+                                                                .format,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w100,
+                                                          fontSize: 14,
+                                                          letterSpacing: 0.27,
+                                                          color: Colors.blueGrey
+                                                              .shade300,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 15),
+                                                          child: Text(
+                                                            isiData[index]
+                                                                        .size ==
+                                                                    null
+                                                                ? ''
+                                                                : isiData[index]
+                                                                    .size
+                                                                    .toString(),
+                                                            textAlign:
+                                                                TextAlign.right,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w200,
+                                                              fontSize: 13,
+                                                              letterSpacing:
+                                                                  0.27,
+                                                              color:
+                                                                  DesignAppTheme
+                                                                      .grey,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 15),
-                                                      child: isiData[index]
-                                                                  .type ==
-                                                              'Folder'
-                                                          ? Icon(
-                                                              isiData[index]
-                                                                          .is_shared ==
-                                                                      "1"
-                                                                  ? Icons
-                                                                      .folder_shared
-                                                                  : Icons
-                                                                      .folder,
-                                                              color: Colors.blue
-                                                                  .shade200,
-                                                            )
-                                                          : Icon(
-                                                              isiData[index]
-                                                                          .format ==
-                                                                      'pdf'
-                                                                  ? MyFlutterApp
-                                                                      .file_pdf
-                                                                  : MyFlutterApp
-                                                                      .file_word,
-                                                              color: isiData[index]
-                                                                          .format ==
-                                                                      'pdf'
-                                                                  ? Colors.red
-                                                                  : Colors.blue,
-                                                            ),
-                                                    ),
-                                                    Container(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Container(
-                                                            child: Row(
-                                                              children: [
-                                                                Text(
-                                                                  isiData[index]
-                                                                      .name,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        16,
-                                                                    letterSpacing:
-                                                                        0.27,
-                                                                    color: DesignAppTheme
-                                                                        .darkerText,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Row(
+                                          ],
+                                        ),
+                                        Container(
+                                          child: PopupMenuButton<String>(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20)
+                                                          .copyWith(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      0))),
+                                              padding: EdgeInsets.all(10),
+                                              elevation: 10,
+                                              color: Colors.grey.shade100,
+                                              itemBuilder:
+                                                  (BuildContext context) =>
+                                                      <PopupMenuEntry<String>>[
+                                                        PopupMenuItem<String>(
+                                                          value: 'view',
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
-                                                              Text(
-                                                                isiData[index]
-                                                                            .type ==
-                                                                        'Folder'
-                                                                    ? isiData[
-                                                                            index]
-                                                                        .type
-                                                                    : isiData[
-                                                                            index]
-                                                                        .format,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w100,
-                                                                  fontSize: 14,
-                                                                  letterSpacing:
-                                                                      0.27,
-                                                                  color: Colors
-                                                                      .blueGrey
-                                                                      .shade300,
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              15),
-                                                                  child: Text(
-                                                                    isiData[index].size ==
-                                                                            null
-                                                                        ? ''
-                                                                        : isiData[index]
-                                                                            .size
-                                                                            .toString(),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .right,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w200,
-                                                                      fontSize:
-                                                                          13,
-                                                                      letterSpacing:
-                                                                          0.27,
-                                                                      color: DesignAppTheme
-                                                                          .grey,
-                                                                    ),
+                                                              Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    Icons
+                                                                        .info_rounded,
+                                                                    size: 20,
+                                                                    color: Colors
+                                                                        .green,
                                                                   ),
-                                                                ),
-                                                              )
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    'Info',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .green,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Divider()
                                                             ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  child: PopupMenuButton<
-                                                          String>(
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius
-                                                                  .circular(20)
-                                                              .copyWith(
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          0))),
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      elevation: 10,
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                      itemBuilder: (BuildContext
-                                                              context) =>
-                                                          <
-                                                              PopupMenuEntry<
-                                                                  String>>[
-                                                            PopupMenuItem<
-                                                                String>(
-                                                              value: 'view',
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .info_rounded,
-                                                                        size:
-                                                                            20,
-                                                                        color: Colors
-                                                                            .green,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width:
-                                                                            5,
-                                                                      ),
-                                                                      Text(
-                                                                        'Info',
-                                                                        style: TextStyle(
-                                                                            color: Colors
-                                                                                .green,
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.w500),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Divider()
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            // Visibility(child: child)
-                                                            PopupMenuItem<
-                                                                String>(
-                                                              value: 'atur',
-                                                              enabled:
-                                                                  isiData[index]
-                                                                              .is_owner ==
-                                                                          "1"
-                                                                      ? true
-                                                                      : false,
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .settings,
-                                                                        size:
-                                                                            20,
-                                                                        color: Colors
-                                                                            .green,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width:
-                                                                            5,
-                                                                      ),
-                                                                      Text(
-                                                                        'Pengaturan',
-                                                                        style: TextStyle(
-                                                                            color: Colors
-                                                                                .green,
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.w500),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Divider()
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                      onSelected:
-                                                          (String value) {
-                                                        // Handle menu item selection here
-                                                        if (value == 'view') {
-                                                          slidePanelOn(
-                                                              SlideUpView(
-                                                            folder_id:
-                                                                isiData[index]
-                                                                    .folder_id,
-                                                            name: isiData[index]
-                                                                .name,
-                                                            desc: isiData[index]
-                                                                .description,
-                                                            user_access:
-                                                                isiData[index]
-                                                                    .user_access,
-                                                            created_by:
-                                                                isiData[index]
-                                                                    .created_by,
-                                                            created_on:
-                                                                isiData[index]
-                                                                    .created_on,
-                                                            updated_on:
-                                                                isiData[index]
-                                                                    .updated_on,
-                                                            file_url:
-                                                                isiData[index]
-                                                                    .file_url,
-                                                            type: isiData[index]
-                                                                .type,
-                                                          ));
-                                                        }
-
-                                                        if (value == 'atur') {
-                                                          slidePanelOn(
-                                                              SlideUpSetting(
-                                                            folder_parent_id:
-                                                                isiData[index]
-                                                                    .folder_parent_id,
-                                                            folder_id:
-                                                                isiData[index]
-                                                                    .folder_id,
-                                                            name: isiData[index]
-                                                                .name,
-                                                            desc: isiData[index]
-                                                                .description,
-                                                            user_access:
-                                                                isiData[index]
-                                                                    .user_access,
-                                                            created_by:
-                                                                isiData[index]
-                                                                    .created_by,
-                                                            created_on:
-                                                                isiData[index]
-                                                                    .created_on,
-                                                            updated_on:
-                                                                isiData[index]
-                                                                    .updated_on,
-                                                            file_url:
-                                                                isiData[index]
-                                                                    .file_url,
-                                                            type: isiData[index]
-                                                                .type,
-                                                            is_owner:
-                                                                isiData[index]
-                                                                    .is_owner,
-                                                            perihal:
-                                                                isiData[index]
-                                                                    .perihal,
-                                                            nomor:
-                                                                isiData[index]
-                                                                    .nomor,
-                                                            reloadData:
-                                                                reloadData,
-                                                          ));
-                                                        }
-                                                      },
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 5),
-                                                        child: Icon(
-                                                          Icons.more_vert,
-                                                          color: Colors.black,
-                                                          size: 20,
                                                         ),
-                                                      )),
+                                                        // Visibility(child: child)
+                                                        PopupMenuItem<String>(
+                                                          value: 'atur',
+                                                          enabled: isiData[
+                                                                          index]
+                                                                      .is_owner ==
+                                                                  "1"
+                                                              ? true
+                                                              : false,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    Icons
+                                                                        .settings,
+                                                                    size: 20,
+                                                                    color: Colors
+                                                                        .green,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    'Pengaturan',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .green,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Divider()
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                              onSelected: (String value) {
+                                                // Handle menu item selection here
+                                                if (value == 'view') {
+                                                  slidePanelOn(SlideUpView(
+                                                    folder_id: isiData[index]
+                                                        .folder_id,
+                                                    name: isiData[index].name,
+                                                    desc: isiData[index]
+                                                        .description,
+                                                    user_access: isiData[index]
+                                                        .user_access,
+                                                    created_by: isiData[index]
+                                                        .created_by,
+                                                    created_on: isiData[index]
+                                                        .created_on,
+                                                    updated_on: isiData[index]
+                                                        .updated_on,
+                                                    file_url:
+                                                        isiData[index].file_url,
+                                                    type: isiData[index].type,
+                                                  ));
+                                                }
+
+                                                if (value == 'atur') {
+                                                  slidePanelOn(SlideUpSetting(
+                                                    folder_parent_id:
+                                                        isiData[index]
+                                                            .folder_parent_id,
+                                                    folder_id: isiData[index]
+                                                        .folder_id,
+                                                    name: isiData[index].name,
+                                                    desc: isiData[index]
+                                                        .description,
+                                                    user_access: isiData[index]
+                                                        .user_access,
+                                                    created_by: isiData[index]
+                                                        .created_by,
+                                                    created_on: isiData[index]
+                                                        .created_on,
+                                                    updated_on: isiData[index]
+                                                        .updated_on,
+                                                    file_url:
+                                                        isiData[index].file_url,
+                                                    type: isiData[index].type,
+                                                    is_owner:
+                                                        isiData[index].is_owner,
+                                                    perihal:
+                                                        isiData[index].perihal,
+                                                    nomor: isiData[index].nomor,
+                                                    reloadData: reloadData,
+                                                  ));
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 5),
+                                                child: Icon(
+                                                  Icons.more_vert,
+                                                  color: Colors.black,
+                                                  size: 20,
                                                 ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -574,7 +500,7 @@ class _CategoryListViewState extends State<CategoryListView>
     var user_token = sharedPreferences.getString("user_token");
     var jsonResponse = null;
     final response = await http.post(
-        "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/delete?user_token=" +
+        "http://34.101.208.151/agutask/dms/api/files/delete?user_token=" +
             user_token!,
         body: data);
     if (response.body.isNotEmpty) {

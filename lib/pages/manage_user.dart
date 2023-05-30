@@ -57,14 +57,14 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
     String user_token = await prefs.getString('user_token') ?? 'unknown';
 
     var url =
-        'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/getuseraccessbyfolder?user_token=' +
+        'http://34.101.208.151/agutask/dms/api/files/getuseraccessbyfolder?user_token=' +
             user_token +
             '&folder_id=' +
             folder_id;
 
     if (type == 'Folder') {
       url =
-          'https://192.168.1.66/leap_integra/leap_integra/master/dms/api/user/getallusers?user_token=' +
+          'http://34.101.208.151/agutask/dms/api/user/getallusers?user_token=' +
               user_token;
     }
 
@@ -167,7 +167,7 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                       };
                                       var jsonResponse = null;
                                       var response = await http.post(
-                                          "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/manageuseraccess?user_token=" +
+                                          "http://34.101.208.151/agutask/dms/api/files/manageuseraccess?user_token=" +
                                               user_token!,
                                           body: data);
 
@@ -396,7 +396,7 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                                               null;
                                                           var response =
                                                               await http.post(
-                                                                  "https://192.168.1.66/leap_integra/leap_integra/master/dms/api/files/deleteuseraccess?user_token=" +
+                                                                  "http://34.101.208.151/agutask/dms/api/files/deleteuseraccess?user_token=" +
                                                                       user_token!,
                                                                   body: data);
 
