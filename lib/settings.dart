@@ -84,28 +84,28 @@ class _SettingsOnePageState extends State<Settings> {
       });
     }
 
-    var jsonResponse = null;
-    var response =
-        await http.get("https://discoverkorea.site/apiuser/" + username);
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-      if (jsonResponse != null) {
-        setState(() {
-          //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
-          var content = json.decode(response.body);
-          //KEMUDIAN DATANYA DISIMPAN KE DALAM VARIABLE data,
-          //DIMANA SECARA SPESIFIK YANG INGIN KITA AMBIL ADALAH ISI DARI KEY hasil
-          data = content['values'];
-        });
-      }
-    } else {
-      print(response.body);
-    }
-    nama = data[0]['nama'];
-    bio = data[0]['biodata'];
-    profile = 'https://discoverkorea.site/uploads/profile/' +
-        data[0]['profile_picture'];
-    print('profil url ' + '$profile');
+    // var jsonResponse = null;
+    // var response =
+    //     await http.get("https://discoverkorea.site/apiuser/" + username);
+    // if (response.statusCode == 200) {
+    //   jsonResponse = json.decode(response.body);
+    //   if (jsonResponse != null) {
+    //     setState(() {
+    //       //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
+    //       var content = json.decode(response.body);
+    //       //KEMUDIAN DATANYA DISIMPAN KE DALAM VARIABLE data,
+    //       //DIMANA SECARA SPESIFIK YANG INGIN KITA AMBIL ADALAH ISI DARI KEY hasil
+    //       data = content['values'];
+    //     });
+    //   }
+    // } else {
+    //   print(response.body);
+    // }
+    // nama = data[0]['nama'];
+    // bio = data[0]['biodata'];
+    // profile = 'https://discoverkorea.site/uploads/profile/' +
+    //     data[0]['profile_picture'];
+    // print('profil url ' + '$profile');
   }
 
   checkLoginStatus() async {
