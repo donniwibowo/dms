@@ -287,11 +287,15 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                           //             width: 1, color: Colors.grey))),
                           child: Row(
                             children: [
-                              Text(
-                                'User Akses (' + widget.name + ')',
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                              ),
+                              Container(
+                                width: 250,
+                                child: Text(
+                                  'User Akses (' + widget.name + ')',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
                             ],
                           )),
                       Container(
