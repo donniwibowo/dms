@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:best_flutter_ui_templates/login_view.dart';
 import 'package:flutter/material.dart';
 import 'introduction_animation/introduction_animation_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:best_flutter_ui_templates/design_storage/home_design.dart';
+import 'package:http/http.dart' as http;
 
 class SplashSreen extends StatefulWidget {
   @override
@@ -19,15 +22,27 @@ class _MyHomePageState extends State<SplashSreen> {
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    // sharedPreferences.clear();
-    // sharedPreferences.commit();
-    if (sharedPreferences.getString("user_token") != null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => DesignHomeScreen(
-                    folder_parent_id: "0",
-                  )),
-          (Route<dynamic> route) => false);
+
+    var user_token = sharedPreferences.getString("user_token");
+    if (user_token != null) {
+      var api_url =
+          'http://34.101.208.151/agutask/dms/api/user/islogin?user_token=' +
+              user_token;
+      var response = await http.get(Uri.parse(api_url));
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['message'] == 0) {
+        sharedPreferences.clear();
+        sharedPreferences.commit();
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginView()));
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (BuildContext context) => DesignHomeScreen(
+                      folder_parent_id: "0",
+                    )),
+            (Route<dynamic> route) => false);
+      }
     } else {
       Timer(
           Duration(seconds: 3),
