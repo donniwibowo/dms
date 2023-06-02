@@ -330,10 +330,12 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         // Visibility(child: child)
                                                         PopupMenuItem<String>(
                                                           value: 'atur',
-                                                          enabled: isiData[
-                                                                          index]
-                                                                      .is_owner ==
-                                                                  "1"
+                                                          enabled: isiData[index]
+                                                                          .is_owner ==
+                                                                      "1" ||
+                                                                  isiData[index]
+                                                                          .has_edit_access ==
+                                                                      "1"
                                                               ? true
                                                               : false,
                                                           child: Column(
@@ -414,8 +416,14 @@ class _CategoryListViewState extends State<CategoryListView>
                                                     file_url:
                                                         isiData[index].file_url,
                                                     type: isiData[index].type,
-                                                    is_owner:
-                                                        isiData[index].is_owner,
+                                                    is_owner: isiData[index]
+                                                                    .is_owner ==
+                                                                "1" ||
+                                                            isiData[index]
+                                                                    .has_edit_access ==
+                                                                "1"
+                                                        ? "1"
+                                                        : "0",
                                                     perihal:
                                                         isiData[index].perihal,
                                                     nomor: isiData[index].nomor,
