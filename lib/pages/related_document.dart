@@ -81,6 +81,7 @@ class _RelatedDocumentState extends State<RelatedDocument> {
 
   @override
   Widget build(BuildContext context) {
+    double c_width = MediaQuery.of(context).size.width * 0.7;
     final key = GlobalObjectKey<ExpandableFabState>(context);
     List<String>? selectedDocument = [];
     return Container(
@@ -308,11 +309,15 @@ class _RelatedDocumentState extends State<RelatedDocument> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(
-                                                              isiData[index]
-                                                                  .name,
-                                                              style: TextStyle(
-                                                                  fontSize: 16),
+                                                            Container(
+                                                              width: c_width,
+                                                              child: Text(
+                                                                isiData[index]
+                                                                    .name,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16),
+                                                              ),
                                                             ),
                                                             SizedBox(
                                                               height: 3,

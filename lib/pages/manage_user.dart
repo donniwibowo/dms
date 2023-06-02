@@ -96,6 +96,7 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final key = GlobalObjectKey<ExpandableFabState>(context);
+    double c_width = MediaQuery.of(context).size.width * 0.65;
     List<String>? selectedUser = [];
     return Container(
       color: DesignAppTheme.nearlyWhite,
@@ -288,12 +289,13 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                           child: Row(
                             children: [
                               Container(
-                                width: 250,
-                                child: Text(
-                                  'User Akses (' + widget.name + ')',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
+                                child: Flexible(
+                                  child: Text(
+                                    'User Akses (' + widget.name + ')',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               )
                             ],
@@ -356,17 +358,25 @@ class _ManageUserState extends State<ManageUser> with TickerProviderStateMixin {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(
-                                                              isiData[index]
-                                                                  .fullname,
-                                                              style: TextStyle(
-                                                                  fontSize: 18),
+                                                            Container(
+                                                              width: c_width,
+                                                              child: Text(
+                                                                isiData[index]
+                                                                    .fullname,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
                                                             ),
                                                             SizedBox(
                                                               height: 3,
                                                             ),
-                                                            Text(isiData[index]
-                                                                .email),
+                                                            Container(
+                                                              width: c_width,
+                                                              child: Text(
+                                                                  isiData[index]
+                                                                      .email),
+                                                            ),
                                                             SizedBox(
                                                               height: 3,
                                                             ),

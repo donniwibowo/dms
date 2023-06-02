@@ -337,6 +337,7 @@ class SlideUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double c_width = MediaQuery.of(context).size.width * 0.5;
     ApiFolders serviceAPI = ApiFolders();
     // bool isVisible = true;
 
@@ -372,10 +373,13 @@ class SlideUpView extends StatelessWidget {
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ),
-                  Text(
-                    name,
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
+                  Container(
+                    width: c_width,
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
                   )
                 ],
               ),
@@ -393,9 +397,12 @@ class SlideUpView extends StatelessWidget {
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ),
-                  Text(desc,
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w500))
+                  Container(
+                    width: c_width,
+                    child: Text(desc,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500)),
+                  )
                 ],
               ),
             ),
@@ -433,9 +440,11 @@ class SlideUpView extends StatelessWidget {
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ),
-                  Text(created_by,
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w500))
+                  Flexible(
+                    child: Text(created_by,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500)),
+                  )
                 ],
               ),
             ),
@@ -521,6 +530,7 @@ class SlideUpSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double c_width = MediaQuery.of(context).size.width * 0.42;
     ApiFolders serviceAPI = ApiFolders();
     bool isVisible = true;
 
@@ -840,12 +850,17 @@ class SlideUpSetting extends StatelessWidget {
                                                                       MainAxisAlignment
                                                                           .spaceAround,
                                                                   children: [
-                                                                    Text(
-                                                                      isiData[index]
-                                                                          .name,
-                                                                      style: TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.w400),
+                                                                    Container(
+                                                                      width:
+                                                                          c_width,
+                                                                      child:
+                                                                          Text(
+                                                                        isiData[index]
+                                                                            .name,
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w400),
+                                                                      ),
                                                                     ),
                                                                     Padding(
                                                                       padding: const EdgeInsets
@@ -879,16 +894,20 @@ class SlideUpSetting extends StatelessWidget {
                                                                         color: Colors
                                                                             .grey
                                                                             .shade600)),
-                                                                Text(
-                                                                    'Oleh : ' +
-                                                                        isiData[index]
-                                                                            .email,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            14,
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade600)),
+                                                                Container(
+                                                                  width:
+                                                                      c_width,
+                                                                  child: Text(
+                                                                      'Oleh : ' +
+                                                                          isiData[index]
+                                                                              .email,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              14,
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade600)),
+                                                                ),
                                                               ],
                                                             ),
                                                             Column(

@@ -57,6 +57,8 @@ class _RecentActivitiesListViewState extends State<RecentActivitiesListView>
   @override
   Widget build(BuildContext context) {
     ScrollController sc = new ScrollController();
+    double c_width = MediaQuery.of(context).size.width * 0.5;
+    double c_md_width = MediaQuery.of(context).size.width * 0.8;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
@@ -130,21 +132,25 @@ class _RecentActivitiesListViewState extends State<RecentActivitiesListView>
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                        data
-                                                            .dataRecentActivities[
-                                                                index]
-                                                            .name,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.27,
-                                                          color: DesignAppTheme
-                                                              .darkerText,
-                                                        )),
+                                                    Container(
+                                                      width: c_width,
+                                                      child: Text(
+                                                          data
+                                                              .dataRecentActivities[
+                                                                  index]
+                                                              .name,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                DesignAppTheme
+                                                                    .darkerText,
+                                                          )),
+                                                    ),
                                                     Text(
                                                         data
                                                             .dataRecentActivities[
@@ -165,7 +171,7 @@ class _RecentActivitiesListViewState extends State<RecentActivitiesListView>
                                                 Row(
                                                   children: [
                                                     Container(
-                                                      width: 340,
+                                                      width: c_md_width,
                                                       padding:
                                                           const EdgeInsets.only(
                                                               top: 10,

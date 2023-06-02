@@ -82,6 +82,7 @@ class _CategoryListViewState extends State<CategoryListView>
   @override
   Widget build(BuildContext context) {
     ScrollController sc = new ScrollController();
+    double c_width = MediaQuery.of(context).size.width * 0.7;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
@@ -195,18 +196,23 @@ class _CategoryListViewState extends State<CategoryListView>
                                                   Container(
                                                     child: Row(
                                                       children: [
-                                                        Text(
-                                                          isiData[index].name,
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 16,
-                                                            letterSpacing: 0.27,
-                                                            color:
-                                                                DesignAppTheme
-                                                                    .darkerText,
+                                                        Container(
+                                                          width: c_width,
+                                                          child: Text(
+                                                            isiData[index].name,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 16,
+                                                              letterSpacing:
+                                                                  0.27,
+                                                              color:
+                                                                  DesignAppTheme
+                                                                      .darkerText,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
