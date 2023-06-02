@@ -1018,15 +1018,31 @@ class SlideUpSetting extends StatelessWidget {
                                                                       slidePanelClose();
                                                                       Navigator.pop(
                                                                           context);
-                                                                      const downloadRevisionFileMsg =
-                                                                          SnackBar(
-                                                                        content:
-                                                                            Text('Dokumen berhasil di download'),
-                                                                      );
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              downloadRevisionFileMsg);
+
+                                                                      String
+                                                                          downloadUrl =
+                                                                          'http://34.101.208.151/agutask/dms/uploads/documents/' +
+                                                                              isiData[index].name;
+                                                                      print(
+                                                                          downloadUrl);
+                                                                      FileDownloader.downloadFile(
+                                                                          url: downloadUrl,
+                                                                          onProgress: (name, progress) {
+                                                                            print(progress);
+                                                                            const downloadMsg =
+                                                                                SnackBar(
+                                                                              content: Text('Downloading..'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                                                                          },
+                                                                          onDownloadCompleted: (value) {
+                                                                            slidePanelClose();
+                                                                            const downloadMsg =
+                                                                                SnackBar(
+                                                                              content: Text('Dokumen berhasil di download'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(downloadMsg);
+                                                                          });
                                                                     },
                                                                     icon: Icon(
                                                                       Icons
@@ -1072,27 +1088,49 @@ class SlideUpSetting extends StatelessWidget {
                     visible: type == 'File' ? true : false,
                     child: Container(
                         child: InkWell(
-                      onTap: () {
-                        FileDownloader.downloadFile(
-                            url:
-                                'https://dms.tigajayabahankue.com/uploads/documents/EF_TestResult.pdf',
-                            onProgress: (name, progress) {
-                              print(progress);
-                              // setState(() {
-                              //   _progress = progress;
-                              // });
-                            },
-                            onDownloadCompleted: (value) {
-                              slidePanelClose();
-                              const downloadMsg = SnackBar(
-                                content: Text('Dokumen berhasil di download'),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(downloadMsg);
-                              // setState(() {
-                              //   _progress = null;
-                              // });
-                            });
+                      onTap: () async {
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        var user_token =
+                            sharedPreferences.getString("user_token");
+
+                        final response = await http.get(
+                            "http://34.101.208.151/agutask/dms/api/files/getfiledata?user_token=" +
+                                user_token! +
+                                '&folder_id=' +
+                                folder_id);
+                        var jsonResponse = json.decode(response.body);
+                        if (jsonResponse['status'] == 200) {
+                          print(jsonResponse['data'][0]['name']);
+                          String downloadUrl =
+                              'http://34.101.208.151/agutask/dms/uploads/documents/' +
+                                  jsonResponse['data'][0]['name'];
+                          print(downloadUrl);
+                          FileDownloader.downloadFile(
+                              url: downloadUrl,
+                              onProgress: (name, progress) {
+                                print(progress);
+                                const downloadMsg = SnackBar(
+                                  content: Text('Downloading..'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(downloadMsg);
+                              },
+                              onDownloadCompleted: (value) {
+                                slidePanelClose();
+                                const downloadMsg = SnackBar(
+                                  content: Text('Dokumen berhasil di download'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(downloadMsg);
+                              });
+                        } else {
+                          const downloadMsg = SnackBar(
+                            content: Text('Dokumen tidak ditemukan'),
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(downloadMsg);
+                        }
                       },
                       child: Row(
                         children: [
